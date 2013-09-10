@@ -4,8 +4,8 @@ CoolSpot
 Welcome to The CoolSpot Project!
 
 
-1) Getting started with Symfony
--------------------------------
+Getting started with Symfony
+----------------------------
 
 This distribution is meant to be the starting point for your Symfony
 applications, but it also contains some sample code that you can learn from
