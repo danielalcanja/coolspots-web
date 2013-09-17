@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="CoolSpots\SiteBundle\Entity\CsPics" table="cs_pics">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="identity" type="integer" column="identity" nullable="true"/>
+    <field name="type" type="integer" column="type" nullable="true"/>
+    <field name="dateAdded" type="datetime" column="date_added" nullable="true"/>
+    <field name="createdTime" type="datetime" column="created_time" nullable="true"/>
+    <field name="lowResolution" type="string" column="low_resolution" length="150" nullable="true"/>
+    <field name="thumbnail" type="string" column="thumbnail" length="150" nullable="true"/>
+    <field name="standardResolution" type="string" column="standard_resolution" length="150" nullable="true"/>
+    <field name="caption" type="string" column="caption" length="150" nullable="true"/>
+    <field name="likesCount" type="integer" column="likes_count" nullable="true"/>
+    <many-to-one field="idUser" target-entity="CsUsers">
+      <join-columns>
+        <join-column name="id_user" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

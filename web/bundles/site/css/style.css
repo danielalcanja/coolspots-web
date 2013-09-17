@@ -1,0 +1,128 @@
+@font-face {
+    font-family: 'Museo300-Regular';
+    src: url('../fonts/Museo/Museo300-Regular.eot');
+    src: url('../fonts/Museo/Museo300-Regular.eot?#iefix'),
+         url('../fonts/Museo/Museo300-Regular.woff') format('woff'),
+         url('../fonts/Museo/Museo300-Regular.ttf') format('truetype'),
+         url('../fonts/Museo/Museo300-Regular.svg#Museo300-Regular') format('svg');
+}
+@font-face {
+    font-family: 'Museo500-Regular';
+    src: url('../fonts/Museo/Museo500-Regular.eot');
+    src: url('../fonts/Museo/Museo500-Regular.eot?#iefix'),
+         url('../fonts/Museo/Museo500-Regular.woff') format('woff'),
+         url('../fonts/Museo/Museo500-Regular.ttf') format('truetype'),
+         url('../fonts/Museo/Museo500-Regular.svg#Museo500-Regular') format('svg');
+}
+
+* { margin:0; padding:0; list-style:none; border:0; outline:none; text-decoration:none; }
+html { height:100%; }
+body { height:100%; background:#FFF; overflow:hidden; font-family: 'Museo500-Regular'; font-size:15px; }
+
+.top-bar { width:100%; position:absolute; top:0; left:0; z-index:2; }
+.top-bar .back { height:50px; margin:10px 20px; background:#31749B; color:#FFF; line-height:50px; }
+
+.aonde { float:left; }
+.aonde .ico-onde { width:50px; height:50px; float:left; background:url('../images/icons.png') 0px 9px no-repeat; }
+.aonde .topo-input { float:left; background:#31749B; padding:0 8px 8px 0; padding-bottom:0; }
+.aonde .topo-input .ico-input { width:6px; height:50px; background:url('../images/icons.png') -64px 20px no-repeat; float:left; }
+.aonde .topo-input .inp-postar { width:340px; height:30px; margin-top:10px; padding:0 5px; border:0; line-height:30px; background:#FFF; color:#AAA; float:left; resize: none; }
+.aonde .post { margin:10px 0 0 -3px; }
+input, textarea { font-family: 'Museo500-Regular'; font-size: 13px; }
+
+.btn-padrao { padding:0 20px; height:30px; line-height:30px; background:#518FB3; color:#FFF; cursor:pointer; }
+.btn-padrao:hover { background-color:#143F58; }
+
+.best { margin:0 30px 0 50px; line-height:50px; float:left; cursor:pointer; position:relative; }
+.best span { display:inline-block; height:50px; float:left; }
+.best .ico-melhores { width:23px; margin-left:8px; background:url('../images/icons.png') -92px 23px no-repeat; }
+.best:hover .ico-melhores { background-position:-92px -35px; }
+
+.best ul { width:275px; background:#FFF; position:absolute; top:49px; left:-70px; display:none; }
+.best ul li { height:27px; text-align:center; line-height:27px; border-bottom:1px solid #98BFD5; }
+.best ul li a { height:20px; line-height:20px; margin-top:8px; display:block; text-align:center; color:#000; border-left:4px solid #FFF; border-right:4px solid #FFF;  }
+.best ul li a:hover { border-color:#FF5885; }
+
+
+.top-ico { width:65px; height:32px; float:left; margin-top:10px; border-left:3px solid #296689; position:relative; cursor:pointer; }
+.add-event { background:url('../images/icons.png') -120px 0px no-repeat; }
+.add-event .hint { width:132px; height:53px; background:url('../images/icons.png') 0px -85px no-repeat; position:absolute; top:30px; left:-33px; display:none; }
+.ind-event { background:url('../images/icons.png') -190px 0px no-repeat; }
+.ind-event .hint { width:148px; height:53px; background:url('../images/icons.png') -135px -85px no-repeat; position:absolute; top:30px; left:-40px; display:none; }
+
+.region { float:right; margin-right:15px; }
+.region span { color:#FFF; }
+
+#site { height:100%; margin-top:-55px; overflow:hidden; position:relative; z-index:0; }
+#site .move { height:100%; margin-top:55px; position:relative; z-index:0; left:0; }
+
+#site .move ul.content { height:100%; position:relative; z-index:0; }
+
+.photo { margin:0; padding:0; display:none; position:absolute; }
+.photo .back { width:100%; height:100%; background:url('../images/alpha.png'); position:absolute; top:0; left:0; z-index:1; display:none; cursor:pointer; }
+.photo a.box { height:100%; display:block; color:#FFF; }
+.photo .time { position:absolute; top:10px; right:15px; z-index:2; display:none; }
+.photo .time .clock { width:14px; height:15px; float:left; background:url('../images/icons.png') 0px -50px no-repeat; }
+.photo .time .tmp { font-size:12px; font-weight:normal; height:15px; float:left; line-height:17px; padding-left:5px; }
+.phG .info, .phP .info { position:absolute; left:10px; bottom:20px; z-index:2; font-family: 'Museo300-Regular'; font-weight:normal; }
+.phG .info h2 { font-size:35px; font-weight:normal; }
+.phP .info h2 { font-size:25px; font-weight:normal; }
+.info .more { margin-top:10px; padding-top:5px; font-family: 'Museo500-Regular'; font-size:15px; border-top:1px solid #FFF; display:none; }
+
+.shadown { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; z-index:2; display:none; }
+.shadown .box { width:450px; height:500px; background:#FFF; position:absolute; top:50%; left:50%; margin-top:-255px; margin-left:-225px; display:none; }
+.shadown .box .content { width:425px; margin:12px auto 0 auto; }
+.shadown .box .content .img { width:100%; height:425px; }
+.shadown .box .content .img img { width:100%; height:425px; }
+.shadown .box .content .author { width:100%; margin-top:10px; font-size:10px; color:#333; }
+.shadown .box .content .author img { float:left; margin-right:5px; }
+.shadown .box .content .author h3 { font-size:12px; font-weight:normal; }
+
+.location-info { width:470px; height:100%; position:absolute; z-index:1; top:0; left:0; color:#888; }
+.location-info .loc { width:680px; height:140px; background:#FFF; position:fixed; top:75px; left:30px; }
+.location-info .loc h1 { width:410px; padding:20px 0 0 30px; font-size:45px; font-weight:normal; float:left; }
+.location-info .loc .date { width:240px; height:140px; background:#31749B; float:left; position:relative;  color:#FFF; }
+.location-info .loc .date .day { font-family: 'Museo300-Regular'; font-size:80px; font-weight:normal; position:absolute; top:0px; right:10px; }
+.location-info .loc .date .time { font-family: 'Museo500-Regular'; font-size:12px; position:absolute; bottom:10px; left:10px; }
+.location-info .content { margin-top:230px; padding:0px 50px 0 60px; }
+.location-info .content h3 { font-size:15px; margin-bottom:10px; }
+.location-info .content span { font-size:13px; font-weight:normal; }
+.location-info .content .divide { clear:both; width:345px; height:1px; margin:15px 0 10px 0; border-bottom:1px solid #CCC; }
+
+ul.pho-menu {  }
+ul.pho-menu li { clear:both; height:25px; margin:0 0 10px 5px; }
+ul.pho-menu li span { width:27px; height:25px; background:url('../images/icons.png') #31749B; display:block; float:left; }
+ul.pho-menu li a { display:inline-block; height:25px; line-height:25px; margin-left:3px; padding:0px 10px; background-color:#31749B; color:#FFF; float:left; }
+ul.pho-menu li a:hover { background:#143F58; }
+ul.pho-menu li span.ind { background-position:-292px -103px; }
+ul.pho-menu li span.add { background-position:-316px -103px; }
+ul.pho-menu li span.fav { background-position:-341px -103px; }
+
+.bottom-bar { width:100%; height:55px; margin:0; background:#31749B;  position:fixed; bottom:0; left:0; z-index:2; }
+.bottom-bar .logo { width:150px; height:55px; display:block; float:left; background:url('../images/logo.png') no-repeat center #296689; }
+.bottom-bar .bottom-ico { width:65px; height:32px; float:left; margin-top:12px; border-right:3px solid #296689; position:relative; cursor:pointer; }
+.bottom-bar .search { background:url('../images/icons.png') -250px 0px no-repeat; }
+
+.bottom-bar ul { float:left; }
+.bottom-bar ul li { float:left; }
+.bottom-bar ul li a { padding:0 20px; height:55px; line-height:55px; display:block; color:#FFF; position:relative; }
+.bottom-bar ul li a:hover { background:#296689; }
+
+.bottom-bar ul li a span { width:3px; height:32px; display:block; background:#31749B; position:absolute; top:12px; }
+.bottom-bar ul li a span.bl { left:0; }
+.bottom-bar ul li a span.br { right:0; background:#296689; }
+.bottom-bar ul li a:hover span { background:#FF5885; }
+
+.bottom-bar .info { float:right; padding:0 20px; height:55px; display:block; color:#FFF; position:relative; background:#296689; }
+.bottom-bar .info .name { display:block; padding-top:15px; font-size:13px; }
+.bottom-bar .info .fav-fri { display:block; font-size:11px; font-weight:normal; }
+
+.clr { clear:both; }
+.esq { float:left; }
+.dir { float:right; }
+.h05 { height:05px; }
+.h10 { height:10px; }
+.h20 { height:20px; }
+.poi { cursor:pointer }
+.cen { text-align:center; }
+.noBor { border:none; }

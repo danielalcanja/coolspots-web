@@ -3,7 +3,7 @@ parameters:
     database_driver: pdo_mysql
     database_host: localhost
     database_port: null
-    database_name: coolspots
+    database_name: coolspots_new
     database_user: root
     database_password: chmod-Ra+w
     mailer_transport: smtp

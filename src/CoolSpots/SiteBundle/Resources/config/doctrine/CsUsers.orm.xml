@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="CoolSpots\SiteBundle\Entity\CsUsers" table="cs_users">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="username" type="string" column="username" length="100" nullable="false"/>
+    <field name="fullName" type="string" column="full_name" length="150" nullable="true"/>
+    <field name="email" type="string" column="email" length="150" nullable="true"/>
+    <field name="profilePicture" type="string" column="profile_picture" length="150" nullable="true"/>
+    <field name="bio" type="string" column="bio" length="150" nullable="true"/>
+  </entity>
+</doctrine-mapping>
