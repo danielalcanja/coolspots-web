@@ -1,3 +1,10 @@
-site_homepage:
-    pattern:  /
-    defaults: { _controller: SiteBundle:Default:index }
+main:
+  pattern:    /
+  defaults: { _controller: SiteBundle:Default:index }
+  
+locale:
+  pattern:   /locale/{lang}
+  defaults:  { _controller: SiteBundle:Default:locale, lang: en_US }
+  requirements:
+    lang: en_US|pt_BR
+  

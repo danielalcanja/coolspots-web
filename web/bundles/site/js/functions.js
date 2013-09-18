@@ -96,16 +96,16 @@ $a(document).ready(function(){
 	},1000);
 	
 	$a(".inp-postar").focus(function(){
-		if($a(this).val()=="aonde você vai hoje?"){
-			$a(this).val("");
-		}
+//		if($a(this).val()=="aonde vocÃª vai hoje?"){
+//			$a(this).val("");
+//		}
 		$a(this).animate({height : 60}, 'fast');
 		$a(".topo-input").animate({paddingBottom : 8}, 'fast');
 	});
 	$a(".inp-postar").blur(function(){
-		if($a(this).val()==""){
-			$a(this).val("aonde você vai hoje?");
-		}
+//		if($a(this).val()==""){
+//			$a(this).val("aonde vocÃª vai hoje?");
+//		}
 		$a(this).animate({height : 30}, 'fast');
 		$a(".topo-input").animate({paddingBottom : 0}, 'fast');
 	});

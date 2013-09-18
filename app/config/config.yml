@@ -4,7 +4,7 @@ imports:
 
 framework:
     #esi:             ~
-    #translator:      { fallback: %locale% }
+    translator:      { fallback: %locale% }
     secret:          %secret%
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -24,7 +24,13 @@ framework:
 twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
-
+    globals:
+      site_name:          "CoolSpots!"
+      site_title:         "CoolSpots!"
+      site_description:   "See what's going on"
+      site_logo:          "/bundles/site/images/logo.png"
+      site_keywords:      "photos,instagram,foursquare,4sqr,social,fun,bars,restaurants"
+      
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%

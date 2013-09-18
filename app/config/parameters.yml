@@ -1,14 +1,14 @@
 # This file is auto-generated during the composer install
 parameters:
-    database_driver: pdo_mysql
-    database_host: localhost
-    database_port: null
-    database_name: coolspots_new
-    database_user: root
-    database_password: chmod-Ra+w
-    mailer_transport: smtp
-    mailer_host: 127.0.0.1
-    mailer_user: null
-    mailer_password: null
-    locale: pt_BR
-    secret: 'c00lSPOTs!S3cr3tT0k3N@123%$#'
+  database_driver: pdo_mysql
+  database_host: localhost
+  database_port: null
+  database_name: coolspots_new
+  database_user: root
+  database_password: chmod-Ra+w
+  mailer_transport: smtp
+  mailer_host: 127.0.0.1
+  mailer_user: null
+  mailer_password: null
+  locale: en_US
+  secret: 'c00lSPOTs!S3cr3tT0k3N@123%$#'    

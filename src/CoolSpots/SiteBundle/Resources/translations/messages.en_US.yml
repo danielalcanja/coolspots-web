@@ -1,0 +1,17 @@
+## en
+wdygt:
+    field:           where do you go today?
+    submit:          Go!
+spots: 
+    best:            best spots
+events:
+    last:            last events
+    create:          Create an event
+    indicate:        Indicate an event
+bottom:
+    bar:
+        about:       About
+        explore:     Explore
+        friends:     friends
+        favorites:   favorites
+        
