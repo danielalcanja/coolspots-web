@@ -8,3 +8,6 @@ locale:
   requirements:
     lang: en_US|pt_BR
   
+api_location:
+    pattern: /json/location
+    defaults: { _controller: SiteBundle:JSON:location }

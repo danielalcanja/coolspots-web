@@ -13,14 +13,18 @@ class DefaultController extends Controller
     {
 		$request = $this->getRequest();
 		$session = $request->getSession();
-		$request->setLocale($session->get('_locale', 'en'));
+		$request->setLocale($session->get('_locale', 'en_US'));
 		
 		
 		$repository = $this->getDoctrine()->getRepository('SiteBundle:CsLocation');
 		$rs = $repository->createQueryBuilder('c')
 				->where('c.coverPic is not null')
+				->andWhere('c.enabled = :enabled')
+				->andWhere('c.deleted = :deleted')
 				->orderBy('c.dateUpdated', 'desc')
-				->setMaxResults(100)
+				->setParameter('enabled', 'Y')
+				->setParameter('deleted', 'N')
+				->setMaxResults(1000)
 				->getQuery()
 				->getResult();
         return(array('rs' => $rs));

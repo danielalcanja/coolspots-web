@@ -518,4 +518,88 @@ class CsLocation
     {
         return $this->idGeo;
     }
+    /**
+     * @var string
+     */
+    private $enabled;
+
+    /**
+     * @var string
+     */
+    private $deleted;
+
+
+    /**
+     * Set enabled
+     *
+     * @param string $enabled
+     * @return CsLocation
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    
+        return $this;
+    }
+
+    /**
+     * Get enabled
+     *
+     * @return string 
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param string $deleted
+     * @return CsLocation
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+    
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return string 
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+    /**
+     * @var string
+     */
+    private $slug;
+
+
+    /**
+     * Set slug
+     *
+     * @param string $slug
+     * @return CsLocation
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    
+        return $this;
+    }
+
+    /**
+     * Get slug
+     *
+     * @return string 
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
 }

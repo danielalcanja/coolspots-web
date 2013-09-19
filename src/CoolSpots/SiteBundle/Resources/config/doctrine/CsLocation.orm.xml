@@ -7,6 +7,7 @@
     <field name="idInstagram" type="integer" column="id_instagram" nullable="false"/>
     <field name="idFoursquare" type="string" column="id_foursquare" length="100" nullable="false"/>
     <field name="name" type="string" column="name" length="100" nullable="false"/>
+    <field name="slug" type="string" column="slug" length="100" nullable="false"/>
     <field name="dateAdded" type="datetime" column="date_added" nullable="false"/>
     <field name="dateUpdated" type="datetime" column="date_updated" nullable="true"/>
     <field name="coverPic" type="string" column="cover_pic" length="150" nullable="true"/>
@@ -18,14 +19,16 @@
     <field name="city" type="string" column="city" length="100" nullable="true"/>
     <field name="state" type="string" column="state" length="4" nullable="true"/>
     <field name="phone" type="string" column="phone" length="20" nullable="true"/>
-    <many-to-one field="idCategory" target-entity="CsCategory">
-      <join-columns>
-        <join-column name="id_category" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
+    <field name="enabled" type="string" column="enabled" length="1" nullable="false"/>
+    <field name="deleted" type="string" column="deleted" length="1" nullable="false"/>
     <many-to-one field="idGeo" target-entity="CsGeo">
       <join-columns>
         <join-column name="id_geo" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idCategory" target-entity="CsCategory">
+      <join-columns>
+        <join-column name="id_category" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>
