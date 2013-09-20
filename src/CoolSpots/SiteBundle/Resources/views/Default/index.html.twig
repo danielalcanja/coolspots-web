@@ -9,7 +9,7 @@
 <textarea id="locations_template" style="display: none;">
 	{@foreach $T as item}
 		<li class="photo">
-			<a href="#" data-id="{$T.item.id}" data-slug="{$T.item.slug}" class="box">
+			<a href="#" data-behavior="link" data-target="/{$T.item.id}/{$T.item.slug}" class="box">
 				<div class="time">
 					<div class="clock"></div>
 					<div class="tmp">10m atrás</div>
@@ -22,14 +22,14 @@
 					<div class="more">25 Spooters - 2 Friends</div>
 				</div>
 			</a>
-			<div class="back" onclick="location.href='#';"></div>
+			<div class="back" data-behavior="link" data-target="/{$T.item.id}/{$T.item.slug}"></div>
 		</li>
 	{@/for}
-<div class="create" style="height:1px; display:block;"></div>
 </textarea>
 <!-- end js template -->
 
 <ul class="content">
 </ul>
+<div class="create" style="height:1px; display:block;"></div>
 
 {% endblock %}

@@ -44,12 +44,11 @@ input, textarea { font-family: 'Museo500-Regular'; font-size: 13px; }
 .best ul li a { height:20px; line-height:20px; margin-top:8px; display:block; text-align:center; color:#000; border-left:4px solid #FFF; border-right:4px solid #FFF;  }
 .best ul li a:hover { border-color:#FF5885; }
 
-
 .top-ico { width:65px; height:32px; float:left; margin-top:10px; border-left:3px solid #296689; position:relative; cursor:pointer; }
 .add-event { background:url('../images/icons.png') -120px 0px no-repeat; }
 .add-event .hint { width:132px; height:53px; background:url('../images/icons.png') 0px -85px no-repeat; position:absolute; top:30px; left:-33px; display:none; }
-.ind-event { background:url('../images/icons.png') -190px 0px no-repeat; }
-.ind-event .hint { width:148px; height:53px; background:url('../images/icons.png') -135px -85px no-repeat; position:absolute; top:30px; left:-40px; display:none; }
+.ind-location { background:url('../images/icons.png') -190px 0px no-repeat; }
+.ind-location .hint { width:148px; height:53px; background:url('../images/icons.png') -135px -85px no-repeat; position:absolute; top:30px; left:-40px; display:none; }
 
 .region { float:right; margin-right:15px; }
 .region span { color:#FFF; }
@@ -70,8 +69,20 @@ input, textarea { font-family: 'Museo500-Regular'; font-size: 13px; }
 .phP .info h2 { font-size:25px; font-weight:normal; }
 .info .more { margin-top:10px; padding-top:5px; font-family: 'Museo500-Regular'; font-size:15px; border-top:1px solid #FFF; display:none; }
 
+/*COMENTARIO*/
+.comentario { width:270px; height:100%; background:#FFF; position:absolute; z-index:10; top:0; left:50%; }
+.comentario .espace { width:240px; margin:15px auto; }
+.comentario h2 { font-weight:normal; color:#999; }
+.comentario h2 span { font-size:15px; color:#31749B; font-weight:normal; }
+.comentario .com { clear:both; display:table; margin-top:10px; }
+.comentario .com h3 { font-size:12px; color:#333; font-weight:normal; }
+.comentario .com h3 strong { color:#31749B; }
+.comentario .com span { font-size:11px; color:#999; float:left; line-height:20px; }
+.comentario .com a:link, .comentario .com a:visited { font-size:11px; color:#999; float:right; line-height:20px; }
+.comentario .com a:hover { color:#31749B; }
+
 /*GALERIA*/
-.shadown { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; z-index:5; display:none; }
+.shadown, .shadownBox  { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; z-index:5; display:none; }
 .shadown .box { width:450px; height:500px; background:#FFF; position:absolute; top:50%; left:50%; margin-top:-250px; margin-left:-225px; display:none; }
 .shadown .box .content { width:425px; margin:12px auto 0 auto; }
 .shadown .box .content .img { width:100%; height:425px; }
@@ -91,6 +102,15 @@ input, textarea { font-family: 'Museo500-Regular'; font-size: 13px; }
 .shadown .box .slide-lug { top:60px; background-position:-0px -215px; }
 .shadown .box .slide-com { top:90px; background-position:-0px -245px; }
 
+.shadownBox .box-criar-evento { width:310px; height:220px; background:#FFF; position:absolute; top:50%; left:50%; margin:-110px auto auto -155px; }
+.shadownBox .box-criar-evento .space { margin:10px; }
+.shadownBox .box-criar-evento .space .box-h2 { font-size:15px; color:#31749B; margin-bottom:25px; } 
+.shadownBox .box-criar-evento .space .row span.col1 { width:65px; display:block; font-size:12px; line-height:20px; float:left; text-align:right; }
+.shadownBox .box-criar-evento .space .row .col2 { width:210px; margin-right:10px; float:right; }
+.space .row input[type="text"], .space .row textarea, .space .pri-box { padding:0 3px; border:1px solid #CCC; line-height:20px; color:#666; font-family:'Museo500-Regular'; font-size:12px; resize:none; }
+.space .row .campos-box { width:210px; }
+.space .row .campos-boxM { width:70px; }
+.space .pri-box { display:inline-block; }
 
 .location-info { width:470px; height:100%; position:absolute; z-index:1; top:0; left:0; color:#888; }
 .location-info .loc { width:680px; height:140px; background:#FFF; position:absolute; top:75px; left:30px; }
@@ -140,8 +160,3 @@ ul.pho-menu li span.fav { background-position:-341px -103px; }
 .poi { cursor:pointer }
 .cen { text-align:center; }
 .noBor { border:none; }
-
-/* added by Walter */
-/*.lazy {
-  display: none;
-}*/

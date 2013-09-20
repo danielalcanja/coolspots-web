@@ -11,6 +11,7 @@ jQuery(document).ready(function(){
 			jQuery('ul.content').processTemplate(data);
 			buildScreen();
 			updateLazyImages();	
+			buildLinks();
 		}
 	}).error(function(){
 		console.log('Error trying to fetch json data');

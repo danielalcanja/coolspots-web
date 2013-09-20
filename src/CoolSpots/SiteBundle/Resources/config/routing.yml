@@ -11,3 +11,10 @@ locale:
 api_location:
     pattern: /json/location
     defaults: { _controller: SiteBundle:JSON:location }
+    
+photo_show:
+    pattern:  /{idLocation}/{slug}
+    defaults: { _controller: SiteBundle:Photo:show }
+    requirements:
+        _method:  GET
+        idLocation: \d+

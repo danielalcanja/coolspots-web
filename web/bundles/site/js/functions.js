@@ -176,12 +176,3 @@ function buildScreen() {
 	});
 //});
 }
-
-function updateLazyImages() {
-	jQuery("img.lazy").lazyload({ 
-		container: jQuery("#site"),
-		threshold: 200,
-		failure_limit : 20,
-		effect : "fadeIn"
-	});	
-}
