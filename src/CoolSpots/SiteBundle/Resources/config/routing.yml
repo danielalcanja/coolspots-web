@@ -8,13 +8,23 @@ locale:
   requirements:
     lang: en_US|pt_BR
   
-api_location:
-    pattern: /json/location
-    defaults: { _controller: SiteBundle:JSON:location }
-    
 photo_show:
     pattern:  /{idLocation}/{slug}
     defaults: { _controller: SiteBundle:Photo:show }
     requirements:
         _method:  GET
         idLocation: \d+
+
+#### JSON routings ####
+json_location:
+    pattern: /json/location
+    defaults: { _controller: SiteBundle:JSON:location }
+    
+json_location_info:
+    pattern: /json/location/{id}/{slug}
+    defaults: { _controller: SiteBundle:JSON:locationInfo }
+
+json_photos:
+    pattern: /json/photos/{idLocation}/{slug}
+    defaults: { _controller: SiteBundle:JSON:photos }
+        

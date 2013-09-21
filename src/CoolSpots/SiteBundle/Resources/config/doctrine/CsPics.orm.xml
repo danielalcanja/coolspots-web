@@ -4,7 +4,6 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="identity" type="integer" column="identity" nullable="true"/>
     <field name="type" type="integer" column="type" nullable="true"/>
     <field name="dateAdded" type="datetime" column="date_added" nullable="true"/>
     <field name="createdTime" type="datetime" column="created_time" nullable="true"/>
@@ -16,6 +15,11 @@
     <many-to-one field="idUser" target-entity="CsUsers">
       <join-columns>
         <join-column name="id_user" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idLocation" target-entity="CsLocation">
+      <join-columns>
+        <join-column name="id_location" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

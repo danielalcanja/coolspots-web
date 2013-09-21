@@ -15,13 +15,6 @@ class CsPics
     /**
      * @var integer
      *
-     * @ORM\Column(name="identity", type="integer", nullable=true)
-     */
-    private $identity;
-
-    /**
-     * @var integer
-     *
      * @ORM\Column(name="type", type="integer", nullable=true)
      */
     private $type;
@@ -95,29 +88,6 @@ class CsPics
     private $idUser;
 
 
-
-    /**
-     * Set identity
-     *
-     * @param integer $identity
-     * @return CsPics
-     */
-    public function setIdentity($identity)
-    {
-        $this->identity = $identity;
-    
-        return $this;
-    }
-
-    /**
-     * Get identity
-     *
-     * @return integer 
-     */
-    public function getIdentity()
-    {
-        return $this->identity;
-    }
 
     /**
      * Set type
@@ -334,5 +304,33 @@ class CsPics
     public function getIdUser()
     {
         return $this->idUser;
+    }
+    /**
+     * @var \CoolSpots\SiteBundle\Entity\CsLocation
+     */
+    private $idLocation;
+
+
+    /**
+     * Set idLocation
+     *
+     * @param \CoolSpots\SiteBundle\Entity\CsLocation $idLocation
+     * @return CsPics
+     */
+    public function setIdLocation(\CoolSpots\SiteBundle\Entity\CsLocation $idLocation = null)
+    {
+        $this->idLocation = $idLocation;
+    
+        return $this;
+    }
+
+    /**
+     * Get idLocation
+     *
+     * @return \CoolSpots\SiteBundle\Entity\CsLocation 
+     */
+    public function getIdLocation()
+    {
+        return $this->idLocation;
     }
 }

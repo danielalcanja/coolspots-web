@@ -33,13 +33,14 @@
 		<!-- Javascripts -->
 		<script src="{{ asset('bundles/site/js/jquery-1.10.2.min.js') }} " type="text/javascript"></script>
 		<script src="{{ asset('bundles/site/js/main.js') }} " type="text/javascript"></script>
-		<script src="{{ asset('bundles/site/js/jquery.jtemplate.min.js') }} " type="text/javascript"></script>
 		<script src="{{ asset('bundles/site/js/jquery.lazyload.min.js') }} " type="text/javascript"></script>
 		<script src="{{ asset('bundles/site/js/css3-mediaqueries.js') }} " type="text/javascript"></script>
 		<script src="{{ asset('bundles/site/js/jquery.cycle.all.min.js') }} " type="text/javascript"></script>
 		<script src="{{ asset('bundles/site/js/jquery.prettyPhoto.js') }} " type="text/javascript"></script>
 		<script src="{{ asset('bundles/site/js/functions.js') }} " type="text/javascript"></script>
 		<script src="{{ asset('bundles/site/js/jquery.mCustomScrollbar.min.js') }} " type="text/javascript"></script>
+		<script src="{{ asset('bundles/site/js/jquery.timeago/jquery.timeago.js') }} " type="text/javascript"></script>
+		<script src="{{ asset('bundles/site/js/jquery.timeago/locales/jquery.timeago.' ~ app.session.get('_locale', 'en_US') ~ '.js') }} " type="text/javascript"></script>
 		{% block custom_javascripts %}{% endblock %}
 		<!-- /Javascrits -->
 		

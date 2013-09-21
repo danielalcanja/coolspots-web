@@ -14,3 +14,9 @@ bottom:
         explore:     Explore
         friends:     amigos
         favorites:   favoritos
+location:
+    info:
+        phone:       Telefone
+        indicate:    Indicar
+        favorite:    Adicionar aos favoritos
+        favlist:     Mostrar favoritos

@@ -32,6 +32,14 @@ class CsLocation
      * @ORM\Column(name="name", type="string", length=100, nullable=false)
      */
     private $name;
+	
+	/**
+     * @var string
+	 * 
+	 * @ORM\Column(name="slug", type="string", length=100, nullable=false)
+     */
+    private $slug;
+
 
     /**
      * @var \DateTime
@@ -574,11 +582,17 @@ class CsLocation
     {
         return $this->deleted;
     }
-    /**
-     * @var string
-     */
-    private $slug;
+	
 
+    /**
+     * Get slug
+     *
+     * @return string 
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
 
     /**
      * Set slug
@@ -591,15 +605,5 @@ class CsLocation
         $this->slug = $slug;
     
         return $this;
-    }
-
-    /**
-     * Get slug
-     *
-     * @return string 
-     */
-    public function getSlug()
-    {
-        return $this->slug;
     }
 }

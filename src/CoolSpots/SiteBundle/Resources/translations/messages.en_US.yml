@@ -14,4 +14,13 @@ bottom:
         explore:     Explore
         friends:     friends
         favorites:   favorites
+location:
+    info:
+        phone:       Phone
+        indicate:    Indicate
+        favorite:    Add to favorite
+        favlist:     Show favorites
         
+photo:
+    info:
+        da_suffix:    ago

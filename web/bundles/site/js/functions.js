@@ -1,25 +1,5 @@
 var $a = jQuery.noConflict();
-
-
 $a(document).ready(function(){
-	$a(".inp-postar").focus(function(){
-		$a(this).animate({height : 60}, 'fast');
-		$a(".topo-input").animate({paddingBottom : 8}, 'fast');
-	});
-	$a(".inp-postar").blur(function(){
-		$a(this).animate({height : 30}, 'fast');
-		$a(".topo-input").animate({paddingBottom : 0}, 'fast');
-	});
-	$a(".best").hover(function(){
-		$a(this).find("ul").slideToggle('fast');
-	});
-	$a(".top-ico").hover(function(){
-		$a(this).find(".hint").slideToggle('fast');
-	});
-});
-
-//$a(document).ready(function(){
-function buildScreen() {
 	var content = "ul.content";
 	var altTotal = $a(content).height();
 	var altBox = altTotal - 70;
@@ -31,58 +11,82 @@ function buildScreen() {
 	altDis2 = altP + esp;
 	altDis3 = altDis2 * esp;
 	
-	if($a(content).hasClass("location")) { espL = 470; } else { espL = 0; }
+	if($a(content).hasClass("location") || $a(content).hasClass("event")) { espL = 470; } else { espL = 0; }
 	
 	var ph = 1, blc = 0, wid = 0, widTotal = 0;;
 	var col1 = 0, col2 = 0, col3 = 0, col4 = 0, col5 = 0;
+	var comentario = 0, posAtual = 0, totCom = 1, posComent = 0;
 	col2 = esp + altP;		col3 = esp + 2 + (2 * altP);		col4 = esp + 4 + (3 * altP);		col5 = esp + 6 + (4 * altP);
 	
 	$a(".photo").each(function(i){
-		if(ph == 1) {
+		if(ph === 1) {
+			posAtual = col1 + wid + espL + comentario;
 			$a(this).width(altG).height(altG).addClass("phG");
-			$a(this).css({ top : altDis1, left : col1 + wid + espL });
+			$a(this).css({ top : altDis1, left : posAtual });
 			$a(this).find("img").width(altG).height(altG);
 			$a(this).find(".info").width(altG - 20);
-			widTotal = widTotal + altG;
+			widTotal = widTotal + altG + esp;
+			posComent = posAtual + altG;
 		}
-		if(ph == 2 || ph == 3 || ph == 4 || ph == 5 || ph == 6 || ph == 7 || ph == 8){
+		if(ph === 2 || ph === 3 || ph === 4 || ph === 5 || ph === 6 || ph === 7 || ph === 8){
 			$a(this).width(altP).height(altP).addClass("phP");;
 			$a(this).find("img").width(altP).height(altP);
 			$a(this).find(".info").width(altP - 20);
 		}
-		if(ph == 2){
-			$a(this).css({ top : altDis3, left : col1 + wid + espL });
-			left = altP + 2;
+		if(ph === 2){
+			posAtual = col1 + wid + espL + comentario;
+			$a(this).css({ top : altDis3, left : posAtual });
 		}
-		if(ph == 3){
-			$a(this).css({ top : altDis3, left : col2 + wid + espL });
+		if(ph === 3){
+			posAtual = col2 + wid + espL + comentario;
+			$a(this).css({ top : altDis3, left : posAtual });
 		}
-		if(ph == 4){
-			$a(this).css({ top : altDis1, left : col3 + wid + espL });
-			widTotal = widTotal + altP;
+		if(ph === 4){
+			posAtual = col3 + wid + espL + comentario;
+			$a(this).css({ top : altDis1, left : posAtual });
+			widTotal = widTotal + altP + esp;
+			posComent = posAtual + altP;
 		}
-		if(ph == 5){
-			$a(this).css({ top : altDis2, left : col3 + wid + espL });
+		if(ph === 5){
+			posAtual = col3 + wid + espL + comentario;
+			$a(this).css({ top : altDis2, left : posAtual });
 		}
-		if(ph == 6){
-			$a(this).css({ top : altDis3, left : col3 + wid + espL });
+		if(ph === 6){
+			posAtual = col3 + wid + espL + comentario;
+			$a(this).css({ top : altDis3, left : posAtual });
 		}
-		if(ph == 7){
-			$a(this).css({ top : altDis1, left : col4 + wid + espL });
-			widTotal = widTotal + altP;
+		if(ph === 7){
+			posAtual = col4 + wid + espL + comentario;
+			$a(this).css({ top : altDis1, left : posAtual });
+			widTotal = widTotal + altP + esp;
+			posComent = posAtual + altP;
 		}
-		if(ph == 8) {
-			$a(this).css({ top : altDis1, left : col5 + wid + espL});
-			widTotal = widTotal + altP;
+		if(ph === 8) {
+			posAtual = col5 + wid + espL + comentario;
+			$a(this).css({ top : altDis1, left : posAtual });
+			widTotal = widTotal + altP + esp;
+			posComent = posAtual + altP;
 		}
-		if(ph == 9){
+		if(ph === 9){
+			posAtual = col4 + wid + espL + comentario;
 			$a(this).width(altG).height(altG).addClass("phG");;
-			$a(this).css({ top : altDis2, left : col4 + wid + espL });
+			$a(this).css({ top : altDis2, left : posAtual });
 			$a(this).find("img").width(altG).height(altG);
 			$a(this).find(".info").width(altG - 20);
 			ph = 0;
 			blc++;
-			wid = blc * (col5 + altP + 2)
+			wid = blc * (col5 + altP + 2);
+			posComent = posAtual + altG;
+		}
+		if($a(this).next().hasClass("comentario")) {
+			ph = 0;
+			var com = $a(this).next(".comentario");
+			comentario = 270;
+			$a(com).css({ left : posComent });
+			if(totCom === 1) {
+				widTotal = widTotal + comentario;
+				totCom++;
+			}
 		}
 		ph++;
 	});
@@ -106,9 +110,13 @@ function buildScreen() {
 		$a(".top-bar .back").fadeIn('fast');
 	});
 	
-//	var time = "";
-//	time = setTimeout(function(){
-		$a(".create").width(widTotal + espL);
+	var content = "";
+	time = setTimeout(function(){
+		var end = 0;
+		if($a(".comentario").hasClass("end")) { end = 20; }
+		$a(".create").width(widTotal + espL + end);
+		
+		content=$a("#site");
 		$a("#site").mCustomScrollbar({
 			horizontalScroll:true,
 			advanced:{
@@ -121,10 +129,59 @@ function buildScreen() {
 				}
 			}
 		});
+				
 		$a(".mCSB_container").height(altTotal);
+		$a(".comentario").mCustomScrollbar({
+			verticalScroll:true,
+			autoHideScrollbar:true
+		});
 		$a(".photo").fadeIn('slow');
-//	},1000);
+		updateLazyImages();
+	},1000);
 	
+	$a("#site").mousemove(function(event) {
+		var posicao = parseInt((event.pageX / $a(window).width()) * 100);
+		if(posicao < 45 ) { content.mCustomScrollbar("scrollTo","left",{ scrollInertia:7000}); }
+		if(posicao > 55 ) { content.mCustomScrollbar("scrollTo","right",{ scrollInertia:7000}); }
+		if(posicao > 45 && posicao < 55 ){ content.mCustomScrollbar("stop") };
+	});
+	$a("#site").mouseout(function(event) {
+		content.mCustomScrollbar("stop");
+	});
+	
+	//TOP - BAR
+	var	shadownBox = ".shadownBox";
+	$a(".inp-postar").focus(function(){
+		if($a(this).val()==="aonde você vai hoje?"){
+			$a(this).val("");
+		}
+		$a(this).animate({height : 60}, 'fast');
+		$a(".topo-input").animate({paddingBottom : 8}, 'fast');
+	});
+	$a(".inp-postar").blur(function(){
+		if($a(this).val()===""){
+			$a(this).val("aonde você vai hoje?");
+		}
+		$a(this).animate({height : 30}, 'fast');
+		$a(".topo-input").animate({paddingBottom : 0}, 'fast');
+	});
+	$a(".best").hover(function(){
+		$a(this).find("ul").slideToggle('fast');
+	});
+	$a(".top-ico").hover(function(){
+		$a(this).find(".hint").slideToggle('fast');
+	});
+	
+	$a(".add-event").click(function(){
+		$a(shadownBox).fadeIn('slow');
+	});
+	
+	//COMENTARIO
+	$a(".com a.coment").click(function(){
+		AutoScrollOn("left");
+	});
+	
+	//GALLERY
 	var	shadown = ".shadown",
 		box = ".shadown .box",
 		atual = 0,
@@ -139,7 +196,7 @@ function buildScreen() {
 		
 		$a(pic[index]).click(function(){
 			$a(shadown).fadeIn('slow');
-			$a(".box .img img").hide().attr("src",imagem).fadeIn('fast');
+			$a(".box .img img").attr("src",imagem);
 			$a(".author img").attr("src",userpic);
 			$a("strong.user").html(user);
 			$a("span.data_pic").html(data_add);
@@ -149,30 +206,37 @@ function buildScreen() {
 			return false;
 		});
 	});
-	$a(".slide-eve-prev").click(function(){
+	$a(document).delegate(".slide-eve-prev", "click", function(){
 		$a(pic[atual-1]).click();
 	});
-	$a(".slide-eve-next").click(function(){
+	$a(document).delegate(".slide-eve-next", "click", function(){
 		$a(pic[atual+1]).click();
 	});
 	var widthIco = 0;
-	$a(".slide-icos").hover(function(){
-		if($a(this).hasClass("slide-fav")) { widthIco = 202; }
-		if($a(this).hasClass("slide-lug")) { widthIco = 130; }
-		if($a(this).hasClass("slide-com")) { widthIco = 114; }
-		$a(this).animate({ width : widthIco}, 200);
-	}, function(){
-		widthIco = 29;
-		$a(this).animate({ width : widthIco}, 200);
+	$a(document).delegate(".slide-icos", "hover", function(event){
+		if (event.type === 'mouseenter') {
+			if($a(this).hasClass("slide-fav")) { widthIco = 202; }
+			if($a(this).hasClass("slide-lug")) { widthIco = 130; }
+			if($a(this).hasClass("slide-com")) { widthIco = 114; }
+			$a(this).animate({ width : widthIco}, 200);
+		} else {
+			widthIco = 29;
+			$a(this).animate({ width : widthIco}, 200);
+		}
 	});
 	$a(document).delegate(".slide-close", "click", function(){
-		$a(shadown).fadeOut('slow');	
+		$a(shadown).fadeOut('slow');
 	});
 	$a(document).delegate(shadown, "click", function(){
+		$a(this).fadeOut('slow');
+	});
+	$a(document).delegate(shadownBox, "click", function(){
 		$a(this).fadeOut('slow');
 	});
 	$a(document).delegate(box, "click", function(){
 		return false;
 	});
-//});
-}
+	$a(document).delegate(".boxDiversos", "click", function(){
+		return false;
+	});
+});

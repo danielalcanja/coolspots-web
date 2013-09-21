@@ -4,6 +4,8 @@ namespace CoolSpots\SiteBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use CoolSpots\SiteBundle\Entity\CsLocation;
+
 class DefaultController extends Controller
 {
 	/**
