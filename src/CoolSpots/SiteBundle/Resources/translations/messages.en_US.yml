@@ -20,7 +20,3 @@ location:
         indicate:    Indicate
         favorite:    Add to favorite
         favlist:     Show favorites
-        
-photo:
-    info:
-        da_suffix:    ago

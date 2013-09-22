@@ -3,9 +3,17 @@ parameters:
     database_driver: pdo_mysql
     database_host: localhost
     database_port: null
+    
+    # db settings for vps hosting
+#    database_name: coolspot_db
+#    database_user: coolspot_user
+#    database_password: c00lsp0ts!
+    
+    # db settings for local hosts
     database_name: coolspots_new
     database_user: root
     database_password: chmod-Ra+w
+    
     mailer_transport: smtp
     mailer_host: 127.0.0.1
     mailer_user: null
