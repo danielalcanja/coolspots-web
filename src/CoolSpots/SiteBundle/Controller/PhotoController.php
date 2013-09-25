@@ -43,3 +43,4 @@ class PhotoController extends Controller
 	}
 }
 //teste
+//Teste Daniel
