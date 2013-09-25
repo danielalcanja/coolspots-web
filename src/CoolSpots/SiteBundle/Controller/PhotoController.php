@@ -42,5 +42,3 @@ class PhotoController extends Controller
 		return(array('location' => $rsInfo, 'pics' => $rsPics));
 	}
 }
-//teste
-//Teste Daniel
