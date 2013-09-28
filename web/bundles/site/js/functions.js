@@ -1,5 +1,7 @@
 var $a = jQuery.noConflict();
 $a(document).ready(function(){
+	$a(".page").css({width : $a(window).width(), height : $a(window).height()});
+	
 	var content = "ul.content";
 	var altTotal = $a(content).height();
 	var altBox = altTotal - 70;
@@ -29,7 +31,7 @@ $a(document).ready(function(){
 			posComent = posAtual + altG;
 		}
 		if(ph === 2 || ph === 3 || ph === 4 || ph === 5 || ph === 6 || ph === 7 || ph === 8){
-			$a(this).width(altP).height(altP).addClass("phP");;
+			$a(this).width(altP).height(altP).addClass("phP");
 			$a(this).find("img").width(altP).height(altP);
 			$a(this).find(".info").width(altP - 20);
 		}
@@ -140,12 +142,29 @@ $a(document).ready(function(){
 	},1000);
 	
 	$a("#site").mousemove(function(event) {
-		var posicao = parseInt((event.pageX / $a(window).width()) * 100);
-		if(posicao < 45 ) { content.mCustomScrollbar("scrollTo","left",{ scrollInertia:7000}); }
-		if(posicao > 55 ) { content.mCustomScrollbar("scrollTo","right",{ scrollInertia:7000}); }
-		if(posicao > 45 && posicao < 55 ){ content.mCustomScrollbar("stop") };
+		//var posicao = parseInt((event.pageX / $a(window).width()) * 100);
+		if(event.pageX < 45 ) { 
+			$a(".pg-prev").fadeIn("slow");
+		} else {
+			$a(".pg-prev").fadeOut("fast");
+		}
+		if(($a(window).width() - event.pageX) < 50 ) {
+			$a(".pg-next").fadeIn("slow");
+		} else {
+			$a(".pg-next").fadeOut("fast");
+		}
 	});
 	$a("#site").mouseout(function(event) {
+		content.mCustomScrollbar("stop");
+	});
+	$a(".pg-prev").hover(function(){
+		content.mCustomScrollbar("scrollTo","left",{ scrollInertia:20000});
+	}, function(){
+		content.mCustomScrollbar("stop");
+	});
+	$a(".pg-next").hover(function(){
+		content.mCustomScrollbar("scrollTo","right",{ scrollInertia:20000});
+	}, function(){
 		content.mCustomScrollbar("stop");
 	});
 	
@@ -237,6 +256,19 @@ $a(document).ready(function(){
 		return false;
 	});
 	$a(document).delegate(".boxDiversos", "click", function(){
+		return false;
+	});
+	
+	//SOBRE
+	$a(document).delegate(".sobre-ul a", "click", function(){
+		if(!($a(this).hasClass("ativo"))){
+			$a(".sobre-ul a").removeClass("ativo");
+			$a(this).addClass("ativo");
+			var pg = $a(this).attr("data");
+			$a(".sobre-pg").slideUp("slow");
+			$a("."+pg).slideDown("slow");
+			$a(".rollBar").mCustomScrollbar("update");
+		}
 		return false;
 	});
 });
