@@ -12,7 +12,7 @@ parameters:
     # db settings for local hosts
     database_name: coolspots_new
     database_user: root
-    database_password: chmod-Ra+w
+    database_password: ~
     
     mailer_transport: smtp
     mailer_host: 127.0.0.1
