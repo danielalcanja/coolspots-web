@@ -28,3 +28,6 @@ json_photos:
     pattern: /json/photos/{idLocation}/{slug}
     defaults: { _controller: SiteBundle:JSON:photos }
         
+about:
+    pattern: /about
+    defaults: { _controller: SiteBundle:About:index }
