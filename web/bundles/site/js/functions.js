@@ -181,6 +181,24 @@ $a(document).ready(function(){
 		$a(shadownBox).fadeIn('slow');
 	});
 	
+	//BOTTOM - BAR
+	$a(".search").hover(function(){
+		$a(".inp-search").animate({ width: 150, paddingLeft: 5, paddingRight: 5 },500).show().focus();
+	});
+	
+	var input = ".inp-search";
+	$a("#site").click(function(){
+		var searchTime = "";
+		$a(input).animate({ width: 0, padding: 0 },500);
+		searchTime = setTimeout(function(){
+			$a(input).hide();
+		},500)
+		clearTimeout(searchTime);
+	});
+	$a(input).click(function(){
+		return false;
+	});
+	
 	//COMENTARIO
 	$a(".com a.coment").click(function(){
 		AutoScrollOn("left");
