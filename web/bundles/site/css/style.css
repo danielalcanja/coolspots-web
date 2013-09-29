@@ -27,7 +27,7 @@ body { height:100%; background:#FFF; overflow:hidden; font-family: 'Museo500-Reg
 .aonde .ico-onde { width:50px; height:50px; float:left; background:url('../images/icons.png') 0px 9px no-repeat; }
 .aonde .topo-input { float:left; background:#31749B; padding:0 8px 8px 0; padding-bottom:0; }
 .aonde .topo-input .ico-input { width:6px; height:50px; background:url('../images/icons.png') -64px 20px no-repeat; float:left; }
-.aonde .topo-input .inp-postar { width:340px; height:30px; margin-top:10px; padding:0 5px; border:0; line-height:30px; background:#FFF; color:#AAA; float:left; resize: none; }
+.aonde .topo-input .inp-postar { width:250px; max-width:250px; height:30px; margin-top:10px; padding:0 5px; border:0; line-height:30px; background:#FFF; color:#AAA; float:left; resize: none; }
 .aonde .post { margin:10px 0 0 -3px; }
 input, textarea { font-family: 'Museo500-Regular'; font-size: 13px; }
 
@@ -49,6 +49,7 @@ input, textarea { font-family: 'Museo500-Regular'; font-size: 13px; }
 .add-event .hint { width:132px; height:53px; background:url('../images/icons.png') 0px -85px no-repeat; position:absolute; top:30px; left:-33px; display:none; }
 .ind-location { background:url('../images/icons.png') -190px 0px no-repeat; }
 .ind-location .hint { width:148px; height:53px; background:url('../images/icons.png') -135px -85px no-repeat; position:absolute; top:30px; left:-40px; display:none; }
+.add-event .hint , .ind-location .hint { padding-top:13px; text-align:center; color:#000; }
 
 .region { float:right; margin-right:15px; }
 .region span { color:#FFF; }
@@ -138,6 +139,7 @@ ul.pho-menu li span.fav { background-position:-341px -103px; }
 .pg-next { background-position:-405px -100px; right:10px; }
 .pg-next:hover { background-position:-405px -225px; }
 
+
 .bottom-bar { width:100%; height:55px; margin:0; background:#31749B;  position:fixed; bottom:0; left:0; z-index:2; }
 .bottom-bar .logo { width:150px; height:55px; display:block; float:left; background:url('../images/logo.png') no-repeat center #296689; }
 .bottom-bar .bottom-ico { width:65px; height:32px; float:left; margin-top:12px; border-right:3px solid #296689; position:relative; cursor:pointer; }
@@ -146,16 +148,17 @@ ul.pho-menu li span.fav { background-position:-341px -103px; }
 .bottom-bar ul { float:left; }
 .bottom-bar ul li { float:left; }
 .bottom-bar ul li a { padding:0 20px; height:55px; line-height:55px; display:block; color:#FFF; position:relative; }
-.bottom-bar ul li a:hover { background:#296689; }
+.bottom-bar ul li a:hover, .bottom-bar ul li a.menuAtivo { background:#296689; }
 
 .bottom-bar ul li a span { width:3px; height:32px; display:block; background:#31749B; position:absolute; top:12px; }
 .bottom-bar ul li a span.bl { left:0; }
 .bottom-bar ul li a span.br { right:0; background:#296689; }
-.bottom-bar ul li a:hover span { background:#FF5885; }
+.bottom-bar ul li a:hover span, .bottom-bar ul li a span.menuAtivo { background:#FF5885; }
 
 .bottom-bar .info { float:right; padding:0 20px; height:55px; display:block; color:#FFF; position:relative; background:#296689; }
 .bottom-bar .info .name { display:block; padding-top:15px; font-size:13px; }
 .bottom-bar .info .fav-fri { display:block; font-size:11px; font-weight:normal; }
+
 
 /*SOBRE*/
 .sobre { width:100%; height:100%; background-color:#F4F4F4; color:#999; font-family: 'Museo300-Regular'; }

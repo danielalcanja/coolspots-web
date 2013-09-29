@@ -68,7 +68,7 @@
 					
 					<div class="topo-input">
 						<div class="ico-input"></div>
-						<textarea class="inp-postar" placeholder="{% trans %}wdygt.field{% endtrans %}"></textarea>
+						<input type="text" class="inp-postar" placeholder="{% trans %}wdygt.field{% endtrans %}">
 					</div>
 					<input class="btn-padrao post" type="button" value="{% trans %}wdygt.submit{% endtrans %}">
 				</div>
@@ -83,15 +83,15 @@
 				</div>
 				
 				<div class="top-ico add-event">
-					<div class="hint"></div>
+					<div class="hint">Criar um evento</div>
 				</div>
-				<div class="top-ico ind-event">
-					<div class="hint"></div>
+				<div class="top-ico ind-location">
+					<div class="hint">Indicar um lugar</div>
 				</div>
 				<div class="top-ico"></div>
 								
 				<div class="region">
-					<span> Cuiabá &nbsp; > &nbsp; </span> <span> Brasil &nbsp; > &nbsp; </span> <span> Mundo </span>
+					<span> Cuiabá &nbsp; > &nbsp; </span> <span> Brasil </span>
 				</div>
 			</div>
 		</div>
@@ -115,28 +115,52 @@
 			</div>
 		</div>
 		
-		<div class="shadown">
-			<div class="box">
-				<div class="slide-eve-prev"></div>
-				<div class="slide-eve-next"></div>
-				<div class="content">
-					<div class="img">
-						<img src="" />
+		<div class="shadown"></div>
+		<div class="shadownBox">
+			<div class="box-criar-evento boxDiversos">
+				<div class="space">
+					<h2 class="box-h2">Crie um evento</h2>
+					<div class="row">
+						<span class="col1">Nome</span>
+						<div class="col2">
+							<input type="text" name="nome" class="campos-box">
+						</div>
 					</div>
-					<div class="author">
-						<img src="" width="30" height="30" />
-						<h3>
-							<strong class="user"></strong> enviou essa foto de <strong><strong class="name_location"></strong></strong> <br />
-							<span class="data_pic"></span>
-						</h3>
+					<div class="clr h05"></div>
+					<div class="row">
+						<span class="col1">Detalhes</span>
+						<div class="col2">
+							<textarea name="detalhes" rows="2" class="campos-box">Adicione mais informações</textarea>
+						</div>
+					</div>
+					<div class="clr h05"></div>
+					<div class="row">
+						<span class="col1">Onde</span>
+						<div class="col2">
+							<input type="text" name="nome" class="campos-box">
+						</div>
+					</div>
+					<div class="clr h05"></div>
+					<div class="row">
+						<span class="col1">Quando</span>
+						<div class="col2">
+							<input type="text" name="data" class="campos-boxM">
+							<input type="text" name="hora" class="campos-boxM">
+						</div>
+					</div>
+					<div class="clr h05"></div>
+					<div class="row">
+						<span class="col1">Privacidade</span>
+						<div class="col2">
+							<div class="pri-box">
+								<span id="privacidade">Spooters Amigos</span>
+								<div class="ico-pri"></span>
+							</div>
+							<input type="hidden" name="privacidade" value="Spooters Amigos">
+						</div>
 					</div>
 				</div>
-				<div class="slide-close"></div>
-				<div class="slide-icos slide-fav"></div>
-				<div class="slide-icos slide-lug"></div>
-				<div class="slide-icos slide-com"></div>
 			</div>
 		</div>
-		
     </body>
 </html>

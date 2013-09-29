@@ -170,20 +170,6 @@ $a(document).ready(function(){
 	
 	//TOP - BAR
 	var	shadownBox = ".shadownBox";
-	$a(".inp-postar").focus(function(){
-		if($a(this).val()==="aonde você vai hoje?"){
-			$a(this).val("");
-		}
-		$a(this).animate({height : 60}, 'fast');
-		$a(".topo-input").animate({paddingBottom : 8}, 'fast');
-	});
-	$a(".inp-postar").blur(function(){
-		if($a(this).val()===""){
-			$a(this).val("aonde você vai hoje?");
-		}
-		$a(this).animate({height : 30}, 'fast');
-		$a(".topo-input").animate({paddingBottom : 0}, 'fast');
-	});
 	$a(".best").hover(function(){
 		$a(this).find("ul").slideToggle('fast');
 	});
