@@ -32,7 +32,9 @@ body { height:100%; background:#FFF; overflow:hidden; font-family: 'Museo500-Reg
 input, textarea { font-family: 'Museo500-Regular'; font-size: 13px; }
 
 .btn-padrao { padding:0 20px; height:30px; line-height:30px; background:#518FB3; color:#FFF; cursor:pointer; }
-.btn-padrao:hover { background-color:#143F58; }
+.btn-padrao:hover, .btn-padrao-m:hover { background-color:#143F58; }
+.btn-padrao-m { padding:0 15px; height:25px; line-height:25px; background:#518FB3; color:#FFF; cursor:pointer; }
+
 
 .best { margin:0 30px 0 50px; line-height:50px; float:left; cursor:pointer; position:relative; }
 .best span { display:inline-block; height:50px; float:left; }
@@ -103,15 +105,18 @@ input, textarea { font-family: 'Museo500-Regular'; font-size: 13px; }
 .shadown .box .slide-lug { top:60px; background-position:-0px -215px; }
 .shadown .box .slide-com { top:90px; background-position:-0px -245px; }
 
-.shadownBox .box-criar-evento { width:310px; height:220px; background:#FFF; position:absolute; top:50%; left:50%; margin:-110px auto auto -155px; }
+.shadownBox .box-criar-evento { width:310px; height:275px; background:#FFF; position:absolute; top:50%; left:50%; margin:-137px auto auto -155px; }
 .shadownBox .box-criar-evento .space { margin:10px; }
 .shadownBox .box-criar-evento .space .box-h2 { font-size:15px; color:#31749B; margin-bottom:25px; } 
 .shadownBox .box-criar-evento .space .row span.col1 { width:65px; display:block; font-size:12px; line-height:20px; float:left; text-align:right; }
 .shadownBox .box-criar-evento .space .row .col2 { width:210px; margin-right:10px; float:right; }
-.space .row input[type="text"], .space .row textarea, .space .pri-box { padding:0 3px; border:1px solid #CCC; line-height:20px; color:#666; font-family:'Museo500-Regular'; font-size:12px; resize:none; }
+.space .row input[type="text"], .space .row textarea { padding:0 3px; border:1px solid #CCC; line-height:20px; color:#666; font-family:'Museo500-Regular'; font-size:12px; resize:none; }
 .space .row .campos-box { width:210px; }
 .space .row .campos-boxM { width:70px; }
-.space .pri-box { display:inline-block; }
+.space .pri-box { border:1px solid #CCC; width:130px; height:20px; resize:none; overflow: hidden; background: url('../images/ico-select.png') no-repeat right center #FFF; }
+.space .pri-box:hover { border-color:#999; }
+select { color:#999; font-family:'Museo500-Regular'; font-size:12px; font-weight:normal; cursor:pointer; background: none repeat scroll 0 0 transparent; border: medium none; padding:0 3px; width:150px; }
+.rowDivide { margin:15px auto 10px auto; border-bottom:1px solid #CCC; }
 
 .location-info { width:470px; height:100%; position:absolute; z-index:1; top:0; left:0; color:#888; }
 .location-info .loc { width:680px; height:140px; background:#FFF; position:absolute; top:75px; left:30px; }
@@ -196,3 +201,4 @@ ul.pho-menu li span.fav { background-position:-341px -103px; }
 .none { display:none; }
 .bold { font-weight:bold; }
 .altRolagem { height:70px; }
+.marRig05 { margin-right:5px; }

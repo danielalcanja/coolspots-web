@@ -126,21 +126,21 @@
 					<div class="row">
 						<span class="col1">Nome</span>
 						<div class="col2">
-							<input type="text" name="nome" class="campos-box">
+							<input type="text" name="nome" class="campos-box" placeholder="ex: Festa de aniversário">
 						</div>
 					</div>
 					<div class="clr h05"></div>
 					<div class="row">
 						<span class="col1">Detalhes</span>
 						<div class="col2">
-							<textarea name="detalhes" rows="2" class="campos-box">Adicione mais informações</textarea>
+							<textarea name="detalhes" rows="2" class="campos-box" placeholder="Adicione mais informações"></textarea>
 						</div>
 					</div>
 					<div class="clr h05"></div>
 					<div class="row">
 						<span class="col1">Onde</span>
 						<div class="col2">
-							<input type="text" name="nome" class="campos-box">
+							<input type="text" name="onde" class="campos-box" placeholder="Adicione um lugar">
 						</div>
 					</div>
 					<div class="clr h05"></div>
@@ -148,7 +148,7 @@
 						<span class="col1">Quando</span>
 						<div class="col2">
 							<input type="text" name="data" class="campos-boxM">
-							<input type="text" name="hora" class="campos-boxM">
+							<input type="text" name="hora" class="campos-boxM" placeholder="Horário">
 						</div>
 					</div>
 					<div class="clr h05"></div>
@@ -156,12 +156,20 @@
 						<span class="col1">Privacidade</span>
 						<div class="col2">
 							<div class="pri-box">
-								<span id="privacidade">Spooters Amigos</span>
-								<div class="ico-pri"></span>
+								<select>
+									<option value="Spooters Amigos">Spooters Amigos</option>
+									<option value="valor">Opção 1</option>
+									<option value="valor">Opção 2</option>
+									<option value="valor">Opção 3</option>
+								</select>
 							</div>
 							<input type="hidden" name="privacidade" value="Spooters Amigos">
 						</div>
 					</div>
+					
+					<div class="clr"></div><div class="rowDivide"></div>
+					<input class="btn-padrao-m dir" type="button" value="Cancelar">
+					<input class="btn-padrao-m dir marRig05" type="button" value="Criar">
 				</div>
 			</div>
 		</div>
