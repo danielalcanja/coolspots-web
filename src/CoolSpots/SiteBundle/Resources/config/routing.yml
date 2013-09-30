@@ -31,3 +31,7 @@ json_photos:
 about:
     pattern: /about
     defaults: { _controller: SiteBundle:About:index }
+
+explore:
+    pattern: /explore
+    defaults: { _controller: SiteBundle:Explore:index }

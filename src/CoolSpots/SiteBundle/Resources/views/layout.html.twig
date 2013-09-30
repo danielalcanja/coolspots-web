@@ -105,8 +105,8 @@
 		<div class="bottom-bar">
 			<a href="<?=$Site?>/" class="logo"></a>
 			<ul>
-				<li><a href="about"><span class="bl"></span>{% trans %}bottom.bar.about{% endtrans %}<span class="br"></span></a></li>
-				<li><a href="explore"><span class="bl"></span>{% trans %}bottom.bar.explore{% endtrans %}<span class="br"></span></a></li>
+				<li><a href="{{ path('about') }}"><span class="bl"></span>{% trans %}bottom.bar.about{% endtrans %}<span class="br"></span></a></li>
+				<li><a href="{{ path('explore') }}"><span class="bl"></span>{% trans %}bottom.bar.explore{% endtrans %}<span class="br"></span></a></li>
 			</ul>
 			<div class="container-search">
 				<input type="text" class="inp-search" placeholder="Procurar no site">
