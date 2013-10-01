@@ -35,3 +35,11 @@ about:
 explore:
     pattern: /explore
     defaults: { _controller: SiteBundle:Explore:index }
+
+favorites:
+    pattern: /favorites
+    defaults: { _controller: SiteBundle:Favorites:index }
+
+messages:
+    pattern: /messages
+    defaults: { _controller: SiteBundle:Messages:index }
