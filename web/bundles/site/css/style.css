@@ -185,8 +185,21 @@ ul.pho-menu li span.fav { background-position:-341px -103px; }
 .sobre .sobre-info .content span, .sobre .sobre-info .content p { font-size:13px; }
 .sobre .sobre-info .content p { margin:10px 0; }
 
-
-
+/*EXPLORE*/
+.explore { width:400px; height:100%; position:absolute; z-index:1; top:0; left:0; background-color:#F4F4F4; color:#999; font-family: 'Museo300-Regular'; }
+.explore .explore-esq { width:400px; height:100%; float:left; background-color:#E8E8E8; }
+.explore .explore-esq .content { margin:70px auto auto 50px; }
+.explore .explore-esq .content h1 { margin-left:10px; font-size:45px; font-weight:normal; }
+.titleAtivo  { display:block; height:15px; padding-left:5px; line-height:15px; color:#999; border-left:4px solid #FF5885; font-weight:bold; }
+.explore .explore-esq .content-esq { margin:25px auto auto 10px; font-size:12px; }
+.explore .explore-esq .content-esq h3 { margin-bottom:25px; color:#000; }
+.explore .explore-esq .content-esq .box-city { width:200px; }
+.explore .explore-esq .content-esq a.city:link, .explore .explore-esq .content-esq a.city:visited { font-weight:bold; padding:5px 10px; margin:0 5px 5px 0; background:#FFF; color:#666; float:left; }
+.explore .explore-esq .content-esq a.city:hover { color:#FFF; background:#666; }
+.explore .explore-esq .content-esq a.order:link, .explore .explore-esq .content-esq a.order:visited { width:300px; height:40px; line-height:40px; display:block; font-weight:bold; text-align:left; color:#666; background:url('../images/borGray.png') repeat-x bottom; position:relative; }
+.explore .explore-esq .content-esq a.order span { width:12px; height:12px; display:block; position:absolute; top:14px; right:15px; background:url('../images/icons.png') -50px -149px no-repeat; }
+.explore .explore-esq .content-esq a.order span.hover { background-position: -50px -161px; }
+.explore .explore-esq .content-esq a.order span.ativo { background-position: -50px -173px; }
 
 
 .clr { clear:both; }
@@ -195,6 +208,8 @@ ul.pho-menu li span.fav { background-position:-341px -103px; }
 .h05 { height:05px; }
 .h10 { height:10px; }
 .h20 { height:20px; }
+.h25 { height:25px; }
+.h30 { height:30px; }
 .poi { cursor:pointer }
 .cen { text-align:center; }
 .noBor { border:none; }
@@ -202,3 +217,5 @@ ul.pho-menu li span.fav { background-position:-341px -103px; }
 .bold { font-weight:bold; }
 .altRolagem { height:70px; }
 .marRig05 { margin-right:5px; }
+.marTop25 { margin-top:25px; }
+.borRad02 { -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; }

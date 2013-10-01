@@ -13,7 +13,8 @@ $a(document).ready(function(){
 	altDis2 = altP + esp;
 	altDis3 = altDis2 * esp;
 	
-	if($a(content).hasClass("location") || $a(content).hasClass("event")) { espL = 470; } else { espL = 0; }
+	if($a(content).hasClass("location") || $a(content).hasClass("event")) { espL = 470; }
+	else if($a(content).hasClass("explorer")) { espL = 400; } else { espL = 0; }
 	
 	var ph = 1, blc = 0, wid = 0, widTotal = 0;;
 	var col1 = 0, col2 = 0, col3 = 0, col4 = 0, col5 = 0;
@@ -272,6 +273,25 @@ $a(document).ready(function(){
 			$a(".sobre-pg").slideUp("slow");
 			$a("."+pg).slideDown("slow");
 			$a(".rollBar").mCustomScrollbar("update");
+		}
+		return false;
+	});
+	
+	//EXPLORE
+	$a("a.order").hover(function(){
+		if(!($a(this).find("span").hasClass("ativo"))){
+			$a(this).find("span").addClass("hover");
+		}
+		return false;
+	}, function(){
+		$a(this).find("span").removeClass("hover");
+	});
+	$a("a.order").click(function(){
+		if(!($a(this).find("span").hasClass("ativo"))){
+			$a("a.order").find("span").removeClass("ativo");
+			$a(this).find("span").addClass("ativo");
+		} else {
+			$a(this).find("span").removeClass("ativo");
 		}
 		return false;
 	});
