@@ -313,9 +313,28 @@ $a(document).ready(function(){
 	});
 	
 	//FAVORITOS
-	$a("a.estab").click(function(){
-		$a("a.estab").removeClass("estabAtivo");
-		$a(this).addClass("estabAtivo");
+	$a("a.menuPink").click(function(){
+		$a("a.menuPink").removeClass("menuPinkAtivo");
+		$a(this).addClass("menuPinkAtivo");
+		
+		var pg = $a(this).attr("data");
+		if(pg !="" && !($a("div."+pg).is(':visible'))){
+			$a(".mes-box").slideUp('fast');
+			$a("div."+pg).slideDown('fast');
+		}
+		return false;
+	});
+	
+	//MESSAGES
+	$a(".mes-box:first").show();
+	$a("a.toggle").click(function(){
+		if(!($a(this).find("span").hasClass("ativo"))){
+			$a("a.toggle").find("span").removeClass("ativo");
+			$a(this).find("span").addClass("ativo");
+		} else {
+			$a(this).find("span").removeClass("ativo");
+		}
+		$a(this).next().slideToggle('fast');
 		return false;
 	});
 });

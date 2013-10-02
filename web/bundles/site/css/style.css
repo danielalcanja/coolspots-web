@@ -50,9 +50,9 @@ input, textarea { font-family: 'Museo500-Regular'; font-size: 13px; }
 .top-ico { padding:0 15px; display:block; height:50px; float:left; position:relative; cursor:pointer; }
 .top-ico:hover { background:#296689; }
 .top-ico em.add-event { width:32px; height:100%; display:block; background:url('../images/icons.png') -137px 10px no-repeat; }
-.top-ico em.add-event .hint { width:132px; height:53px; background:url('../images/icons.png') 0px -85px no-repeat; position:absolute; top:40px; left:-33px; display:none; }
+.top-ico em.add-event .hint { width:132px; height:40px; background:url('../images/icons.png') 0px -85px no-repeat; position:absolute; top:40px; left:-33px; display:none; }
 .top-ico em.ind-location { width:32px; height:100%; display:block; background:url('../images/icons.png') -205px 10px no-repeat; }
-.top-ico em.ind-location .hint { width:148px; height:53px; background:url('../images/icons.png') -135px -85px no-repeat; position:absolute; top:40px; left:-40px; display:none; }
+.top-ico em.ind-location .hint { width:148px; height:40px; background:url('../images/icons.png') -135px -85px no-repeat; position:absolute; top:40px; left:-40px; display:none; }
 .add-event .hint , .ind-location .hint { padding-top:13px; text-align:center; color:#000; }
 
 .top-ico .bor { height:29px; }
@@ -221,16 +221,42 @@ ul.pho-menu li span.fav { background-position:-341px -103px; }
 .favorites .favorites-esq .content-esq { margin:25px auto auto 10px; font-size:12px; }
 .favorites .favorites-esq .content-esq h3 { margin-bottom:25px; color:#000; }
 .favorites .favorites-esq .content-esq h3.marNo { margin:0px; }
-.favorites .favorites-esq .content-esq a.estab:link, .favorites .favorites-esq .content-esq a.estab:visited , a.estabAtivo{ width:300px; height:40px; line-height:40px; display:block; text-align:left; color:#666; background:url('../images/borGray.png') repeat-x bottom; position:relative; }
-.favorites .favorites-esq .content-esq a.estab span.pink { width:3px; height:20px; background:#FF5885; position:absolute; top:10px; left:-10px; display:none; }
-.favorites .favorites-esq .content-esq a.estab:hover span.pink, .favorites .favorites-esq .content-esq a.estabAtivo span.pink { display:block; }
-.favorites .favorites-esq .content-esq a.estabAtivo { font-weight:bold; }
-.favorites .favorites-esq .content-esq a.estab span.total { float:right; margin-right:15px; }
 
-.favorites .favorites-esq .content-esq a.order:link, .favorites .favorites-esq .content-esq a.order:visited { width:300px; height:40px; line-height:40px; display:block; text-align:left; color:#666; background:url('../images/borGray.png') repeat-x bottom; position:relative; }
-.favorites .favorites-esq .content-esq a.order span { width:12px; height:12px; display:block; position:absolute; top:14px; right:15px; background:url('../images/icons.png') -50px -149px no-repeat; }
-.favorites .favorites-esq .content-esq a.order span.hover { background-position: -50px -161px; }
-.favorites .favorites-esq .content-esq a.order span.ativo { background-position: -50px -173px; }
+/*MESSAGES*/
+.messages { width:100%; height:100%; background-color:#F4F4F4; color:#999; font-family: 'Museo300-Regular'; }
+.messages .messages-esq { width:400px; height:100%; float:left; background-color:#E8E8E8; }
+.messages .messages-esq .content { margin:70px auto auto 50px; }
+.messages .messages-esq .content h1 { margin-left:10px; font-size:45px; font-weight:normal; }
+.messages .messages-esq .content-esq { margin:25px auto auto 10px; font-size:12px; }
+
+.messages .messages-info { width:500px; padding-top:80px; height:100%; float:left; }
+.messages .messages-info .content { margin:0 15px auto 50px; }
+.messages .messages-info .content h3 { font-weight:normal; }
+.messages .messages-info .content h3.bold { font-weight:bold; font-size:14px; }
+.messages .messages-info .content span, .sobre .sobre-info .content p { font-size:13px; }
+.messages .messages-info .content p { margin:10px 0; }
+
+.messages .messages-info .content .mes-content { width:100%; display:none; border-bottom:1px solid #CCC; padding-bottom:10px; }
+.messages .messages-info .content .mes-content p { padding:5px; font-size:13px; }
+
+.messages .messages-info .content .mes-box { width:480px; display:none; }
+
+/*MENUS - LINKS*/
+a.menuPink:link, a.menuPink:visited , a.menuPinkAtivo{ width:300px; height:40px; line-height:40px; display:block; text-align:left; color:#666; background:url('../images/borGray.png') repeat-x bottom; position:relative; }
+a.menuPink span.pink { width:3px; height:20px; background:#FF5885; position:absolute; top:10px; left:-10px; display:none; }
+a.menuPink:hover span.pink, a.menuPinkAtivo span.pink { display:block; }
+a.menuPinkAtivo { font-weight:bold; }
+a.menuPink span.total { float:right; margin-right:15px; }
+
+a.order:link, a.order:visited { width:300px; height:40px; line-height:40px; display:block; text-align:left; color:#666; background:url('../images/borGray.png') repeat-x bottom; position:relative; }
+a.order span { width:12px; height:12px; display:block; position:absolute; top:14px; right:15px; background:url('../images/icons.png') -50px -149px no-repeat; }
+a.order span.hover { background-position: -50px -161px; }
+a.order span.ativo { background-position: -50px -173px; }
+
+a.toggle:link, a.toggle:visited { width:480px; height:40px; line-height:40px; display:block; text-align:left; font-weight:bold; color:#333; border-bottom:1px solid #CCC; position:relative; }
+a.toggle span { width:8px; height:6px; display:block; position:absolute; top:16px; right:0px; background:url('../images/icons.png') -65px -149px no-repeat; }
+a.toggle span.ativo { background-position: -65px -155px; }
+a.toggle em { float:right; margin-right:25px; color:#666; font-weight:normal; }
 
 .clr { clear:both; }
 .esq { float:left; }
