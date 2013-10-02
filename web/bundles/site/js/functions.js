@@ -14,7 +14,7 @@ $a(document).ready(function(){
 	altDis3 = altDis2 * esp;
 	
 	if($a(content).hasClass("location") || $a(content).hasClass("event")) { espL = 470; }
-	else if($a(content).hasClass("explorer")) { espL = 400; } else { espL = 0; }
+	else if($a(content).hasClass("explorer") || $a(content).hasClass("favorite")) { espL = 400; } else { espL = 0; }
 	
 	var ph = 1, blc = 0, wid = 0, widTotal = 0;;
 	var col1 = 0, col2 = 0, col3 = 0, col4 = 0, col5 = 0;
@@ -182,6 +182,14 @@ $a(document).ready(function(){
 		$a(shadownBox).fadeIn('slow');
 	});
 	
+	$a(".top-ico").hover(function(){
+		$a(this).find("span").addClass("ros");
+		$a(this).prev().find(".br").removeClass("nor");
+	}, function(){
+		$a(this).find("span").removeClass("ros");
+		$a(this).prev().find(".br").addClass("nor");
+	});
+	
 	//BOTTOM - BAR
 	$a(".search").hover(function(){
 		$a(".inp-search").animate({ width: 150, paddingLeft: 5, paddingRight: 5 },500).show().focus();
@@ -198,6 +206,14 @@ $a(document).ready(function(){
 	});
 	$a(input).click(function(){
 		return false;
+	});
+	
+	$a(".bottom-bar ul li").hover(function(){
+		$a(this).find("span").addClass("ros");
+		$a(this).prev().find(".br").removeClass("nor");
+	}, function(){
+		$a(this).find("span").removeClass("ros");
+		$a(this).prev().find(".br").addClass("nor");
 	});
 	
 	//COMENTARIO
@@ -293,6 +309,13 @@ $a(document).ready(function(){
 		} else {
 			$a(this).find("span").removeClass("ativo");
 		}
+		return false;
+	});
+	
+	//FAVORITOS
+	$a("a.estab").click(function(){
+		$a("a.estab").removeClass("estabAtivo");
+		$a(this).addClass("estabAtivo");
 		return false;
 	});
 });

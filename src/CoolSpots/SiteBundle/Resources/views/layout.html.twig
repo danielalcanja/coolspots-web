@@ -82,13 +82,20 @@
 					</ul>
 				</div>
 				
-				<div class="top-ico add-event">
-					<div class="hint">Criar um evento</div>
+				<div class="top-ico">
+					<span class="bor bl nor"></span>
+					<em class="add-event">
+						<em class="hint">Criar um evento</em>
+					</em>
+					<span class="bor br nor"></span>
 				</div>
-				<div class="top-ico ind-location">
-					<div class="hint">Indicar um lugar</div>
+				<div class="top-ico">
+					<span class="bor bl"></span>
+					<em class="ind-location">
+						<em class="hint">Indicar um lugar</em>
+					</em>
+					<span class="bor br nor"></span>
 				</div>
-				<div class="top-ico"></div>
 								
 				<div class="region">
 					<span> Cuiabá &nbsp; > &nbsp; </span> <span> Brasil </span>
@@ -103,10 +110,10 @@
 		</div>
 		
 		<div class="bottom-bar">
-			<a href="{{ path('main') }}" class="logo"></a>
+			<a href="<?=$Site?>/" class="logo"></a>
 			<ul>
-				<li><a href="{{ path('about') }}"><span class="bl"></span>{% trans %}bottom.bar.about{% endtrans %}<span class="br"></span></a></li>
-				<li><a href="{{ path('explore') }}"><span class="bl"></span>{% trans %}bottom.bar.explore{% endtrans %}<span class="br"></span></a></li>
+				<li><a href="{{ path('about') }}"><span class="bor bl"></span>{% trans %}bottom.bar.about{% endtrans %}<span class="bor br nor"></span></a></li>
+				<li><a href="{{ path('explore') }}"><span class="bor bl"></span>{% trans %}bottom.bar.explore{% endtrans %}<span class="bor br nor"></span></a></li>
 			</ul>
 			<div class="container-search">
 				<input type="text" class="inp-search" placeholder="Procurar no site">
@@ -116,6 +123,10 @@
 				<span class="name">Givanildo Oliveira</span>
 				<span class="fav-fri">15 {% trans %}bottom.bar.favorites{% endtrans %} | 45 {% trans %}bottom.bar.friends{% endtrans %}</span>
 			</div>
+			<ul class="dir">
+				<li><a href="{{ path('favorites') }}"><span class="bor bl nor"></span><em class="fav"></em><span class="bor br nor"></span></a></li>
+				<li><a href="{{ path('messages') }}"><span class="bor bl"></span><em class="mes"><em class="tot">10</em></em><span class="bor br"></span></a></li>
+			</ul>
 		</div>
 		
 		<div class="shadown"></div>
