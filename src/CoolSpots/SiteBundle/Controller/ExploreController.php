@@ -12,7 +12,23 @@ class ExploreController extends Controller
 	 */
     public function indexAction()
     {
-		return(array());
+		$request = $this->getRequest();
+		$session = $request->getSession();
+		$request->setLocale($session->get('_locale', 'en_US'));
+		
+		// falta filtrar melhor o SQL
+		$repository = $this->getDoctrine()->getRepository('SiteBundle:CsLocation');
+		$rs = $repository->createQueryBuilder('c')
+				->where('c.coverPic is not null')
+				->andWhere('c.enabled = :enabled')
+				->andWhere('c.deleted = :deleted')
+				->orderBy('c.dateUpdated', 'desc')
+				->setParameter('enabled', 'Y')
+				->setParameter('deleted', 'N')
+				->setMaxResults(1000)
+				->getQuery()
+				->getResult();
+        return(array('rs' => $rs));
     }
 
 }
