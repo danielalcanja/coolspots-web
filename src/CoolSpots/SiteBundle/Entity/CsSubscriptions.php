@@ -41,14 +41,34 @@ class CsSubscriptions
     private $time;
 
     /**
+     * @var string
+	 * 
+	 * @ORM\Column(name="updated", type="char", length=1, nullable=false)
+     */
+    private $updated;
+
+    /**
      * @var integer
-     *
+	 * 
+	 * @ORM\Column(name="cycle_count", type="integer", nullable=false)
+     */
+    private $cycleCount;
+
+    /**
+     * @var integer
+	 * 
+	 * @ORM\Column(name="subscription_id", type="integer", nullable=false)
+     */
+    private $subscriptionId;
+
+	/**
+     * @var integer
+	 * 
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
 
 
     /**
@@ -144,6 +164,75 @@ class CsSubscriptions
     }
 
     /**
+     * Set updated
+     *
+     * @param string $updated
+     * @return CsSubscriptions
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+    
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return string 
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set cycleCount
+     *
+     * @param integer $cycleCount
+     * @return CsSubscriptions
+     */
+    public function setCycleCount($cycleCount)
+    {
+        $this->cycleCount = $cycleCount;
+    
+        return $this;
+    }
+
+    /**
+     * Get cycleCount
+     *
+     * @return integer 
+     */
+    public function getCycleCount()
+    {
+        return $this->cycleCount;
+    }
+
+    /**
+     * Set subscriptionId
+     *
+     * @param integer $subscriptionId
+     * @return CsSubscriptions
+     */
+    public function setSubscriptionId($subscriptionId)
+    {
+        $this->subscriptionId = $subscriptionId;
+    
+        return $this;
+    }
+	
+    /**
+     * Get subscriptionId
+     *
+     * @return integer 
+     */
+    public function getSubscriptionId()
+    {
+        return $this->subscriptionId;
+    }
+
+	/**
      * Get id
      *
      * @return integer 
