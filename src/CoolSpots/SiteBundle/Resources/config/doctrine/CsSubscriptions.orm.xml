@@ -4,9 +4,12 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="object" type="string" column="object" length="30" nullable="true"/>
-    <field name="objectId" type="string" column="object_id" length="30" nullable="true"/>
+    <field name="object" type="string" column="object" length="30" nullable="false"/>
+    <field name="objectId" type="string" column="object_id" length="30" nullable="false"/>
     <field name="changedAspect" type="string" column="changed_aspect" length="100" nullable="true"/>
     <field name="time" type="datetime" column="time" nullable="true"/>
+    <field name="updated" type="string" column="updated" length="1" nullable="false"/>
+    <field name="cycleCount" type="integer" column="cycle_count" nullable="false"/>
+    <field name="subscriptionId" type="integer" column="subscription_id" nullable="false"/>
   </entity>
 </doctrine-mapping>

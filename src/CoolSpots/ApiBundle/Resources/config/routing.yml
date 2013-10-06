@@ -1,0 +1,17 @@
+instagram_subscription:
+    pattern:    /instagram/subscription/{object}/{object_id}
+    defaults: { _controller: ApiBundle:Default:subscription }
+    requirements:
+        _method:  GET
+        object_id: \d+
+
+instagram_callback:
+    pattern:    /instagram/callback
+    defaults: { _controller: ApiBundle:Default:callback }
+
+#instagram_callback:
+#    pattern:    /instagram/callback/{object}/{object_id}
+#    defaults: { _controller: ApiBundle:Default:callback }
+#    requirements:
+#        _method:  GET
+#        object_id: \d+

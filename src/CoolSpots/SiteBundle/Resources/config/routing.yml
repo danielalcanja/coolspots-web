@@ -1,12 +1,12 @@
 main:
-  pattern:    /
-  defaults: { _controller: SiteBundle:Default:index }
+    pattern:    /
+    defaults: { _controller: SiteBundle:Default:index }
   
 locale:
-  pattern:   /locale/{lang}
-  defaults:  { _controller: SiteBundle:Default:locale, lang: en_US }
-  requirements:
-    lang: en_US|pt_BR
+    pattern:   /locale/{lang}
+    defaults:  { _controller: SiteBundle:Default:locale, lang: en_US }
+    requirements:
+        lang: en_US|pt_BR
   
 photo_show:
     pattern:  /{idLocation}/{slug}
