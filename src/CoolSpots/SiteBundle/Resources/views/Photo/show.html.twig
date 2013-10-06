@@ -4,7 +4,42 @@
 <script>
 var $b = jQuery.noConflict();
 $b(document).ready(function(){
-	$b(".shadown").html('<div class=\"box\"><div class=\"slide-eve-prev\"></div><div class=\"slide-eve-next\"></div><div class=\"content\"><div class=\"img\"><img src=\"\" /></div><div class=\"author\"><img src=\"\" width=\"30\" height=\"30\" /><h3><strong class=\"user\"></strong> enviou essa foto de <strong><strong class=\"name_location\"></strong></strong><br /><span class=\"data_pic\"></span></h3></div></div><div class=\"slide-close\"></div><div class=\"slide-icos slide-fav\"></div><div class=\"slide-icos slide-lug\"></div><div class=\"slide-icos slide-com\"></div></div>');
+	var	shadown = '.shadown';
+	var html = '';
+	html += '<div class=\"box\">                                                        ';
+	html += '	<div class=\"slide-eve-prev\"></div><div class=\"slide-eve-next\"></div>';
+	html += '	<div class=\"content\">                                                 ';
+	html += '		<div class=\"img\"><img src=\"\" /></div>                           ';
+	html += '		<div class=\"author\">                                              ';
+	html += '			<img src=\"\" width=\"30\" height=\"30\" />                     ';
+	html += '			<h3>	                                                        ';
+	html += '				<strong class=\"user\"></strong>	                        ';
+	html += '				enviou essa foto de 	                                    ';
+	html += '				<strong><strong class=\"name_location\"></strong></strong>  ';
+	html += '				<br /><span class=\"data_pic\"></span>	                    ';
+	html += '			</h3>                                                           ';
+	html += '		</div>                                                              ';
+	html += '	</div>                                                                  ';
+	html += '	<div class=\"slide-close\"></div>                                       ';
+	html += '	<div class=\"slide-icos slide-fav\"></div>                              ';
+	html += '	<div class=\"slide-icos slide-lug\"></div>                              ';
+	html += '	<div class=\"slide-icos slide-com\"></div>                              ';
+	html += '</div>                                                                     ';
+	
+	$b(shadown).html(html);
+	
+	var widthIco = 0;
+	$b(".slide-icos").hover(function(event){
+		if (event.type === 'mouseenter') {
+			if($b(this).hasClass("slide-fav")) { widthIco = 202; }
+			if($b(this).hasClass("slide-lug")) { widthIco = 130; }
+			if($b(this).hasClass("slide-com")) { widthIco = 114; }
+			$b(this).animate({ width : widthIco}, 200);
+		} else {
+			widthIco = 29;
+			$b(this).animate({ width : widthIco}, 200);
+		}
+	});
 });
 </script>
 
@@ -56,7 +91,7 @@ $b(document).ready(function(){
 				<div class="clock"></div>
 				<div class="tmp"><span class="timeago" title="{{ pic.dateAdded|date() }}">{{ pic.dateAdded|date('d/m/Y') }}</span></div>
 			</div>
-			<div style="position:absolute; z-index:1;">
+			<div class="image">
 				<img class="lazy" src="{{ asset('bundles/site/images/photo-placeholder.png') }}" data-original="{{ pic.standardResolution }}" />
 			</div>
 		</a>

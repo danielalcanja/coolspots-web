@@ -1,126 +1,135 @@
 var $a = jQuery.noConflict();
 $a(document).ready(function(){
-	$a(".page").css({width : $a(window).width(), height : $a(window).height()});
-	
+
 	var content = "ul.content";
-	var altTotal = $a(content).height();
-	var altBox = altTotal - 70;
-	var altDis1 = 0; altDis2 = 0, altDis3 = 0, esp = 2;
+	var altTotal, altBox, altG, altP, altDis1, altDis2, altDis3, esp, espL;
+	var ph, blc, wid, widTotal;
+	var col1, col2, col3, col4, col5;
+	var posAtual, totCom, posComent;
+	
+	if($a(content).hasClass("location") || $a(content).hasClass("event")) 		var LocEve = true;
+	if($a(content).hasClass("explorer") || $a(content).hasClass("favorite")) 	var ExpFav= true;
+	
+	defineWidth();
+	mountGrid();
+	
+	var delay = (function(){
+		var timer = 0;
+		return function(callback, ms){
+			clearTimeout (timer);
+			timer = setTimeout(callback, ms);
+		};
+	})();
 
-	altG = Math.round(altBox * (66.66666666666667 / 100));
-	altP = Math.round(altBox * (33.17460317460317 / 100));
-
-	altDis2 = altP + esp;
-	altDis3 = altDis2 * esp;
-	
-	if($a(content).hasClass("location") || $a(content).hasClass("event")) { espL = 470; }
-	else if($a(content).hasClass("explorer") || $a(content).hasClass("favorite")) { espL = 400; } else { espL = 0; }
-	
-	var ph = 1, blc = 0, wid = 0, widTotal = 0;;
-	var col1 = 0, col2 = 0, col3 = 0, col4 = 0, col5 = 0;
-	var comentario = 0, posAtual = 0, totCom = 1, posComent = 0;
-	col2 = esp + altP;		col3 = esp + 2 + (2 * altP);		col4 = esp + 4 + (3 * altP);		col5 = esp + 6 + (4 * altP);
-	
-	$a(".photo").each(function(i){
-		if(ph === 1) {
-			posAtual = col1 + wid + espL + comentario;
-			$a(this).width(altG).height(altG).addClass("phG");
-			$a(this).css({ top : altDis1, left : posAtual });
-			$a(this).find("img").width(altG).height(altG);
-			$a(this).find(".info").width(altG - 20);
-			widTotal = widTotal + altG + esp;
-			posComent = posAtual + altG;
-		}
-		if(ph === 2 || ph === 3 || ph === 4 || ph === 5 || ph === 6 || ph === 7 || ph === 8){
-			$a(this).width(altP).height(altP).addClass("phP");
-			$a(this).find("img").width(altP).height(altP);
-			$a(this).find(".info").width(altP - 20);
-		}
-		if(ph === 2){
-			posAtual = col1 + wid + espL + comentario;
-			$a(this).css({ top : altDis3, left : posAtual });
-		}
-		if(ph === 3){
-			posAtual = col2 + wid + espL + comentario;
-			$a(this).css({ top : altDis3, left : posAtual });
-		}
-		if(ph === 4){
-			posAtual = col3 + wid + espL + comentario;
-			$a(this).css({ top : altDis1, left : posAtual });
-			widTotal = widTotal + altP + esp;
-			posComent = posAtual + altP;
-		}
-		if(ph === 5){
-			posAtual = col3 + wid + espL + comentario;
-			$a(this).css({ top : altDis2, left : posAtual });
-		}
-		if(ph === 6){
-			posAtual = col3 + wid + espL + comentario;
-			$a(this).css({ top : altDis3, left : posAtual });
-		}
-		if(ph === 7){
-			posAtual = col4 + wid + espL + comentario;
-			$a(this).css({ top : altDis1, left : posAtual });
-			widTotal = widTotal + altP + esp;
-			posComent = posAtual + altP;
-		}
-		if(ph === 8) {
-			posAtual = col5 + wid + espL + comentario;
-			$a(this).css({ top : altDis1, left : posAtual });
-			widTotal = widTotal + altP + esp;
-			posComent = posAtual + altP;
-		}
-		if(ph === 9){
-			posAtual = col4 + wid + espL + comentario;
-			$a(this).width(altG).height(altG).addClass("phG");;
-			$a(this).css({ top : altDis2, left : posAtual });
-			$a(this).find("img").width(altG).height(altG);
-			$a(this).find(".info").width(altG - 20);
-			ph = 0;
-			blc++;
-			wid = blc * (col5 + altP + 2);
-			posComent = posAtual + altG;
-		}
-		if($a(this).next().hasClass("comentario")) {
-			ph = 0;
-			var com = $a(this).next(".comentario");
-			comentario = 270;
-			$a(com).css({ left : posComent });
-			if(totCom === 1) {
-				widTotal = widTotal + comentario;
-				totCom++;
-			}
-		}
-		ph++;
+	$a(window).resize(function(){
+		delay(function(e){
+			$a(site).mCustomScrollbar("update");
+			defineWidth();
+			mountGrid();
+		}, 50);
 	});
 	
-	$a(".photo").hover(function(){
-		$a(this).find(".back").fadeIn('fast');
-		$a(this).find(".time").fadeIn('fast');
-		$a(this).find(".more").slideDown('fast');
-	}, function(){
-		$a(this).find(".more").slideUp('fast');
-		$a(this).find(".time").fadeOut('fast');
-		$a(this).find(".back").fadeOut('fast');
-	});
-	
-	$a("ul.content").hover(function(){
-		$a(".top-bar .back").fadeOut('fast');
-		$a(".top-bar-ico").fadeIn('slow');
-	});
-	$a(".top-bar-ico").click(function(){
-		$a(this).hide();
-		$a(".top-bar .back").fadeIn('fast');
-	});
-	
-	var content = "";
-	time = setTimeout(function(){
-		var end = 0;
-		if($a(".comentario").hasClass("end")) { end = 20; }
-		$a(".create").width(widTotal + espL + end);
+	function defineWidth(){
+		altTotal = 0; altBox = 0; altG = 0; altP = 0; altDis1 = 0; altDis2 = 0; altDis3 = 0; esp = 2; espL = 0;
+		ph = 1; blc = 0; wid = 0; widTotal = 0;
+		col1 = 0; col2 = 0; col3 = 0; col4 = 0; col5 = 0;
+		comentario = 0; posAtual = 0; totCom = 1; posComent = 0;
 		
-		content=$a("#site");
-		$a("#site").mCustomScrollbar({
+		$a(".page").css({width : $a(window).width(), height : $a(window).height()});
+		
+		altTotal = $a(content).height();
+		altBox = altTotal - 70;
+		altG = Math.round(altBox * (66.66666666666667 / 100));
+		altP = Math.round(altBox * (33.17460317460317 / 100));
+
+		altDis2 = altP + esp;
+		altDis3 = altDis2 * esp;
+
+		if(LocEve) espL = 470; 
+		if(ExpFav) espL = 400;
+		
+		col2 = esp + altP;		col3 = esp + 2 + (2 * altP);		col4 = esp + 4 + (3 * altP);		col5 = esp + 6 + (4 * altP);
+	}
+	function mountGrid(){
+		$a(".photo").each(function(i){
+			if(ph === 1) {
+				posAtual = col1 + wid + espL;
+				$a(this).animate({width : altG, height : altG},500).addClass("phG");
+				$a(this).find("img").animate({width : altG, height : altG},500);
+				$a(this).css({ top : altDis1, left : posAtual });
+				$a(this).find(".info").width(altG - 20);
+				widTotal = widTotal + altG + esp;
+				posComent = posAtual + altG;
+			}
+			if(ph === 2 || ph === 3 || ph === 4 || ph === 5 || ph === 6 || ph === 7 || ph === 8){
+				$a(this).animate({width : altP, height : altP},500).addClass("phP");
+				$a(this).find(".info").width(altP - 20);
+			}
+			if(ph === 2){
+				posAtual = col1 + wid + espL;
+				$a(this).css({ top : altDis3, left : posAtual });
+			}
+			if(ph === 3){
+				posAtual = col2 + wid + espL;
+				$a(this).css({ top : altDis3, left : posAtual });
+			}
+			if(ph === 4){
+				posAtual = col3 + wid + espL;
+				$a(this).css({ top : altDis1, left : posAtual });
+				widTotal = widTotal + altP + esp;
+				posComent = posAtual + altP;
+			}
+			if(ph === 5){
+				posAtual = col3 + wid + espL;
+				$a(this).css({ top : altDis2, left : posAtual });
+			}
+			if(ph === 6){
+				posAtual = col3 + wid + espL;
+				$a(this).css({ top : altDis3, left : posAtual });
+			}
+			if(ph === 7){
+				posAtual = col4 + wid + espL;
+				$a(this).css({ top : altDis1, left : posAtual });
+				widTotal = widTotal + altP + esp;
+				posComent = posAtual + altP;
+			}
+			if(ph === 8) {
+				posAtual = col5 + wid + espL;
+				$a(this).css({ top : altDis1, left : posAtual });
+				widTotal = widTotal + altP + esp;
+				posComent = posAtual + altP;
+			}
+			if(ph === 9){
+				posAtual = col4 + wid + espL;
+				$a(this).animate({width : altG, height : altG},500).addClass("phG");
+				$a(this).find("img").animate({width : altG, height : altG},500);
+				$a(this).css({ top : altDis2, left : posAtual });
+				$a(this).find(".info").width(altG - 20);
+				ph = 0;
+				blc++;
+				wid = blc * (col5 + altP + 2);
+				posComent = posAtual + altG;
+			}
+			if($a(this).next().hasClass("comentario")) {
+				ph = 0;
+				var com = $a(this).next(".comentario");
+				comentario = 270;
+				$a(com).css({ left : posComent });
+				if(totCom === 1) {
+					widTotal = widTotal;
+					totCom++;
+				}
+			}
+			ph++;
+		});
+		
+		$a(".create").width(widTotal + espL);
+	}
+
+	var site = $a("#site"); 
+	var time = '';
+	time = setTimeout(function(){
+		$a(site).mCustomScrollbar({
 			horizontalScroll:true,
 			advanced:{
 				updateOnBrowserResize: true,
@@ -132,17 +141,33 @@ $a(document).ready(function(){
 				}
 			}
 		});
-				
+
 		$a(".mCSB_container").height(altTotal);
-		$a(".comentario").mCustomScrollbar({
-			verticalScroll:true,
-			autoHideScrollbar:true
-		});
 		$a(".photo").fadeIn('slow');
 		updateLazyImages();
 	},1000);
 	
-	$a("#site").mousemove(function(event) {
+	$a(".photo").hover(function(){
+		$a(this).find(".back").fadeIn('fast');
+		$a(this).find(".time").fadeIn('fast');
+		$a(this).find(".more").slideDown('fast');
+	}, function(){
+		$a(this).find(".more").slideUp('fast');
+		$a(this).find(".time").fadeOut('fast');
+		$a(this).find(".back").fadeOut('fast');
+	});
+
+	$a(content).hover(function(){
+		$a(".top-bar .back").fadeOut('fast');
+		$a(".top-bar-ico").fadeIn('slow');
+	});
+	$a(".top-bar-ico").click(function(){
+		$a(this).hide();
+		$a(".top-bar .back").fadeIn('fast');
+	});
+	var content = $a("#site"); //
+	
+	$a(site).mousemove(function(event) {
 		//var posicao = parseInt((event.pageX / $a(window).width()) * 100);
 		if(event.pageX < 45 ) { 
 			$a(".pg-prev").fadeIn("slow");
@@ -155,22 +180,25 @@ $a(document).ready(function(){
 			$a(".pg-next").fadeOut("fast");
 		}
 	});
-	$a("#site").mouseout(function(event) {
-		content.mCustomScrollbar("stop");
+	$a(site).mouseout(function(event) {
+		$a(this).mCustomScrollbar("stop");
 	});
 	$a(".pg-prev").hover(function(){
-		content.mCustomScrollbar("scrollTo","left",{ scrollInertia:20000});
+		site.mCustomScrollbar("scrollTo","left",{ scrollInertia:20000});
 	}, function(){
-		content.mCustomScrollbar("stop");
+		site.mCustomScrollbar("stop");
 	});
 	$a(".pg-next").hover(function(){
-		content.mCustomScrollbar("scrollTo","right",{ scrollInertia:20000});
+		site.mCustomScrollbar("scrollTo","right",{ scrollInertia:20000});
 	}, function(){
-		content.mCustomScrollbar("stop");
+		site.mCustomScrollbar("stop");
 	});
 	
+	var	shadown = ".shadown",
+		box = ".shadown .box",
+		atual = 0,
+		pic = [];
 	//TOP - BAR
-	var	shadownBox = ".shadownBox";
 	$a(".best").hover(function(){
 		$a(this).find("ul").slideToggle('fast');
 	});
@@ -179,7 +207,60 @@ $a(document).ready(function(){
 	});
 	
 	$a(".add-event").click(function(){
-		$a(shadownBox).fadeIn('slow');
+		var html = '';
+		html += '<div class=\"box-criar-evento boxDiversos\">                                                                    ';
+		html += '	<div class=\"space\">                                                                                        ';
+		html += '		<h2 class=\"box-h2\">Crie um evento</h2>                                                                 ';
+		html += '		<div class=\"row\">                                                                                      ';
+		html += '			<span class=\"col1\">Nome</span>                                                                     ';
+		html += '			<div class=\"col2\">                                                                                 ';
+		html += '				<input type=\"text\" name=\"nome\" class=\"campos-box\" placeholder=\"ex: Festa de aniversário\">';
+		html += '			</div>                                                                                               ';
+		html += '		</div>                                                                                                   ';
+		html += '		<div class=\"clr h05\"></div>                                                                            ';
+		html += '		<div class=\"row\">                                                                                      ';
+		html += '			<span class=\"col1\">Detalhes</span>                                                                 ';
+		html += '			<div class=\"col2\">                                                                                 ';
+		html += '				<textarea name=\"detalhes\" rows=\"2\" class=\"campos-box\" placeholder=\"Adicione mais          informações\"></textarea>';
+		html += '			</div>                                                                                               ';
+		html += '		</div>                                                                                                   ';
+		html += '		<div class=\"clr h05\"></div>                                                                            ';
+		html += '		<div class=\"row\">                                                                                      ';
+		html += '			<span class=\"col1\">Onde</span>                                                                     ';
+		html += '			<div class=\"col2\">                                                                                 ';
+		html += '				<input type=\"text\" name=\"onde\" class=\"campos-box\" placeholder=\"Adicione um lugar\">       ';
+		html += '			</div>                                                                                               ';
+		html += '		</div>                                                                                                   ';
+		html += '		<div class=\"clr h05\"></div>                                                                            ';
+		html += '		<div class=\"row\">                                                                                      ';
+		html += '			<span class=\"col1\">Quando</span>                                                                   ';
+		html += '			<div class=\"col2\">                                                                                 ';
+		html += '				<input type=\"text\" name=\"data\" class=\"campos-boxM\">                                        ';
+		html += '				<input type=\"text\" name=\"hora\" class=\"campos-boxM\" placeholder=\"Horário\">                ';
+		html += '			</div>                                                                                               ';
+		html += '		</div>                                                                                                   ';
+		html += '		<div class=\"clr h05\"></div>                                                                            ';
+		html += '		<div class=\"row\">                                                                                      ';
+		html += '			<span class=\"col1\">Privacidade</span>                                                              ';
+		html += '			<div class=\"col2\">                                                                                 ';
+		html += '				<div class=\"pri-box\">                                                                          ';
+		html += '					<select>                                                                                     ';
+		html += '						<option value=\"Spooters Amigos\">Spooters Amigos</option>                               ';
+		html += '						<option value=\"valor\">Opção 1</option>                                                 ';
+		html += '						<option value=\"valor\">Opção 2</option>                                                 ';
+		html += '						<option value=\"valor\">Opção 3</option>                                                 ';
+		html += '					</select>                                                                                    ';
+		html += '				</div>                                                                                           ';
+		html += '				<input type=\"hidden\" name=\"privacidade\" value=\"Spooters Amigos\">                           ';
+		html += '			</div>                                                                                               ';
+		html += '		</div>                                                                                                   ';
+		html += '		                                                                                                         ';
+		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>                                                 ';
+		html += '		<input class=\"btn-padrao-m dir\" type=\"button\" value=\"Cancelar\">                                    ';
+		html += '		<input class=\"btn-padrao-m dir marRig05\" type=\"button\" value=\"Criar\">                              ';
+		html += '	</div>                                                                                                       ';
+		html += '</div>                                                                                                          ';
+		$a(shadown).html(html).fadeIn('slow');
 	});
 	
 	$a(".top-ico").hover(function(){
@@ -196,7 +277,7 @@ $a(document).ready(function(){
 	});
 	
 	var input = ".inp-search";
-	$a("#site").click(function(){
+	$a(site).click(function(){
 		var searchTime = "";
 		$a(input).animate({ width: 0, padding: 0 },500);
 		searchTime = setTimeout(function(){
@@ -222,10 +303,6 @@ $a(document).ready(function(){
 	});
 	
 	//GALLERY
-	var	shadown = ".shadown",
-		box = ".shadown .box",
-		atual = 0,
-		pic = [];
 	$a(".eve-pic").each(function(index){
 		pic[index] 	= $a(this);
 		var imagem 	= $a(this).attr("data");
@@ -252,25 +329,10 @@ $a(document).ready(function(){
 	$a(document).delegate(".slide-eve-next", "click", function(){
 		$a(pic[atual+1]).click();
 	});
-	var widthIco = 0;
-	$a(document).delegate(".slide-icos", "hover", function(event){
-		if (event.type === 'mouseenter') {
-			if($a(this).hasClass("slide-fav")) { widthIco = 202; }
-			if($a(this).hasClass("slide-lug")) { widthIco = 130; }
-			if($a(this).hasClass("slide-com")) { widthIco = 114; }
-			$a(this).animate({ width : widthIco}, 200);
-		} else {
-			widthIco = 29;
-			$a(this).animate({ width : widthIco}, 200);
-		}
-	});
 	$a(document).delegate(".slide-close", "click", function(){
 		$a(shadown).fadeOut('slow');
 	});
 	$a(document).delegate(shadown, "click", function(){
-		$a(this).fadeOut('slow');
-	});
-	$a(document).delegate(shadownBox, "click", function(){
 		$a(this).fadeOut('slow');
 	});
 	$a(document).delegate(box, "click", function(){
