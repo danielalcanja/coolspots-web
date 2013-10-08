@@ -1,0 +1,162 @@
+#!/usr/bin/env php
+<?php
+// global variables
+$last_max_id = null;
+$photo_count = 0;
+$total_user_count = 0;
+$total_photo_count = 0;
+
+include_once('config/settings.php');
+echo "\n";
+echo "--------------------------------------\n";
+echo "CoolSpots Photo Updater - Version " . $settings['app']['version'] . "\n";
+echo "--------------------------------------\n\n";
+
+echo "=> Connecting to database: ";
+$db = new PDO($settings['db']['dsn'], $settings['db']['user'], $settings['db']['pass']);
+if(!$db) {
+	echo "ERROR\n";
+	die("*** Unable to open database connection");
+} else {
+	echo "success\n";
+}
+
+// apply default charset
+echo "=> Appling default database charset: ";
+$db->exec("SET NAMES 'latin1'");
+echo "success\n";
+
+// query for subscriptions update
+echo "=> Searching for subscriptions needing update: ";
+$sqlSubscription = sprintf("SELECT * FROM cs_subscriptions WHERE updated = 'N'");
+$stSubscriptions = $db->prepare($sqlSubscription);
+$stSubscriptions->execute();
+$rsSubscriptions = $stSubscriptions->fetchAll();
+if(count($rsSubscriptions) == 0)
+{
+	echo " 0 records\n";
+	echo "=> All done!\n\n";
+	exit(0);
+}
+
+echo count($rsSubscriptions) . " locations found\n";
+$db->beginTransaction();
+try 
+{
+	foreach($rsSubscriptions as $subscription) 
+	{
+		$last_max_id = null;
+		$photo_count = 0;
+		echo "  => Updating " . $subscription['object'] . " id " . $subscription['object_id'] . ": ";
+		if($subscription['object'] != 'location')
+		{
+			echo "skipped (object not supported)\n";
+			continue;
+		}
+		$sqlLocation = sprintf("SELECT * FROM cs_location WHERE id_instagram = '%s' AND enabled = 'Y' AND deleted = 'N'", $subscription['object_id']);
+		$stLocation = $db->prepare($sqlLocation);
+		$stLocation->execute();
+		$rsLocation = $stLocation->fetch();
+		if(!$rsLocation)
+		{
+			echo "failed (location not found or disabled)\n";
+			continue;
+		}
+
+		// pick a random client_id
+		$client_id = $settings['instagram']['client_id'][rand(0, (count($settings['instagram']['client_id']) - 1))];
+
+		$url = str_replace(array('@OBJECT_ID@', '@CLIENT_ID@'), array($subscription['object_id'], $client_id), $settings['instagram']['api_url']);
+		// check if there is a next_max_id
+		if($rsLocation['next_max_id'])
+		{
+			$url .= str_replace(array('@MAX_ID@'), array($rsLocation['next_max_id']), $settings['instagram']['api_param']);
+		}
+		getJson($rsLocation['id'], $url, $rsLocation['next_max_id']);
+
+		// update the location info
+		$sqlUpdateLocation = sprintf("UPDATE cs_location SET date_updated = NOW(), next_max_id = '%s' WHERE id_instagram = '%s'", $last_max_id, $subscription['object_id']);
+		$db->exec($sqlUpdateLocation);
+		echo "success (" . $photo_count . " new photos added)\n";
+		$total_photo_count += $photo_count;
+	}
+	$db->commit();
+	unset($db);
+	echo "=> All done! " . $total_photo_count . " new photos and " . $total_user_count .  " new users added  ;-)\n\n";
+} 
+catch(Exception $e) 
+{
+	echo "\n\n*** sql error: " . $e->getMessage();
+	$db->rollBack();
+	
+}
+exit();
+
+
+// grab the photos!
+function getJson($id_location, $url, $maxid = null) 
+{
+	global $last_max_id;
+	global $photo_count;
+	global $db;
+	global $total_user_count;
+	
+	$last_max_id = $maxid;
+	if(!$url) return false;
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL,$url);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+	curl_setopt($ch, CURLOPT_POST, false);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$result = curl_exec($ch);
+	curl_close ($ch);
+	$response = json_decode($result, true);
+	foreach($response['data'] as $data)
+	{
+		// check if user is already registered
+		$sqlUser = sprintf("SELECT * FROM cs_users WHERE username = '%s'", $data['user']['username']);
+		$stUser = $db->prepare($sqlUser);
+		$stUser->execute();
+		$rsUser = $stUser->fetch();
+		if(!$rsUser)
+		{
+			// user not found. Let's create a new record
+			$sqlUserInsert = sprintf("INSERT INTO cs_users (username, full_name, email, profile_picture, bio) VALUES ('%s', '%s', null, '%s', '%s')",
+					$data['user']['username'],
+					substr(str_replace(array("'", '"'), '', $data['user']['full_name']),0,150),
+					substr($data['user']['profile_picture'],0,150),
+					substr($data['user']['bio'],0,150)
+					);
+			if($db->exec($sqlUserInsert) === FALSE) throw new Exception('Error inserting user: ' . $sqlUserInsert);;
+			$total_user_count++;
+			
+			// get the user id
+			$stUser = $db->prepare($sqlUser);
+			$stUser->execute();
+			$rsUser = $stUser->fetch();
+		}
+		
+		// add the photo to our database
+		$sqlPic = sprintf("INSERT INTO cs_pics (id_user, id_location, type, date_added, created_time, low_resolution, thumbnail, standard_resolution, caption, likes_count)
+					   VALUES (%d, %d, 1, NOW(), '%s', '%s', '%s', '%s', '%s', %d)",
+					   $rsUser['id'], 
+					   $id_location, 
+					   date('Y-m-d H:i:s', $data['caption']['created_time']), 
+					   $data['images']['low_resolution']['url'], 
+					   $data['images']['thumbnail']['url'], 
+					   $data['images']['standard_resolution']['url'], 
+					   substr(str_replace(array("'", '"'), '', $data['caption']['text']),0,150),
+					   $data['likes']['count']);
+		
+		if($db->exec($sqlPic) === FALSE) throw new Exception('Error inserting photo: ' . $sqlPic);
+		$photo_count++;
+	}
+	
+	if($response['pagination']['next_url'])
+	{
+		getJson($id_location, $response['pagination']['next_url'], $response['pagination']['next_max_id']);
+	}
+	return true;
+}
+?>

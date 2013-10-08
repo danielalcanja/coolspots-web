@@ -5,14 +5,14 @@ parameters:
     database_port: null
     
     # db settings for vps hosting
-    database_name: coolspot_db
-    database_user: coolspot_user
-    database_password: c00lsp0ts!
+#    database_name: coolspot_db
+#    database_user: coolspot_user
+#    database_password: c00lsp0ts!
     
     # db settings for local hosts
-#    database_name: coolspots_new
-#    database_user: root
-#    database_password: ~
+    database_name: coolspots_new
+    database_user: root
+    database_password: ~
     
     mailer_transport: smtp
     mailer_host: 127.0.0.1
