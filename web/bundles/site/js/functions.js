@@ -221,7 +221,7 @@ $a(document).ready(function(){
 		html += '		<div class=\"row\">                                                                                      ';
 		html += '			<span class=\"col1\">Detalhes</span>                                                                 ';
 		html += '			<div class=\"col2\">                                                                                 ';
-		html += '				<textarea name=\"detalhes\" rows=\"2\" class=\"campos-box\" placeholder=\"Adicione mais          informações\"></textarea>';
+		html += '				<textarea name=\"detalhes\" rows=\"2\" class=\"campos-box\" placeholder=\"Adicione mais informações\"></textarea>';
 		html += '			</div>                                                                                               ';
 		html += '		</div>                                                                                                   ';
 		html += '		<div class=\"clr h05\"></div>                                                                            ';
@@ -256,7 +256,7 @@ $a(document).ready(function(){
 		html += '		</div>                                                                                                   ';
 		html += '		                                                                                                         ';
 		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>                                                 ';
-		html += '		<input class=\"btn-padrao-m dir\" type=\"button\" value=\"Cancelar\">                                    ';
+		html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">                         ';
 		html += '		<input class=\"btn-padrao-m dir marRig05\" type=\"button\" value=\"Criar\">                              ';
 		html += '	</div>                                                                                                       ';
 		html += '</div>                                                                                                          ';
@@ -330,7 +330,7 @@ $a(document).ready(function(){
 		$a(pic[atual+1]).click();
 	});
 	$a(document).delegate(".slide-close", "click", function(){
-		$a(shadown).fadeOut('slow');
+		shadownClose();
 	});
 	$a(document).delegate(shadown, "click", function(){
 		$a(this).fadeOut('slow');
@@ -399,4 +399,12 @@ $a(document).ready(function(){
 		$a(this).next().slideToggle('fast');
 		return false;
 	});
+	
+	$a(document).delegate(".btn-cancel", "click", function(){
+		shadownClose();
+	});
+	
+	function shadownClose(){
+		$a(shadown).fadeOut('slow');
+	}
 });

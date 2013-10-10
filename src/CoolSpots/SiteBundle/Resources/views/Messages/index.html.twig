@@ -3,6 +3,35 @@
 {% block title %}SiteBundle:Messages:index{% endblock %}
 
 {% block body %}
+<script>
+var $b = jQuery.noConflict();
+$b(document).ready(function(){
+	$b(".reply").click(function(){
+		var	shadown = '.shadown';
+		var html = '';
+		html += '<div class=\"box-criar-evento boxDiversos\">                                                                    ';
+		html += '	<div class=\"space\">                                                                                        ';
+		html += '		<h2 class=\"box-h2\">Nova Mensagem</h2>                                                                  ';
+		html += '		<div class=\"row\">                                                                                      ';
+		html += '			<span class=\"colM\">Para</span>                                                                     ';
+		html += '			<div class=\"col2M\" contenteditable=\"true\">                                                       ';
+		html += '				<span class=\"user borRad02\">Givanildo <em contenteditable=\"false\"></em></span>				 ';
+		html += '			</div>                                                                                               ';
+		html += '		</div>                                                                                                   ';
+		html += '		<div class=\"clr h05\"></div>                                                                            ';
+		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>                                                 ';
+		html += '		<div class=\"row\">                                                                                      ';
+		html += '			<textarea name=\"detalhes\" rows=\"5\" class=\"campos-box bor-less\" placeholder=\"Escreva sua mensagem\"></textarea>';
+		html += '		</div>                                                                                                   ';
+		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>                                                 ';
+		html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">                         ';
+		html += '		<input class=\"btn-padrao-m dir marRig05\" type=\"button\" value=\"Enviar\">                             ';
+		html += '	</div>                                                                                                       ';
+		html += '</div>                                                                                                          ';
+		$a(shadown).html(html).fadeIn('slow');
+	});
+});
+</script>
 <div class="page messages">
 	<div class="messages-esq">
 		<div class="content">
@@ -30,7 +59,7 @@
 					
 					<div class="clr h20"></div>
 					<input class="btn-padrao-m dir" type="button" value="Deletar">
-					<input class="btn-padrao-m dir marRig05" type="button" value="Responder">
+					<input class="btn-padrao-m dir marRig05 reply" type="button" value="Responder">
 					<div class="clr"></div>
 				</div>
 				<a class="toggle" href="#" title="Walter Cruz">
@@ -41,7 +70,7 @@
 					
 					<div class="clr h20"></div>
 					<input class="btn-padrao-m dir" type="button" value="Deletar">
-					<input class="btn-padrao-m dir marRig05" type="button" value="Responder">
+					<input class="btn-padrao-m dir marRig05 reply" type="button" value="Responder">
 					<div class="clr"></div>
 				</div>
 				<a class="toggle" href="#" title="Daniel Vieira">
@@ -52,7 +81,7 @@
 					
 					<div class="clr h20"></div>
 					<input class="btn-padrao-m dir" type="button" value="Deletar">
-					<input class="btn-padrao-m dir marRig05" type="button" value="Responder">
+					<input class="btn-padrao-m dir marRig05 reply" type="button" value="Responder">
 					<div class="clr"></div>
 				</div>
 				

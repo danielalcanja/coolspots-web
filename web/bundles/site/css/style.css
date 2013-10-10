@@ -119,9 +119,15 @@ span.ros { background:#FF5885; }
 .shadown .box-criar-evento { width:310px; height:275px; background:#FFF; position:absolute; top:50%; left:50%; margin:-137px auto auto -155px; }
 .shadown .box-criar-evento .space { margin:10px; }
 .shadown .box-criar-evento .space .box-h2 { font-size:15px; color:#31749B; margin-bottom:25px; } 
-.shadown .box-criar-evento .space .row span.col1 { width:65px; display:block; font-size:12px; line-height:20px; float:left; text-align:right; }
+.shadown .box-criar-evento .space .row span.col1 { width:65px; display:inline-block; font-size:12px; line-height:20px; float:left; text-align:right; }
+.shadown .box-criar-evento .space .row span.colM { display:inline-block; margin-right:5px; font-size:12px; line-height:20px; float:left; text-align:left; }
 .shadown .box-criar-evento .space .row .col2 { width:210px; margin-right:10px; float:right; }
+.shadown .box-criar-evento .space .row .col2M { width:240px; display:inline-block; margin-right:10px; float:left; line-height:20px; color:#666; font-family:'Museo500-Regular'; font-size:12px; }
+.shadown .box-criar-evento .space .row .col2M span.user { display:inline-block; padding:0 3px; border:1px solid #CCC; line-height:20px; color:#666; font-family:'Museo500-Regular'; font-size:12px; resize:none; }
+.shadown .box-criar-evento .space .row .col2M span.user em { width:6px; height:6px; margin:0 2px 0 5px; display:inline-block; background:url('../images/icons.png') -65px -165px no-repeat; }
+.shadown .box-criar-evento .space .row .col2M span.user em:hover { background-position:-65px -171px; cursor:pointer; }
 .space .row input[type="text"], .space .row textarea { padding:0 3px; border:1px solid #CCC; line-height:20px; color:#666; font-family:'Museo500-Regular'; font-size:12px; resize:none; }
+.space .row textarea.bor-less { width:285px; border:0; }
 .space .row .campos-box { width:210px; }
 .space .row .campos-boxM { width:70px; }
 .space .pri-box { border:1px solid #CCC; width:130px; height:20px; resize:none; overflow: hidden; background: url('../images/ico-select.png') no-repeat right center #FFF; }
