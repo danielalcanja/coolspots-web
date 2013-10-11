@@ -14,12 +14,12 @@ $settings = array(
 		'api_param' => '&min_timestamp=@MIN_TIMESTAMP@'
 	),
 	'db'	=> array(
-//		'dsn'		=> 'mysql://host=localhost;dbname=coolspots_new',
-//		'user'		=> 'root',
-//		'pass'		=> '',
-		'dsn'		=> 'mysql://host=localhost;dbname=coolspot_db',
-		'user'		=> 'coolspot_user',
-		'pass'		=> 'c00lsp0ts!',
+		'dsn'		=> 'mysql://host=localhost;dbname=coolspots_new',
+		'user'		=> 'root',
+		'pass'		=> '',
+//		'dsn'		=> 'mysql://host=localhost;dbname=coolspot_db',
+//		'user'		=> 'coolspot_user',
+//		'pass'		=> 'c00lsp0ts!',
 	)
 );
 ?>
