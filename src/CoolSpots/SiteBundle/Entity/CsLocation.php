@@ -606,4 +606,32 @@ class CsLocation
     
         return $this;
     }
+    /**
+     * @var integer
+     */
+    private $minTimestamp;
+
+
+    /**
+     * Set minTimestamp
+     *
+     * @param integer $minTimestamp
+     * @return CsLocation
+     */
+    public function setMinTimestamp($minTimestamp)
+    {
+        $this->minTimestamp = $minTimestamp;
+    
+        return $this;
+    }
+
+    /**
+     * Get minTimestamp
+     *
+     * @return integer 
+     */
+    public function getMinTimestamp()
+    {
+        return $this->minTimestamp;
+    }
 }

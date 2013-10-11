@@ -57,7 +57,7 @@ class DefaultController extends Controller
 			$Subscription->setObjectId($object_id);
 			$Subscription->setChangedAspect(null);
 			$Subscription->setTime(null);
-			$Subscription->setUpdated('Y');
+			$Subscription->setUpdated('N');
 			$Subscription->setCycleCount(0);
 			$Subscription->setSubscriptionId($response['data']['id']);
 			
