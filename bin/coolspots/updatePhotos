@@ -1,10 +1,12 @@
 #!/usr/bin/env php
 <?php
 // global variables
-$last_max_id = null;
+$last_max_timestamp = 0;
 $photo_count = 0;
 $total_user_count = 0;
 $total_photo_count = 0;
+
+$lockFile = '/tmp/photoUpdate.lock';
 
 include_once('config/settings.php');
 echo "\n";
@@ -12,10 +14,21 @@ echo "--------------------------------------\n";
 echo "CoolSpots Photo Updater - Version " . $settings['app']['version'] . "\n";
 echo "--------------------------------------\n\n";
 
+$tsBegin = time();
+echo "=> Starting at: " . date('Y-m-d H:i:s') . "\n";
+if(file_exists($lockFile)) 
+{
+	echo "=> Another update proccess is running. Quiting!\n\n";
+	exit(0);
+}
+
+lockProccess();
+
 echo "=> Connecting to database: ";
 $db = new PDO($settings['db']['dsn'], $settings['db']['user'], $settings['db']['pass']);
 if(!$db) {
 	echo "ERROR\n";
+	unlockProccess();
 	die("*** Unable to open database connection");
 } else {
 	echo "success\n";
@@ -35,7 +48,11 @@ $rsSubscriptions = $stSubscriptions->fetchAll();
 if(count($rsSubscriptions) == 0)
 {
 	echo " 0 records\n";
+	$tsEnd = time();
+	echo "=> Finished at: " . date('Y-m-d H:i:s') . "\n";
+	echo "=> Execution time: " . ($tsEnd - $tsBegin) . " seconds\n";
 	echo "=> All done!\n\n";
+	unlockProccess();
 	exit(0);
 }
 
@@ -45,7 +62,7 @@ try
 {
 	foreach($rsSubscriptions as $subscription) 
 	{
-		$last_max_id = null;
+		$last_max_timestamp = 0;
 		$photo_count = 0;
 		echo "  => Updating " . $subscription['object'] . " id " . $subscription['object_id'] . ": ";
 		if($subscription['object'] != 'location')
@@ -53,6 +70,7 @@ try
 			echo "skipped (object not supported)\n";
 			continue;
 		}
+		
 		$sqlLocation = sprintf("SELECT * FROM cs_location WHERE id_instagram = '%s' AND enabled = 'Y' AND deleted = 'N'", $subscription['object_id']);
 		$stLocation = $db->prepare($sqlLocation);
 		$stLocation->execute();
@@ -62,46 +80,61 @@ try
 			echo "failed (location not found or disabled)\n";
 			continue;
 		}
+		
+		echo $rsLocation['name'] . " ... ";
 
 		// pick a random client_id
 		$client_id = $settings['instagram']['client_id'][rand(0, (count($settings['instagram']['client_id']) - 1))];
 
 		$url = str_replace(array('@OBJECT_ID@', '@CLIENT_ID@'), array($subscription['object_id'], $client_id), $settings['instagram']['api_url']);
-		// check if there is a next_max_id
-		if($rsLocation['next_max_id'])
+		// check if there is a min_timestamp
+		if($rsLocation['min_timestamp'])
 		{
-			$url .= str_replace(array('@MAX_ID@'), array($rsLocation['next_max_id']), $settings['instagram']['api_param']);
+			if($rsLocation['min_timestamp'] > 0) $url .= str_replace(array('@MIN_TIMESTAMP@'), array($rsLocation['min_timestamp']), $settings['instagram']['api_param']);
 		}
-		getJson($rsLocation['id'], $url, $rsLocation['next_max_id']);
+		getJson($rsLocation['id'], $url);
 
 		// update the location info
-		$sqlUpdateLocation = sprintf("UPDATE cs_location SET date_updated = NOW(), next_max_id = '%s' WHERE id_instagram = '%s'", $last_max_id, $subscription['object_id']);
-		$db->exec($sqlUpdateLocation);
+		if($last_max_timestamp > 0)
+		{
+			$sqlUpdateLocation = sprintf("UPDATE cs_location SET date_updated = NOW(), min_timestamp = %d WHERE id_instagram = '%s'", ($last_max_timestamp + 1), $subscription['object_id']);
+			$db->exec($sqlUpdateLocation);
+		}
+		
 		echo "success (" . $photo_count . " new photos added)\n";
 		$total_photo_count += $photo_count;
+		
+		// update subscription status
+		$sqlSubscriptionUpdate = sprintf("UPDATE cs_subscriptions SET updated = 'Y' WHERE id = %d", $subscription['id']);
+		if($db->exec($sqlSubscriptionUpdate) === FALSE) throw new Exception('Error updating subscription: ' . $sqlSubscriptionUpdate);
 	}
 	$db->commit();
 	unset($db);
+	
+	$tsEnd = time();
+	echo "=> Finished at: " . date('Y-m-d H:i:s') . "\n";
+	echo "=> Execution time: " . ($tsEnd - $tsBegin) . " seconds\n";
 	echo "=> All done! " . $total_photo_count . " new photos and " . $total_user_count .  " new users added  ;-)\n\n";
+	unlockProccess();
+	
 } 
 catch(Exception $e) 
 {
 	echo "\n\n*** sql error: " . $e->getMessage();
 	$db->rollBack();
-	
+	unlockProccess();
 }
 exit();
 
 
 // grab the photos!
-function getJson($id_location, $url, $maxid = null) 
+function getJson($id_location, $url) 
 {
-	global $last_max_id;
+	global $last_max_timestamp;
 	global $photo_count;
 	global $db;
 	global $total_user_count;
 	
-	$last_max_id = $maxid;
 	if(!$url) return false;
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL,$url);
@@ -112,6 +145,7 @@ function getJson($id_location, $url, $maxid = null)
 	$result = curl_exec($ch);
 	curl_close ($ch);
 	$response = json_decode($result, true);
+	if(!isset($response['data'])) return false;
 	foreach($response['data'] as $data)
 	{
 		// check if user is already registered
@@ -150,13 +184,28 @@ function getJson($id_location, $url, $maxid = null)
 					   $data['likes']['count']);
 		
 		if($db->exec($sqlPic) === FALSE) throw new Exception('Error inserting photo: ' . $sqlPic);
+		$last_max_timestamp = ($data['caption']['created_time'] > $last_max_timestamp) ? $data['caption']['created_time'] : $last_max_timestamp;
 		$photo_count++;
 	}
 	
-	if($response['pagination']['next_url'])
+	if(isset($response['pagination']['next_url']))
 	{
-		getJson($id_location, $response['pagination']['next_url'], $response['pagination']['next_max_id']);
+		getJson($id_location, $response['pagination']['next_url']);
 	}
 	return true;
+}
+
+function lockProccess() {
+	global $lockFile;
+	$fp = fopen($lockFile, "w");
+	fputs($fp, 'Update is running!');
+	fclose($fp);
+	return;
+}
+
+function unlockProccess() {
+	global $lockFile;
+	@unlink($lockFile);
+	return;
 }
 ?>

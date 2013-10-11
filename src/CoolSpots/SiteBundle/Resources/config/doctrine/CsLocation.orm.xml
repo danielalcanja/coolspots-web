@@ -14,6 +14,7 @@
     <field name="checkinsCount" type="integer" column="checkins_count" nullable="true"/>
     <field name="lastMinId" type="string" column="last_min_id" length="100" nullable="true"/>
     <field name="nextMaxId" type="string" column="next_max_id" length="100" nullable="true"/>
+    <field name="minTimestamp" type="integer" column="min_timestamp" nullable="true"/>
     <field name="address" type="string" column="address" length="120" nullable="true"/>
     <field name="postalCode" type="integer" column="postal_code" nullable="true"/>
     <field name="city" type="string" column="city" length="100" nullable="true"/>

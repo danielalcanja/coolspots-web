@@ -37,6 +37,7 @@ class PhotoController extends Controller
 					WHERE p.idLocation = :id
 					ORDER BY p.dateAdded DESC')
 				->setParameter('id', $idLocation)
+				->setMaxResults(300)
 				->getResult();
 		
 		return(array('location' => $rsInfo, 'pics' => $rsPics));
