@@ -10,14 +10,14 @@ class PhotoController extends Controller
 	/**
 	 * @Template("SiteBundle:Photo:show.html.twig")
 	 */
-	public function showAction($idLocation, $slug)
+	public function showAction($idLocation, $slug, $page)
 	{
+		$max_per_page = 18;
+		$em = $this->getDoctrine()->getManager();
+		
 		$request = $this->getRequest();
 		$session = $request->getSession();
 		$request->setLocale($session->get('_locale', 'en_US'));
-		
-		$em = $this->getDoctrine()->getManager();
-				
 		$rsInfo = $em->createQuery('
 					SELECT l, g, c FROM SiteBundle:CsLocation l
 					JOIN l.idGeo g
@@ -29,6 +29,8 @@ class PhotoController extends Controller
 				->setParameter('enabled', 'Y')
 				->setParameter('deleted', 'N')
 				->getSingleResult();
+
+		$offset = $max_per_page * ($page - 1);
 		
 		$rsPics = $em->createQuery('
 					SELECT p, u, l FROM SiteBundle:CsPics p
@@ -37,9 +39,11 @@ class PhotoController extends Controller
 					WHERE p.idLocation = :id
 					ORDER BY p.dateAdded DESC')
 				->setParameter('id', $idLocation)
-				->setMaxResults(300)
+				->setFirstResult($offset)
+				->setMaxResults($max_per_page)
 				->getResult();
-		
-		return(array('location' => $rsInfo, 'pics' => $rsPics));
+		$total_pics = count($rsPics);
+		$next_page = $total_pics > 0 ? $page + 1 : false;
+		return(array('location' => $rsInfo, 'pics' => $rsPics, 'page' => $page, 'total_pics' => $total_pics, 'next_page' => $next_page));
 	}
 }

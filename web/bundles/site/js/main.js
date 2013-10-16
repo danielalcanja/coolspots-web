@@ -9,4 +9,8 @@ function updateLazyImages() {
 
 jQuery(document).ready(function(){
 	jQuery(".timeago").timeago();
+	jQuery('.infinite-scroll').jscroll({
+		loadingHtml: '<strong>...</strong>',
+		nextSelector: 'a.jscroll-next:last'
+	});
 });

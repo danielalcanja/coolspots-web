@@ -1,6 +1,7 @@
-{% extends 'SiteBundle::layout.html.twig' %}
+{% extends page == 1 ? 'SiteBundle::layout.html.twig' : 'SiteBundle::blank.html.twig' %}
 
 {% block body %}
+	{% if page == 1%}
 <script>
 var $b = jQuery.noConflict();
 $b(document).ready(function(){
@@ -78,8 +79,10 @@ $b(document).ready(function(){
 		</ul>
 	</div>
 </div>
-
-<ul class="content location">
+<input type="hidden" name="next_page" id="next_page" value="{{ next_page }}" />
+<ul class="content location infinite-scroll">
+	{% endif %}
+	
 	{% for pic in pics %}
 	<li class="photo eve-pic" data="{{ pic.standardResolution }}">
 		<a href="#" class="box">
@@ -98,8 +101,16 @@ $b(document).ready(function(){
 		<div class="back"></div>
 	</li>
 	{% endfor %}
+	
+	{% if next_page != false %}
+		<a class="jscroll-next" href="{{ path('photo_show', { idLocation: location.id, slug: location.slug, page: next_page}) }}">...</a>
+	{% endif %}
+	
+	{% if page == 1%}
+
 </ul>
 <div class="pg-prev"></div>
 <div class="pg-next"></div>
 <div class="create" style="height:1px; display:block;"></div>
+	{% endif %}
 {% endblock %}

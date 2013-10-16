@@ -9,11 +9,12 @@ locale:
         lang: en_US|pt_BR
   
 photo_show:
-    pattern:  /{idLocation}/{slug}
-    defaults: { _controller: SiteBundle:Photo:show }
+    pattern:  /{idLocation}/{slug}/{page}
+    defaults: { _controller: SiteBundle:Photo:show, page: 1 }
     requirements:
         _method:  GET
         idLocation: \d+
+        page: \d+
 
 #### JSON routings ####
 json_location:
