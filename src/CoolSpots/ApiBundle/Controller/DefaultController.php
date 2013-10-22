@@ -65,6 +65,13 @@ class DefaultController extends Controller
 			$em->persist($Subscription);
 			$em->flush();
 		}
+		else
+		{
+			echo "<h2>Error:</h2>";
+			echo "<pre>";
+			print_r($response);
+			echo "</pre>";
+		}
 		return new Response();
 	}
 	
