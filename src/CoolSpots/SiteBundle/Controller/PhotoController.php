@@ -10,7 +10,7 @@ class PhotoController extends Controller
 	/**
 	 * @Template("SiteBundle:Photo:show.html.twig")
 	 */
-	public function showAction($idLocation, $slug, $page)
+	public function showAction($idLocation, $slug, $page = 1)
 	{
 		$max_per_page = 18;
 		$em = $this->getDoctrine()->getManager();

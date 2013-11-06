@@ -23,8 +23,7 @@ parameters:
 
     # instagram api informations
     instagram_subscription_api: https://api.instagram.com/v1/subscriptions/
-    instagram_client_id: 028ea9a1bd024485bae1780ecb871f6d
-    instagram_client_secret: 38443f441eae4a4fa17efb8363fb106b
+    instagram_max_subscriptions: 30
     instagram_object: location
     instagram_aspect: media
     instagram_callback_url: http://api.coolspots.com.br/instagram/callback
