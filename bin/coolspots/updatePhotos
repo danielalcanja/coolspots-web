@@ -41,7 +41,7 @@ echo "success\n";
 
 // query for subscriptions update
 echo "=> Searching for subscriptions needing update: ";
-$sqlSubscription = sprintf("SELECT s.*, i.client_id FROM cs_subscriptions s, cs_instagram_api i WHERE updated = 'N' AND s.id_instagram_api = i.id AND i.enabled = 'Y' AND i.deleted = 'N'");
+$sqlSubscription = sprintf("SELECT * FROM cs_subscriptions WHERE updated = 'N'");
 $stSubscriptions = $db->prepare($sqlSubscription);
 $stSubscriptions->execute();
 $rsSubscriptions = $stSubscriptions->fetchAll();
@@ -84,8 +84,7 @@ try
 		echo $rsLocation['name'] . " ... ";
 
 		// pick a random client_id
-		//$client_id = $settings['instagram']['client_id'][rand(0, (count($settings['instagram']['client_id']) - 1))];
-		$client_id = $subscription['client_id'];
+		$client_id = $settings['instagram']['client_id'][rand(0, (count($settings['instagram']['client_id']) - 1))];
 
 		$url = str_replace(array('@OBJECT_ID@', '@CLIENT_ID@'), array($subscription['object_id'], $client_id), $settings['instagram']['api_url']);
 		// check if there is a min_timestamp
@@ -93,7 +92,6 @@ try
 		{
 			if($rsLocation['min_timestamp'] > 0) $url .= str_replace(array('@MIN_TIMESTAMP@'), array($rsLocation['min_timestamp']), $settings['instagram']['api_param']);
 		}
-		
 		getJson($rsLocation['id'], $url);
 
 		// update the location info

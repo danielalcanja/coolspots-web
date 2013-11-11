@@ -11,10 +11,5 @@
     <field name="updated" type="string" column="updated" length="1" nullable="false"/>
     <field name="cycleCount" type="integer" column="cycle_count" nullable="false"/>
     <field name="subscriptionId" type="integer" column="subscription_id" nullable="false"/>
-    <many-to-one field="idInstagramApi" target-entity="CsInstagramApi">
-      <join-columns>
-        <join-column name="id_instagram_api" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
   </entity>
 </doctrine-mapping>

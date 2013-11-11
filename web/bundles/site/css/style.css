@@ -116,7 +116,7 @@ span.ros { background:#FF5885; }
 .shadown .box .slide-lug { top:60px; background-position:-0px -215px; }
 .shadown .box .slide-com { top:90px; background-position:-0px -245px; }
 
-.shadown .box-criar-evento { width:310px; height:275px; background:#FFF; position:absolute; top:50%; left:50%; margin:-137px auto auto -155px; }
+.shadown .box-criar-evento { width:310px; height:320px; background:#FFF; position:absolute; top:50%; left:50%; margin:-160px auto auto -155px; }
 .shadown .box-criar-evento .space { margin:10px; }
 .shadown .box-criar-evento .space .box-h2 { font-size:15px; color:#31749B; margin-bottom:25px; } 
 .shadown .box-criar-evento .space .row span.col1 { width:65px; display:inline-block; font-size:12px; line-height:20px; float:left; text-align:right; }
@@ -135,6 +135,12 @@ span.ros { background:#FF5885; }
 select { color:#999; font-family:'Museo500-Regular'; font-size:12px; font-weight:normal; cursor:pointer; background: none repeat scroll 0 0 transparent; border: medium none; padding:0 3px; width:150px; }
 .rowDivide { margin:15px auto 10px auto; border-bottom:1px solid #CCC; }
 
+.shadown .box-ind-location { width:310px; height:225px; background:#FFF; position:absolute; top:50%; left:50%; margin:-112px auto auto -155px; }
+.shadown .box-ind-location .space { margin:10px; }
+.shadown .box-ind-location .space .box-h2 { font-size:15px; color:#31749B; margin-bottom:25px; } 
+.shadown .box-ind-location .space .row span.col1 { width:65px; display:inline-block; font-size:12px; line-height:20px; float:left; text-align:right; }
+.shadown .box-ind-location .space .row .col2 { width:210px; margin-right:10px; float:right; }
+
 .location-info { width:470px; height:100%; position:absolute; z-index:1; top:0; left:0; color:#888; }
 .location-info .loc { width:680px; height:140px; background:#FFF; position:absolute; top:75px; left:30px; }
 .location-info .loc h1 { width:410px; padding:20px 0 0 30px; font-size:45px; font-weight:normal; float:left; }
@@ -145,6 +151,10 @@ select { color:#999; font-family:'Museo500-Regular'; font-size:12px; font-weight
 .location-info .content h3 { font-size:15px; margin-bottom:10px; }
 .location-info .content span { font-size:13px; font-weight:normal; }
 .location-info .content .divide { clear:both; width:345px; height:1px; margin:15px 0 10px 0; border-bottom:1px solid #CCC; }
+
+ul .date { width:140px; height:50px; background:#CCC; float:left; position:absolute; top:75px; z-index:99990; color:#31749B; }
+ul .date .day { font-family: 'Museo300-Regular'; font-size:30px; font-weight:normal; position:absolute; top:0px; right:10px; }
+ul .date .time { font-family: 'Museo500-Regular'; font-size:12px; position:absolute; bottom:10px; left:10px; }
 
 ul.pho-menu {  }
 ul.pho-menu li { clear:both; height:25px; margin:0 0 10px 5px; }

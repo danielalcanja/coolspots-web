@@ -100,6 +100,9 @@ $b(document).ready(function(){
 		</a>
 		<div class="back"></div>
 	</li>
+	<div class="date photo">
+		<span class="day">{{ pic.dateAdded|date('d/m/Y') }}</span>
+	</div>
 	{% endfor %}
 	
 	{% if next_page != false %}

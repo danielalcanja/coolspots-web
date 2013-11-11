@@ -17,9 +17,9 @@ class DefaultController extends Controller
 		$request->setLocale($session->get('_locale', 'en_US'));
 		
 		
-		$repository = $this->getDoctrine()->getRepository('SiteBundle:VwLocation');
+		$repository = $this->getDoctrine()->getRepository('SiteBundle:CsLocation');
 		$rs = $repository->createQueryBuilder('c')
-				->where('c.lastPic is not null')
+				->where('c.coverPic is not null')
 				->andWhere('c.enabled = :enabled')
 				->andWhere('c.deleted = :deleted')
 				->orderBy('c.dateUpdated', 'desc')
