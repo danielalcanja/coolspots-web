@@ -1,0 +1,28 @@
+{% extends 'SiteBundle::layout.html.twig' %}
+
+{% block custom_javascripts %}
+{% endblock %}
+
+{% block body %}
+<ul class="content">
+	{% for item in rs %}
+		<li class="photo">
+				<div class="time">
+					<div class="clock"></div>
+					<div class="tmp"><span class="timeago" title="{{ item.dateUpdated|date() }}">{{ item.dateUpdated|date('d/m/Y') }}</span></div>
+				</div>
+				<div style="position:absolute; z-index:1;">
+					<img class="lazy" src="{{ asset('bundles/site/images/photo-placeholder.png') }}" data-original="{{ item.lastPic }}" />
+				</div>
+				<div class="info">
+					<h2 class="title">{{ item.name }}</h2>
+				</div>
+			<div class="back"></div>
+		</li>
+		
+	{% endfor %}
+</ul>
+<div class="pg-prev"></div>
+<div class="pg-next"></div>
+<div class="create" style="height:1px; display:block;"></div>
+{% endblock %}

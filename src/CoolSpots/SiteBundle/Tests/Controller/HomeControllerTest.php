@@ -10,7 +10,7 @@ class HomeControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $crawler = $client->request('GET', '/');
+        $crawler = $client->request('GET', '/home');
     }
 
 }
