@@ -44,3 +44,7 @@ favorites:
 messages:
     pattern: /messages
     defaults: { _controller: SiteBundle:Messages:index }
+
+home:
+    pattern: /home
+    defaults: { _controller: SiteBundle:Home:index }

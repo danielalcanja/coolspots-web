@@ -136,8 +136,12 @@ $a(document).ready(function(){
 				updateOnContentResize: true
 			},
 			callbacks:{
+				onTotalScrollOffset: 300,
 				whileScrolling: function(){
 					updateLazyImages();
+				},
+				onTotalScroll: function(){
+					console.log("scrolled to the end of content.");
 				}
 			}
 		});
