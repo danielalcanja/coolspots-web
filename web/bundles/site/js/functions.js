@@ -391,6 +391,8 @@ $a(document).ready(function(){
 		var userpic	= $a(this).find(".userpic").val();
 		var data_add= $a(this).find(".dateadded").val();
 		var name_loc= $a(this).find(".name_location").val();
+		var caption	= $a(this).find(".caption").val();
+		var altCap	= $a(this).find(".caption").height();
 		
 		$a(pic[index]).click(function(){
 			$a(shadown).fadeIn('slow');
@@ -399,20 +401,21 @@ $a(document).ready(function(){
 			$a("strong.user").html(user);
 			$a("span.data_pic").html(data_add);
 			$a("strong.name_location").html(name_loc);
-			ajustImage();
+			$a("span.caption").html(caption);
+			ajustImage(altCap);
 			$a(box).fadeIn('slow');
 			atual = index;
 			return false;
 		});
 	});
-	function ajustImage(){
+	function ajustImage(heiCap){
 		heiBox = altTotal - 100;
 		widBox = heiBox - 50;
 		$a(box + " .content").css({ width : widBox - 25 });
 		$a(box + " .content .img").css({ height : widBox - 25 });
 		$a(box + " .content .img img").css({ height : widBox - 25 });
 		$a(".slide-icos").css({ left : widBox + 10 });
-		$a(box).css({ width : widBox, height: heiBox, marginTop: -(heiBox / 2), marginLeft : -(widBox / 2) });
+		$a(box).css({ width : widBox, height: heiBox + heiCap, marginTop: -(heiBox / 2), marginLeft : -(widBox / 2) });
 	}
 	$a(document).delegate(".slide-eve-prev", "click", function(){
 		$a(pic[atual-1]).click();
