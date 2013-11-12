@@ -381,12 +381,10 @@ $a(document).ready(function(){
 		$a(this).prev().find(".br").addClass("nor");
 	});
 	
-	//COMENTARIO
-	$a(".com a.coment").click(function(){
-		AutoScrollOn("left");
-	});
-	
 	//GALLERY
+	var widBox = 0, heiBox = 0;
+	heiBox = altTotal - 100;
+	widBox = heiBox - 50;
 	$a(".eve-pic").each(function(index){
 		pic[index] 	= $a(this);
 		var imagem 	= $a(this).attr("data");
@@ -402,7 +400,11 @@ $a(document).ready(function(){
 			$a("strong.user").html(user);
 			$a("span.data_pic").html(data_add);
 			$a("strong.name_location").html(name_loc);
-			$a(box).fadeIn('slow');
+			$a(box + " .content").css({ width : widBox - 25 });
+			$a(box + " .content .img").css({ height : widBox - 25 });
+			$a(box + " .content .img img").css({ height : widBox - 25 });
+			$a(".slide-icos").css({ left : widBox + 10 });
+			$a(box).css({ width : widBox, height: heiBox, marginTop: -(heiBox / 2), marginLeft : -(widBox / 2) }).fadeIn('slow');
 			atual = index;
 			return false;
 		});

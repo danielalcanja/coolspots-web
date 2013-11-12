@@ -97,7 +97,7 @@ span.ros { background:#FF5885; }
 
 /*GALERIA*/
 .shadown { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; z-index:5; display:none; }
-.shadown .box { width:450px; height:500px; background:#FFF; position:absolute; top:50%; left:50%; margin-top:-250px; margin-left:-225px; display:none; }
+.shadown .box { background:#FFF; position:absolute; top:50%; left:50%; display:none; }
 .shadown .box .content { width:425px; margin:12px auto 0 auto; }
 .shadown .box .content .img { width:100%; height:425px; }
 .shadown .box .content .img img { width:100%; height:425px; }
