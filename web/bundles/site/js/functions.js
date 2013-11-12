@@ -26,6 +26,7 @@ $a(document).ready(function(){
 			$a(site).mCustomScrollbar("update");
 			defineWidth();
 			mountGrid();
+			ajustImage();
 		}, 50);
 	});
 	
@@ -52,75 +53,79 @@ $a(document).ready(function(){
 	}
 	function mountGrid(){
 		$a(".photo").each(function(i){
-			if(ph === 1) {
-				posAtual = col1 + wid + espL;
-				$a(this).animate({width : altG, height : altG},500).addClass("phG");
-				$a(this).find("img").animate({width : altG, height : altG},500);
-				$a(this).css({ top : altDis1, left : posAtual });
-				$a(this).find(".info").width(altG - 20);
-				widTotal = widTotal + altG + esp;
-				posComent = posAtual + altG;
-			}
-			if(ph === 2 || ph === 3 || ph === 4 || ph === 5 || ph === 6 || ph === 7 || ph === 8){
-				$a(this).animate({width : altP, height : altP},500).addClass("phP");
-				$a(this).find(".info").width(altP - 20);
-			}
-			if(ph === 2){
-				posAtual = col1 + wid + espL;
-				$a(this).css({ top : altDis3, left : posAtual });
-			}
-			if(ph === 3){
-				posAtual = col2 + wid + espL;
-				$a(this).css({ top : altDis3, left : posAtual });
-			}
-			if(ph === 4){
-				posAtual = col3 + wid + espL;
-				$a(this).css({ top : altDis1, left : posAtual });
-				widTotal = widTotal + altP + esp;
-				posComent = posAtual + altP;
-			}
-			if(ph === 5){
-				posAtual = col3 + wid + espL;
-				$a(this).css({ top : altDis2, left : posAtual });
-			}
-			if(ph === 6){
-				posAtual = col3 + wid + espL;
-				$a(this).css({ top : altDis3, left : posAtual });
-			}
-			if(ph === 7){
-				posAtual = col4 + wid + espL;
-				$a(this).css({ top : altDis1, left : posAtual });
-				widTotal = widTotal + altP + esp;
-				posComent = posAtual + altP;
-			}
-			if(ph === 8) {
-				posAtual = col5 + wid + espL;
-				$a(this).css({ top : altDis1, left : posAtual });
-				widTotal = widTotal + altP + esp;
-				posComent = posAtual + altP;
-			}
-			if(ph === 9){
-				posAtual = col4 + wid + espL;
-				$a(this).animate({width : altG, height : altG},500).addClass("phG");
-				$a(this).find("img").animate({width : altG, height : altG},500);
-				$a(this).css({ top : altDis2, left : posAtual });
-				$a(this).find(".info").width(altG - 20);
-				ph = 0;
-				blc++;
-				wid = blc * (col5 + altP + 2);
-				posComent = posAtual + altG;
-			}
-			if($a(this).next().hasClass("comentario")) {
-				ph = 0;
-				var com = $a(this).next(".comentario");
-				comentario = 270;
-				$a(com).css({ left : posComent });
-				if(totCom === 1) {
-					widTotal = widTotal;
-					totCom++;
+			if(!($a(this).hasClass("date"))) {
+				if(ph === 1) {
+					posAtual = col1 + wid + espL;
+					$a(this).animate({width : altG, height : altG},500).addClass("phG");
+					$a(this).find("img").animate({width : altG, height : altG},500);
+					$a(this).css({ top : altDis1, left : posAtual });
+					$a(this).find(".info").width(altG - 20);
+					widTotal = widTotal + altG + esp;
+					posComent = posAtual + altG;
 				}
-			}
-			ph++;
+				if(ph === 2 || ph === 3 || ph === 4 || ph === 5 || ph === 6 || ph === 7 || ph === 8){
+					$a(this).animate({width : altP, height : altP},500).addClass("phP");
+					$a(this).find(".info").width(altP - 20);
+				}
+				if(ph === 2){
+					posAtual = col1 + wid + espL;
+					$a(this).css({ top : altDis3, left : posAtual });
+				}
+				if(ph === 3){
+					posAtual = col2 + wid + espL;
+					$a(this).css({ top : altDis3, left : posAtual });
+				}
+				if(ph === 4){
+					posAtual = col3 + wid + espL;
+					$a(this).css({ top : altDis1, left : posAtual });
+					widTotal = widTotal + altP + esp;
+					posComent = posAtual + altP;
+				}
+				if(ph === 5){
+					posAtual = col3 + wid + espL;
+					$a(this).css({ top : altDis2, left : posAtual });
+				}
+				if(ph === 6){
+					posAtual = col3 + wid + espL;
+					$a(this).css({ top : altDis3, left : posAtual });
+				}
+				if(ph === 7){
+					posAtual = col4 + wid + espL;
+					$a(this).css({ top : altDis1, left : posAtual });
+					widTotal = widTotal + altP + esp;
+					posComent = posAtual + altP;
+				}
+				if(ph === 8) {
+					posAtual = col5 + wid + espL;
+					$a(this).css({ top : altDis1, left : posAtual });
+					widTotal = widTotal + altP + esp;
+					posComent = posAtual + altP;
+				}
+				if(ph === 9){
+					posAtual = col4 + wid + espL;
+					$a(this).animate({width : altG, height : altG},500).addClass("phG");
+					$a(this).find("img").animate({width : altG, height : altG},500);
+					$a(this).css({ top : altDis2, left : posAtual });
+					$a(this).find(".info").width(altG - 20);
+					ph = 0;
+					blc++;
+					wid = blc * (col5 + altP + 2);
+					posComent = posAtual + altG;
+				}
+				if($a(this).next().hasClass("comentario")) {
+					ph = 0;
+					var com = $a(this).next(".comentario");
+					comentario = 270;
+					$a(com).css({ left : posComent });
+					if(totCom === 1) {
+						widTotal = widTotal;
+						totCom++;
+					}
+				}
+				ph++;
+			}else {
+				$a(this).css({ left : posAtual });
+			} 
 		});
 		
 		$a(".create").width(widTotal + espL);
@@ -139,9 +144,7 @@ $a(document).ready(function(){
 				onTotalScrollOffset: 300,
 				whileScrolling: function(){
 					updateLazyImages();
-				},
-				onTotalScroll: function(){
-					console.log("scrolled to the end of content.");
+					WhileScrolling();		
 				}
 			}
 		});
@@ -149,6 +152,28 @@ $a(document).ready(function(){
 		$a(".mCSB_container").height(altTotal);
 		$a(".photo").fadeIn('slow');
 		updateLazyImages();
+		
+		var esq = [];
+		var box = [];
+		var cai = "ul .date";
+		var tot = $a(cai).length;
+		
+		$a(cai).each(function(i, obj){
+			esq[i] = $a(this).offset().left;
+			box[i] = obj;
+		});
+		
+		function WhileScrolling(){
+			var moveu = mcs.draggerLeft;
+			for(var j = 0; j <= tot; j++){
+				$a(box[j]).html(j);
+				if (moveu > esq[j] -300){
+					$a(box[j]).css({position : 'fixed', left : 150});
+				} else {
+					$a(box[j]).css({position : 'absolute', left : esq[j]});
+				}
+			}
+		}
 	},1000);
 	
 	$a(".photo").hover(function(){
@@ -249,22 +274,79 @@ $a(document).ready(function(){
 		html += '			<div class=\"col2\">                                                                                 ';
 		html += '				<div class=\"pri-box\">                                                                          ';
 		html += '					<select>                                                                                     ';
-		html += '						<option value=\"Spooters Amigos\">Spooters Amigos</option>                               ';
-		html += '						<option value=\"valor\">Opção 1</option>                                                 ';
-		html += '						<option value=\"valor\">Opção 2</option>                                                 ';
-		html += '						<option value=\"valor\">Opção 3</option>                                                 ';
+		html += '						<option value=\"1\">Público</option>  		                             ';
+		html += '						<option value=\"0\">Privado</option>   		                                             ';
 		html += '					</select>                                                                                    ';
 		html += '				</div>                                                                                           ';
 		html += '				<input type=\"hidden\" name=\"privacidade\" value=\"Spooters Amigos\">                           ';
 		html += '			</div>                                                                                               ';
 		html += '		</div>                                                                                                   ';
+		html += '		<div class=\"clr h05\"></div>                                                                            ';
+		html += '		<div class=\"row\">                                                                                      ';
+		html += '			<span class=\"col1\">Hashtag</span>                                                                 ';
+		html += '			<div class=\"col2\">                                                                                 ';
+		html += '				<textarea name=\"hashtag\" rows=\"2\" class=\"campos-box\" placeholder=\"Hashtag\"></textarea>';
+		html += '			</div>                                                                                               ';
+		html += '		</div>                                                                                                   ';
 		html += '		                                                                                                         ';
 		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>                                                 ';
 		html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">                         ';
-		html += '		<input class=\"btn-padrao-m dir marRig05\" type=\"button\" value=\"Criar\">                              ';
+		html += '		<input class=\"btn-padrao-m dir marRig05 btCriarEvento\" type=\"button\" value=\"Criar\">                ';
 		html += '	</div>                                                                                                       ';
 		html += '</div>                                                                                                          ';
 		$a(shadown).html(html).fadeIn('slow');
+	});
+	
+	$a(".ind-location").click(function(){
+		var html = '';
+		html += '<div class=\"box-ind-location boxDiversos\">                                                                    ';
+		html += '	<div class=\"space\">                                                                                        ';
+		html += '		<h2 class=\"box-h2\">Indicar um lugar</h2>                                                                ';
+		html += '		<div class=\"row\">                                                                                      ';
+		html += '			<span class=\"col1\">Lugar</span>                                                                    ';
+		html += '			<div class=\"col2\">                                                                                 ';
+		html += '				<input type=\"text\" name=\"nome\" class=\"campos-box\" placeholder=\"Nome do lugar\">			 ';
+		html += '			</div>                                                                                               ';
+		html += '		</div>                                                                                                   ';
+		html += '		<div class=\"clr h05\"></div>                                                                            ';
+		html += '		<div class=\"row\">                                                                                      ';
+		html += '			<span class=\"col1\">E-mail</span>                                                                   ';
+		html += '			<div class=\"col2\">                                                                                 ';
+		html += '				<input type=\"text\" name=\"email\" class=\"campos-box\" placeholder=\"Seu e-mail\">			 ';
+		html += '			</div>                                                                                               ';
+		html += '		</div>                                                                                                   ';
+		html += '		<div class=\"clr h05\"></div>                                                                            ';
+		html += '		<div class=\"row\">                                                                                      ';
+		html += '			<span class=\"col1\">Cidade</span>             		                                                 ';
+		html += '			<div class=\"col2\">                                                                                 ';
+		html += '				<input type=\"text\" name=\"cidade\" class=\"campos-box\" placeholder=\"Nome da cidade\">		 ';
+		html += '			</div>                                                                                               ';
+		html += '		</div>                                                                                                   ';
+		html += '		<div class=\"clr h05\"></div>                                                                            ';
+		html += '		<div class=\"row\">                                                                                      ';
+		html += '			<span class=\"col1\">Estado</span>                        		                                     ';
+		html += '			<div class=\"col2\">                                                                                 ';
+		html += '				<input type=\"text\" name=\"estado\" class=\"campos-box\" placeholder=\"Nome do estado\">		 ';
+		html += '			</div>                                                                                               ';
+		html += '		</div>                                                                                                   ';
+		html += '		<div class=\"clr h05\"></div>                                                                            ';
+		html += '		                                                                                                         ';
+		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>                                                 ';
+		html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">                         ';
+		html += '		<input class=\"btn-padrao-m dir marRig05 btIndicarLugar\" type=\"button\" value=\"Indicar\">             ';
+		html += '	</div>                                                                                                       ';
+		html += '</div>                                                                                                          ';
+		$a(shadown).html(html).fadeIn('slow');
+	});
+	
+	$a(document).delegate('.btCriarEvento', 'click', function(){
+		alert("Chama função para gravar no banco");
+		shadownClose();
+	});
+	
+	$a(document).delegate('.btIndicarLugar', 'click', function(){
+		alert("Chama função para gravar no banco");
+		shadownClose();
 	});
 	
 	$a(".top-ico").hover(function(){
@@ -301,12 +383,8 @@ $a(document).ready(function(){
 		$a(this).prev().find(".br").addClass("nor");
 	});
 	
-	//COMENTARIO
-	$a(".com a.coment").click(function(){
-		AutoScrollOn("left");
-	});
-	
 	//GALLERY
+	var widBox = 0, heiBox = 0;
 	$a(".eve-pic").each(function(index){
 		pic[index] 	= $a(this);
 		var imagem 	= $a(this).attr("data");
@@ -314,6 +392,8 @@ $a(document).ready(function(){
 		var userpic	= $a(this).find(".userpic").val();
 		var data_add= $a(this).find(".dateadded").val();
 		var name_loc= $a(this).find(".name_location").val();
+		var caption	= $a(this).find(".caption").val();
+		var altCap	= $a(this).find(".caption").height();
 		
 		$a(pic[index]).click(function(){
 			$a(shadown).fadeIn('slow');
@@ -322,11 +402,22 @@ $a(document).ready(function(){
 			$a("strong.user").html(user);
 			$a("span.data_pic").html(data_add);
 			$a("strong.name_location").html(name_loc);
+			$a("span.caption").html(caption);
+			ajustImage(altCap);
 			$a(box).fadeIn('slow');
 			atual = index;
 			return false;
 		});
 	});
+	function ajustImage(heiCap){
+		heiBox = altTotal - 100;
+		widBox = heiBox - 50;
+		$a(box + " .content").css({ width : widBox - 25 });
+		$a(box + " .content .img").css({ height : widBox - 25 });
+		$a(box + " .content .img img").css({ height : widBox - 25 });
+		$a(".slide-icos").css({ left : widBox + 10 });
+		$a(box).css({ width : widBox, height: heiBox + heiCap, marginTop: -(heiBox / 2), marginLeft : -(widBox / 2) });
+	}
 	$a(document).delegate(".slide-eve-prev", "click", function(){
 		$a(pic[atual-1]).click();
 	});
@@ -404,7 +495,7 @@ $a(document).ready(function(){
 		return false;
 	});
 	
-	$a(document).delegate(".btn-cancel", "click", function(){
+	$a(document).delegate('.btn-cancel', 'click', function(){
 		shadownClose();
 	});
 	
