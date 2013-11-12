@@ -145,6 +145,9 @@ $a(document).ready(function(){
 				whileScrolling: function(){
 					updateLazyImages();
 					WhileScrolling();		
+				},
+				onTotalScroll: function(){
+					console.log("scrolled to the end of content.");
 				}
 			}
 		});
