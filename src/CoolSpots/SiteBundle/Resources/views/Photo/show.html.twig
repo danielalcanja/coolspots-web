@@ -44,7 +44,7 @@ $b(document).ready(function(){
 	});
 });
 </script>
-
+<input type="hidden" name="np" id="np" value="" />
 <div class="location-info">
 	<div class="loc">
 		<h1>{{ location.name }}</h1>
@@ -81,7 +81,7 @@ $b(document).ready(function(){
 	</div>
 </div>
 <input type="hidden" name="next_page" id="next_page" value="{{ next_page }}" />
-<ul class="content location infinite-scroll">
+<ul class="content location" id="photo-list">
 	{% endif %}
 	
 	{% for pic in pics %}
@@ -106,10 +106,14 @@ $b(document).ready(function(){
 		<span class="day">{{ pic.dateAdded|date('d/m/Y') }}</span>
 	</div>
 	{% endfor %}
-	
+	<script>
 	{% if next_page != false %}
-		<a class="jscroll-next" href="{{ path('photo_show', { idLocation: location.id, slug: location.slug, page: next_page}) }}">...</a>
+		$b('#np').val("{{ path('photo_show', { idLocation: location.id, slug: location.slug, page: next_page}) }}");
+		
+	{% else %}
+		$b('#np').val("");
 	{% endif %}
+	</script>
 	
 	{% if page == 1%}
 

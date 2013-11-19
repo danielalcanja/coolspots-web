@@ -17,7 +17,7 @@ class DefaultController extends Controller
 		$request->setLocale($session->get('_locale', 'en_US'));
 		
 		
-		$repository = $this->getDoctrine()->getRepository('SiteBundle:CsLocation');
+		$repository = $this->getDoctrine()->getRepository('SiteBundle:VwLocation');
 		$rs = $repository->createQueryBuilder('c')
 				->where('c.coverPic is not null')
 				->andWhere('c.enabled = :enabled')

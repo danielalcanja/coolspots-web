@@ -1,3 +1,8 @@
+jQuery(document).ready(function(){
+	jQuery(".timeago").timeago();
+	
+});
+
 function updateLazyImages() {
 	jQuery("img.lazy").lazyload({ 
 		container: jQuery("#site"),
@@ -7,10 +12,17 @@ function updateLazyImages() {
 	});	
 }
 
-jQuery(document).ready(function(){
-	jQuery(".timeago").timeago();
-	jQuery('.infinite-scroll').jscroll({
-		loadingHtml: '<strong>...</strong>',
-		nextSelector: 'a.jscroll-next:last'
-	});
-});
+function fetchNextPage() {
+	if(jQuery('#np').val() !== "") {
+		console.log('Fetching next page: ' + jQuery('#np').val());
+		jQuery.ajax({
+			url: jQuery('#np').val(),
+			dataType: 'html',
+			success: function(data) {
+				jQuery('#photo-list').append(data);
+				//$a.mountGrid();
+				//console.log(data);
+			}
+		});
+	}
+}
