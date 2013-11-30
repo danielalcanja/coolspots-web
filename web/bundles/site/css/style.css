@@ -20,6 +20,20 @@ html { height:100%; }
 body { height:100%; background:#FFF; overflow:hidden; font-family: 'Museo500-Regular'; font-size:15px; }
 em { font-style:normal; }
 
+.index-shadown { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; z-index:5; display:block; }
+.index-shadown .index-box { width:800px; height:500px; border:2px solid #FFF; position:absolute; top:50%; left:50%; margin:-225px auto auto -400px; overflow:hidden; }
+.index-shadown .index-box .box-geral { width:3250px; height:500px;  } 
+.index-shadown .index-box .box-geral .box { width:800px; height:500px; display:block; float:left; position:relative; z-index:1; font-family: 'Museo300-Regular'; font-weight:normal; color:#FFF; }
+.index-shadown .index-box .box .content { padding:20px; }
+.index-shadown .index-box .box .content h1 { font-weight:normal; font-size:40px; }
+.index-shadown .index-box .box .content span { font-weight:bold; }
+.index-shadown .index-box .options { position:absolute; bottom:10px; right:10px; z-index:2; }
+.index-shadown .index-box .options a:link, .index-shadown .index-box .options a:visited { width:10px; height:10px; display:block; float:left; margin-left:5px; background:url('../images/icons.png') -215px -50px no-repeat; }
+.index-shadown .index-box .options a:hover, .index-shadown .index-box .options a.active { background-position:-215px -60px; }
+
+a.index-sign:link, a.index-sign:visited { color:#D74B70; }
+a.index-get:link, a.index-get:visited { position:absolute; bottom:20px; left:20px; font-size:20px; color:#FFF; }
+
 .top-bar { width:100%; position:absolute; top:0; left:0; z-index:2; }
 .top-bar-ico { width:53px; height:50px; position:absolute; top:10px; left:20px; line-height:50px; background:url('../images/icons.png') 0px 9px no-repeat #31749B; display:none; cursor:pointer; }
 .top-bar .back { height:50px; margin:10px 20px; background:#31749B; color:#FFF; line-height:50px; }
@@ -35,7 +49,8 @@ input, textarea { font-family: 'Museo500-Regular'; font-size: 13px; }
 .btn-padrao { padding:0 20px; height:30px; line-height:30px; background:#518FB3; color:#FFF; cursor:pointer; }
 .btn-padrao:hover, .btn-padrao-m:hover { background-color:#143F58; }
 .btn-padrao-m { padding:0 15px; height:25px; line-height:25px; background:#518FB3; color:#FFF; cursor:pointer; }
-
+.btn-login:link, .btn-login:visited { display:inline-block; padding:0 25px; height:50px; line-height:50px; background:#1B5679; color:#FFF; font-family: 'Museo500-Regular'; font-size:15px; }
+.btn-login:hover { background-color:#143F58; }
 
 .best { margin:0 30px 0 50px; line-height:50px; float:left; cursor:pointer; position:relative; }
 .best span { display:inline-block; height:50px; float:left; }
