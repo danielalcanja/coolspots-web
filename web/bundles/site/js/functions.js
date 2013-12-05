@@ -416,13 +416,15 @@ function montaTudo() {
 		});
 	});
 	function ajustImage(heiCap){
-		heiBox = altTotal - 100;
-		widBox = heiBox - 50;
-		$a(box + " .content").css({ width : widBox - 25 });
-		$a(box + " .content .img").css({ height : widBox - 25 });
-		$a(box + " .content .img img").css({ height : widBox - 25 });
-		$a(".slide-icos").css({ left : widBox + 10 });
-		$a(box).css({ width : widBox, height: heiBox + heiCap, marginTop: -(heiBox / 2), marginLeft : -(widBox / 2) });
+		if($a(window).height() > 500){
+			heiBox = altTotal - 100;
+			widBox = heiBox - 50;
+			$a(box + " .content").css({ width : widBox - 25 });
+			$a(box + " .content .img").css({ height : widBox - 25 });
+			$a(box + " .content .img img").css({ height : widBox - 25 });
+			$a(".slide-icos").css({ left : widBox + 10 });
+			$a(box).css({ width : widBox, height: heiBox + heiCap, marginTop: -(heiBox / 2), marginLeft : -(widBox / 2) });
+		}
 	}
 	$a(document).delegate(".slide-eve-prev", "click", function(){
 		$a(pic[atual-1]).click();

@@ -3,6 +3,26 @@
 {% block title %}SiteBundle:About:index{% endblock %}
 
 {% block body %}
+<script>
+var $b = jQuery.noConflict();
+$b(document).ready(function(){
+	var obj = [];
+	$b(".opt-box").each(function(i){
+		obj[i] = $b(this);
+		$b(obj[i]).click(function(){
+			$b(".opt-box").removeClass("active");
+			$b(this).addClass("active");
+			var a = parseInt(i + 1);
+			var a2 = parseInt(i + 2);
+			$b(".b"+a).animate( {width : 800 },500);
+			$b(".b"+i).animate({ width : 0 },500);
+			$b(".b"+a2).animate({ width : 0 },500);
+			
+			return false;
+		});
+	});
+});
+</script>
 <div class="page sobre">
 	<div class="sobre-menu">
 		<div class="content">
@@ -63,6 +83,66 @@
 			<div class="clr altRolagem"></div>
 			<div class="clr h10"></div>
 		</div>		
+	</div>
+</div>
+<div class="index-shadown">
+	<div class="index-box">
+		<div class="box-geral">
+			<div class="box b1 login" style="background:url('http://3.bp.blogspot.com/-0UMs_Hpa-2E/Ua1E2zp_vpI/AAAAAAAAEdM/hz7drOu6K1g/s1600/balada-marquee-las-vegas.jpg') top;">
+				<div class="content">
+					<h1>See what's <br /> Going on.</h1>
+					<div class="clr h20"></div>
+					<a href="http://instagram.com/" class="btn-login">Login with Instagram</a>
+					<div class="clr h20"></div>
+					<span>Lorem asdflkj asfljk asflkj <br>asflkj asdflkj asf <br> asfljkasfd <a href="http://instagram.com/" class="index-sign">sign up</a>.</span>
+					
+					<a href="http://instagram.com/" class="index-get">Get the app.</a>
+				</div>
+			</div>
+			<div class="box b2 whats" style="background:url('http://imguol.com/2013/03/20/19mar2013---falleros---como-sao-chamados-os-participantes-das-fallas-de-valencia---assistem-a-cremacao-dos-bonecos-o-que-marca-o-fim-da-festa-realizada-anualmente-de-15-a-19-de-marco-1363754611647_956x500.jpg') center;">
+				<div class="content">
+					<h1>What is <br /> Coolspots?</h1>
+					<div class="clr h20"></div>
+					<span>Lorem asdflkj asfljk asflkj <br>
+					asflkj asdflkj asf  asflkjadsf<br> 
+					dskjflkj asforem asdflkj asfljk asflkj <br>
+					asflkj asdflkj asf <br> 
+					osifasf orem asdflkj asfljk asflkj <br>
+					asflkj asdflkj asf <br>
+					Lorem asdflkj asfljk asflkj <br>
+					asflkj asdflkj asf <br>  
+					asfljkasfd <a href="http://instagram.com/" class="index-sign">sign up</a>.</span>
+				</div>
+			</div>
+			<div class="box b3 use" style="background:url('http://www.gazetadopovo.com.br/gaz/wp-content/uploads/2012/06/festa-586x355.jpg') center;">
+				<div class="content">
+					<h1>See what's <br /> Going on.</h1>
+					<div class="clr h20"></div>
+					<a href="http://instagram.com/" class="btn-login">Login with Instagram</a>
+					<div class="clr h20"></div>
+					<span>Lorem asdflkj asfljk asflkj <br>asflkj asdflkj asf <br> asfljkasfd <a href="http://instagram.com/" class="index-sign">sign up</a>.</span>
+					
+					<a href="http://instagram.com/" class="index-get">Get the app.</a>
+				</div>
+			</div>
+			<div class="box b4 where">
+				<div class="content">
+					<h1>See what's <br /> Going on.</h1>
+					<div class="clr h20"></div>
+					<a href="http://instagram.com/" class="btn-login">Login with Instagram</a>
+					<div class="clr h20"></div>
+					<span>Lorem asdflkj asfljk asflkj <br>asflkj asdflkj asf <br> asfljkasfd <a href="http://instagram.com/" class="index-sign">sign up</a>.</span>
+					
+					<a href="http://instagram.com/" class="index-get">Get the app.</a>
+				</div>
+			</div>
+		</div>
+		<div class="options">
+			<a href="#" class="opt-box active"></a>
+			<a href="#" class="opt-box"></a>
+			<a href="#" class="opt-box"></a>
+			<a href="#" class="opt-box"></a>
+		</div>
 	</div>
 </div>
 {% endblock %}
