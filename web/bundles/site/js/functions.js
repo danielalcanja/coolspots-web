@@ -1,6 +1,8 @@
 var $a = jQuery.noConflict();
 $a(document).ready(function(){
-
+	montaTudo();
+});
+function montaTudo() {
 	var content = "ul.content";
 	var altTotal, altBox, altG, altP, altDis1, altDis2, altDis3, esp, espL;
 	var ph, blc, wid, widTotal;
@@ -23,7 +25,7 @@ $a(document).ready(function(){
 
 	$a(window).resize(function(){
 		delay(function(e){
-			$a(site).mCustomScrollbar("update");
+			$a('#site').mCustomScrollbar("update");
 			defineWidth();
 			mountGrid();
 			ajustImage();
@@ -148,6 +150,7 @@ $a(document).ready(function(){
 				},
 				onTotalScroll: function(){
 					console.log("scrolled to the end of content.");
+					fetchNextPage();
 				}
 			}
 		});
@@ -505,4 +508,5 @@ $a(document).ready(function(){
 	function shadownClose(){
 		$a(shadown).fadeOut('slow');
 	}
-});
+}
+

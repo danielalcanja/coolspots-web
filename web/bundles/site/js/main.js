@@ -20,7 +20,7 @@ function fetchNextPage() {
 			dataType: 'html',
 			success: function(data) {
 				jQuery('#photo-list').append(data);
-				//$a.mountGrid();
+				montaTudo();
 				//console.log(data);
 			}
 		});
