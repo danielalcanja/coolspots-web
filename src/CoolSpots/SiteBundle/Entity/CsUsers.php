@@ -56,8 +56,18 @@ class CsUsers
      */
     private $id;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="access_token", type="string", length=40, nullable=true)
+     */
+    private $accessToken;
 
-
+    /**
+     * @var \DateTime
+     */
+    private $tokenDate;
+	
     /**
      * Set username
      *
@@ -172,7 +182,30 @@ class CsUsers
     {
         return $this->bio;
     }
+	
+    /**
+     * Set accessToken
+     *
+     * @param string $accessToken
+     * @return CsUsers
+     */
+    public function setAccessToken($accessToken)
+    {
+        $this->accessToken = $accessToken;
+    
+        return $this;
+    }
 
+    /**
+     * Get accessToken
+     *
+     * @return string 
+     */
+    public function getAccessToken()
+    {
+        return $this->accessToken;
+    }
+	
     /**
      * Get id
      *
@@ -181,5 +214,28 @@ class CsUsers
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set tokenDate
+     *
+     * @param \DateTime $tokenDate
+     * @return CsUsers
+     */
+    public function setTokenDate($tokenDate)
+    {
+        $this->tokenDate = $tokenDate;
+    
+        return $this;
+    }
+
+    /**
+     * Get tokenDate
+     *
+     * @return \DateTime 
+     */
+    public function getTokenDate()
+    {
+        return $this->tokenDate;
     }
 }

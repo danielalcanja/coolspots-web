@@ -20,9 +20,24 @@ class DefaultController extends Controller
 		
 		if(count($subscription) > 0) return new Response('Duplicated subscription');
 		
+		$em = $this->getDoctrine()->getManager();
+		$max_subscriptions = $this->container->getParameter('instagram_max_subscriptions');
+		$rsInstagram = $em->createQuery('
+					SELECT i FROM SiteBundle:VwInstagramApi i
+					WHERE i.totalSubscriptions < :max
+					ORDER BY i.id')
+				->setParameter('max', $max_subscriptions)
+				->setMaxResults(1)
+				->getSingleResult();
+		if(!$rsInstagram) return new Response('No more instagram client id for subscriptions');
+		$client_id = $rsInstagram->getClientId();
+		$client_secret = $rsInstagram->getClientSecret();
+		
+		$Instagram = $this->getDoctrine()->getRepository('SiteBundle:CsInstagramApi')->find($rsInstagram->getId());
+		
 		$attachment =  array(
-			'client_id' => $this->container->getParameter('instagram_client_id'),
-			'client_secret' => $this->container->getParameter('instagram_client_secret'),
+			'client_id' => $client_id,
+			'client_secret' => $client_secret,
 			'object' => $object,
 			'object_id' => $object_id,
 			'aspect' => $this->container->getParameter('instagram_aspect'),
@@ -59,11 +74,19 @@ class DefaultController extends Controller
 			$Subscription->setTime(null);
 			$Subscription->setUpdated('N');
 			$Subscription->setCycleCount(0);
+			$Subscription->setIdInstagramApi($Instagram);
 			$Subscription->setSubscriptionId($response['data']['id']);
 			
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($Subscription);
 			$em->flush();
+		}
+		else
+		{
+			echo "<h2>Error:</h2>";
+			echo "<pre>";
+			print_r($response);
+			echo "</pre>";
 		}
 		return new Response();
 	}

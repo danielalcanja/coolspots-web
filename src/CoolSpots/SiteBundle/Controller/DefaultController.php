@@ -19,7 +19,7 @@ class DefaultController extends Controller
 		
 		$repository = $this->getDoctrine()->getRepository('SiteBundle:VwLocation');
 		$rs = $repository->createQueryBuilder('c')
-				->where('c.coverPic is not null')
+				->where('c.lastPic is not null')
 				->andWhere('c.enabled = :enabled')
 				->andWhere('c.deleted = :deleted')
 				->orderBy('c.dateUpdated', 'desc')

@@ -16,19 +16,6 @@ photo_show:
         idLocation: \d+
         page: \d+
 
-#### JSON routings ####
-json_location:
-    pattern: /json/location
-    defaults: { _controller: SiteBundle:JSON:location }
-    
-json_location_info:
-    pattern: /json/location/{id}/{slug}
-    defaults: { _controller: SiteBundle:JSON:locationInfo }
-
-json_photos:
-    pattern: /json/photos/{idLocation}/{slug}
-    defaults: { _controller: SiteBundle:JSON:photos }
-        
 about:
     pattern: /about
     defaults: { _controller: SiteBundle:About:index }
@@ -48,3 +35,26 @@ messages:
 home:
     pattern: /home
     defaults: { _controller: SiteBundle:Home:index }
+
+login:
+    pattern: /login
+    defaults: { _controller: SiteBundle:Login:index }
+    
+login_auth:
+    pattern: /login/auth
+    defaults: { _controller: SiteBundle:Login:auth }
+
+#### JSON routings ####
+json_location:
+    pattern: /json/location
+    defaults: { _controller: SiteBundle:JSON:location }
+    
+json_location_info:
+    pattern: /json/location/{id}/{slug}
+    defaults: { _controller: SiteBundle:JSON:locationInfo }
+
+json_photos:
+    pattern: /json/photos/{idLocation}/{slug}
+    defaults: { _controller: SiteBundle:JSON:photos }
+        
+

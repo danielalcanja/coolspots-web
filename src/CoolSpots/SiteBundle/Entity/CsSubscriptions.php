@@ -241,4 +241,32 @@ class CsSubscriptions
     {
         return $this->id;
     }
+    /**
+     * @var \CoolSpots\SiteBundle\Entity\CsInstagramApi
+     */
+    private $idInstagramApi;
+
+
+    /**
+     * Set idInstagramApi
+     *
+     * @param \CoolSpots\SiteBundle\Entity\CsInstagramApi $idInstagramApi
+     * @return CsSubscriptions
+     */
+    public function setIdInstagramApi(\CoolSpots\SiteBundle\Entity\CsInstagramApi $idInstagramApi = null)
+    {
+        $this->idInstagramApi = $idInstagramApi;
+    
+        return $this;
+    }
+
+    /**
+     * Get idInstagramApi
+     *
+     * @return \CoolSpots\SiteBundle\Entity\CsInstagramApi 
+     */
+    public function getIdInstagramApi()
+    {
+        return $this->idInstagramApi;
+    }
 }

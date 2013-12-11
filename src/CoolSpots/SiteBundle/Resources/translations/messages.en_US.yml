@@ -20,3 +20,7 @@ location:
         indicate:    Indicate
         favorite:    Add to favorite
         favlist:     Show favorites
+
+login:
+    signinbutton:    Login with your Instagram Account!
+    

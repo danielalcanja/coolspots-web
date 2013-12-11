@@ -22,6 +22,7 @@
     <field name="phone" type="string" column="phone" length="20" nullable="true"/>
     <field name="enabled" type="string" column="enabled" length="1" nullable="false"/>
     <field name="deleted" type="string" column="deleted" length="1" nullable="false"/>
+    <field name="country" type="string" column="country" length="5" nullable="false"/>
     <many-to-one field="idGeo" target-entity="CsGeo">
       <join-columns>
         <join-column name="id_geo" referenced-column-name="id"/>

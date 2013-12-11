@@ -9,5 +9,7 @@
     <field name="email" type="string" column="email" length="150" nullable="true"/>
     <field name="profilePicture" type="string" column="profile_picture" length="150" nullable="true"/>
     <field name="bio" type="string" column="bio" length="150" nullable="true"/>
+    <field name="accessToken" type="string" column="access_token" length="40" nullable="true"/>
+    <field name="tokenDate" type="datetime" column="token_date" nullable="true"/>
   </entity>
 </doctrine-mapping>

@@ -5,14 +5,14 @@ parameters:
     database_port: null
     
     # db settings for vps hosting
-#    database_name: coolspot_db
-#    database_user: coolspot_user
-#    database_password: c00lsp0ts!
+    database_name: coolspot_db
+    database_user: coolspot_user
+    database_password: c00lsp0ts!
     
     # db settings for local hosts
-    database_name: coolspots_new
-    database_user: root
-    database_password: 
+#    database_name: coolspots_new
+#    database_user: root
+#    database_password: ~
     
     mailer_transport: smtp
     mailer_host: 127.0.0.1
@@ -23,9 +23,14 @@ parameters:
 
     # instagram api informations
     instagram_subscription_api: https://api.instagram.com/v1/subscriptions/
-    instagram_client_id: 028ea9a1bd024485bae1780ecb871f6d
-    instagram_client_secret: 38443f441eae4a4fa17efb8363fb106b
+    instagram_max_subscriptions: 30
     instagram_object: location
     instagram_aspect: media
     instagram_callback_url: http://api.coolspots.com.br/instagram/callback
     instagram_verify_token: c00lSPOT$2013JbkY1po1KAqmzI983L0p
+
+    instagram_auth_api: https://api.instagram.com/oauth/authorize/?client_id=@CLIENT_ID@&redirect_uri=@REDIRECT_URI@&response_type=code
+    instagram_auth_token_url: https://api.instagram.com/oauth/access_token
+    instagram_auth_client_id: 4f04a39438c74a6db3f07c2f84ccd8f3
+    instagram_auth_client_secret: e02973d56bc643849d14535b6b0a59f8
+    instagram_auth_redirect_url: http://beta.coolspots.com.br/login/auth
