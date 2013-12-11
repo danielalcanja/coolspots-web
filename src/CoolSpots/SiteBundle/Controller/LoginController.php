@@ -4,6 +4,8 @@ namespace CoolSpots\SiteBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Response;
+use CoolSpots\SiteBundle\Entity\CsUsers;
 
 class LoginController extends Controller
 {
@@ -40,8 +42,26 @@ class LoginController extends Controller
 		$result = curl_exec($ch);
 		curl_close ($ch);
 		$ret = json_decode($result, true);
-
-		return new Response();
+		
+		if(isset($ret['access_token'])) {
+			// check if the user is already on database
+			$em = $this->getDoctrine()->getManager();
+			$user = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $ret['user']['username']));
+			if(!$user) {
+				$user = new CsUsers();
+			}
+			$user->setUsername($ret['user']['username']);
+			$user->setFullName($ret['user']['full_name']);
+			$user->setProfilePicture($ret['user']['profile_picture']);
+			$user->setAccessToken($ret['access_token']);
+			$user->setTokenDate(new \DateTime());
+			$em->persist($user);
+			$em->flush();
+			return $this->redirect($this->generateUrl('main'));
+		} else {
+			return new Response('Authentication error!');
+		}
+		
 	}
 
 }
