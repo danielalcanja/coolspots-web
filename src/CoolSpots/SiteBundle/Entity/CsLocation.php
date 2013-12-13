@@ -110,6 +110,12 @@ class CsLocation
      * @ORM\Column(name="state", type="string", length=4, nullable=true)
      */
     private $state;
+	
+    /**
+     * @var string
+	 * @ORM\Column(name="country", type="string", length=5, nullable=true)
+     */
+    private $country;
 
     /**
      * @var string
@@ -634,11 +640,6 @@ class CsLocation
     {
         return $this->minTimestamp;
     }
-    /**
-     * @var string
-     */
-    private $country;
-
 
     /**
      * Set country

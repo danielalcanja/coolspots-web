@@ -159,6 +159,13 @@ class VwLocation
      * @ORM\Column(name="deleted", type="string", length=1)
      */
     private $deleted;
+	
+    /**
+     * @var string
+	 * @ORM\Column(name="country", type="string", length=5, nullable=true)
+     */
+    private $country;
+	
 
     /**
      * @var string
@@ -660,4 +667,28 @@ class VwLocation
     {
         return $this->lastPic;
     }
+	
+    /**
+     * Set country
+     *
+     * @param string $country
+     * @return CsLocation
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+    
+        return $this;
+    }
+
+    /**
+     * Get country
+     *
+     * @return string 
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+	
 }
