@@ -19,29 +19,38 @@ class JSONController extends Controller
 		 * /json/location?id=9
 		 * 
 		 * Get all locations from a city
-		 * /json/locations?id_geo=1
+		 * /json/locations?city=1
 		 * 
 		 * Get all locations from a specific state
-		 * /json/locations?region=14
+		 * /json/locations?state=14
 		 * 
 		 * Get all locations from a specific country
-		 * /json/locations?country_code=BR
+		 * /json/locations?country=1
 		 * 
+		 * Get all locations from a specific category
+		 * /json/locations?category=1
+		 * 
+		 * Combinations:
+		 * /json/locations?city=1&category=8
 		 */
 		$request = $this->getRequest();
-		
-		$repository = $this->getDoctrine()->getRepository('SiteBundle:CsLocation');
+		$repository = $this->getDoctrine()->getRepository('SiteBundle:VwLocation');
 		$rs = $repository->createQueryBuilder('c')
 				->where('c.coverPic is not null');
 		// check for the id parameter
-		if($request->get('id')) {
-			$rs = $rs->andWhere('c.id = :id')->setParameter('id', $request->get('id'));
-		}
+		if($request->get('id')) $rs = $rs->andWhere('c.id = :id')->setParameter('id', $request->get('id'));
 		
-		// check for the idGeo parameter
-		if($request->get('id_geo')) {
-			$rs = $rs->andWhere('c.idGeo = :idGeo')->setParameter('idGeo', $request->get('id_geo'));
-		}
+		// check for the city parameter
+		if($request->get('city')) $rs = $rs->andWhere('c.idCity = :city')->setParameter('city', $request->get('city'));
+		
+		// check for the state parameter
+		if($request->get('state')) $rs = $rs->andWhere('c.idState = :state')->setParameter('state', $request->get('state'));
+		
+		// check for the country parameter
+		if($request->get('country')) $rs = $rs->andWhere('c.idCountry = :country')->setParameter('country', $request->get('country'));
+		
+		// check for the category parameter
+		if($request->get('category')) $rs = $rs->andWhere('c.idCategory = :category')->setParameter('category', $request->get('category'));
 		
 		$rs = $rs->andWhere('c.enabled = :enabled')
 				->setParameter('enabled', 'Y')
@@ -77,8 +86,9 @@ class JSONController extends Controller
 			$arrLocations[] = array(
 				'address' => $item->getAddress(),
 				'checkinsCount' => $item->getCheckinsCount(),
-				'city' => $item->getCity(),
-				'country' => $item->getCountry(),
+				'categoryName' => $item->getCategoryName(),
+				'cityName' => $item->getCityName(),
+				'countryName' => $item->getCountryName(),
 				'coverPic' => $item->getCoverPic(),
 				'dateAdded' => $item->getDateAdded()->getTimeStamp(),
 				'dateUpdated' => $item->getDateUpdated()->getTimeStamp(),
@@ -86,9 +96,11 @@ class JSONController extends Controller
 				'enabled' => $item->getEnabled(),
 				'id' =>  $item->getId(),
 				'idCategory' => $item->getIdCategory(),
+				'idCity' => $item->getIdCity(),
+				'idCountry' => $item->getIdCountry(),
 				'idFoursquare' => $item->getIdFoursquare(),
-				'idGeo' => $item->getIdGeo(),
 				'idInstagram' => $item->getIdInstagram(),
+				'idState' => $item->getIdState(),
 				'lastMinId' => $item->getLastMinId(),
 				'lastPhotos' => $arrPhotos,
 				'minTimestamp' => $item->getMinTimestamp(),
@@ -97,7 +109,7 @@ class JSONController extends Controller
 				'phone' => $item->getPhone(),
 				'postalCode' => $item->getPostalCode(),
 				'slug' => $item->getSlug(),
-				'state' => $item->getState()
+				'stateName' => $item->getStateName()
 			);
 		}
 		$json = json_encode($arrLocations);
@@ -149,5 +161,4 @@ class JSONController extends Controller
 		
 		return $response;
 	}
-
 }

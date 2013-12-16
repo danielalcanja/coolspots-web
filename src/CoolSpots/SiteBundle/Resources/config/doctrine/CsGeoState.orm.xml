@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="CoolSpots\SiteBundle\Entity\CsGeoState" table="cs_geo_state">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="stateName" type="string" column="state_name" length="100" nullable="false"/>
+    <field name="stateAbbr" type="string" column="state_abbr" length="2" nullable="false"/>
+    <field name="enabled" type="string" column="enabled" length="1" nullable="false"/>
+    <field name="deleted" type="string" column="deleted" length="1" nullable="false"/>
+    <many-to-one field="idCountry" target-entity="CsGeoCountry">
+      <join-columns>
+        <join-column name="id_country" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

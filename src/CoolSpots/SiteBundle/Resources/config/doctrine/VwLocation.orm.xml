@@ -4,6 +4,14 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
+    <field name="idCity" type="integer" column="id_city" nullable="false"/>
+    <field name="cityName" type="string" column="city_name" length="200" nullable="false"/>
+    <field name="idState" type="integer" column="id_state" nullable="false"/>
+    <field name="stateName" type="string" column="state_name" length="100" nullable="false"/>
+    <field name="idCountry" type="integer" column="id_country" nullable="false"/>
+    <field name="countryName" type="string" column="country_name" length="50" nullable="false"/>
+	<field name="idCategory" type="integer" column="id_category" nullable="false"/>
+	<field name="categoryName" type="string" column="category_name" length="20" nullable="true"/>
     <field name="idInstagram" type="integer" column="id_instagram" nullable="false"/>
     <field name="idFoursquare" type="string" column="id_foursquare" length="100" nullable="false"/>
     <field name="name" type="string" column="name" length="100" nullable="false"/>
@@ -17,21 +25,9 @@
     <field name="minTimestamp" type="integer" column="min_timestamp" nullable="true"/>
     <field name="address" type="string" column="address" length="120" nullable="true"/>
     <field name="postalCode" type="integer" column="postal_code" nullable="true"/>
-    <field name="city" type="string" column="city" length="100" nullable="true"/>
-    <field name="state" type="string" column="state" length="4" nullable="true"/>
     <field name="phone" type="string" column="phone" length="20" nullable="true"/>
     <field name="enabled" type="string" column="enabled" length="1" nullable="false"/>
     <field name="deleted" type="string" column="deleted" length="1" nullable="false"/>
 	<field name="lastPic" type="string" column="last_pic" length="150" nullable="true"/>
-    <many-to-one field="idGeo" target-entity="CsGeo">
-      <join-columns>
-        <join-column name="id_geo" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
-    <many-to-one field="idCategory" target-entity="CsCategory">
-      <join-columns>
-        <join-column name="id_category" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
   </entity>
 </doctrine-mapping>

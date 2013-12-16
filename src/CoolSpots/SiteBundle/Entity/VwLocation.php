@@ -14,18 +14,50 @@ class VwLocation
 {
     /**
      * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      */
     private $id;
-
+	
+	/**
+	 * @var integer
+	 * @ORM\Column(name="id_city", type="integer")
+	 */
+	private $idCity;
+	
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id_geo", type="integer")
+     * @var string
+	 * @ORM\Column(name="cityName", type="string" length="200", nullable=false)
      */
-    private $idGeo;
+    private $cityName;
+	
+
+	/**
+	 * @var integer
+	 * 
+	 * @ORM\Column(name="id_state", type="integer")
+	 */
+	private $idState;
+	
+    /**
+     * @var string
+	 * @ORM\Column(name="state_name", type="string", length=50, nullable=false)
+     */
+    private $stateName;
+	
+	
+	/**
+	 * @var integer
+	 * 
+	 * @ORM\Column(name="id_country", type="integer")
+	 */
+	private $idCountry;
+	
+    /**
+     * @var string
+	 * @ORM\Column(name="country_name", type="string", length=50, nullable=false)
+     */
+    private $countryName;
 
     /**
      * @var integer
@@ -34,6 +66,13 @@ class VwLocation
      */
     private $idCategory;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="categoryName", type="string", length=20, nullable=true)
+     */
+    private $categoryName;
+	
     /**
      * @var integer
      *
@@ -128,20 +167,6 @@ class VwLocation
     /**
      * @var string
      *
-     * @ORM\Column(name="city", type="string", length=100)
-     */
-    private $city;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="state", type="string", length=4)
-     */
-    private $state;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="phone", type="string", length=20)
      */
     private $phone;
@@ -162,13 +187,6 @@ class VwLocation
 	
     /**
      * @var string
-	 * @ORM\Column(name="country", type="string", length=5, nullable=true)
-     */
-    private $country;
-	
-
-    /**
-     * @var string
      *
      * @ORM\Column(name="last_pic", type="string", length=150)
      */
@@ -183,29 +201,6 @@ class VwLocation
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set idGeo
-     *
-     * @param integer $idGeo
-     * @return VwLocation
-     */
-    public function setIdGeo($idGeo)
-    {
-        $this->idGeo = $idGeo;
-    
-        return $this;
-    }
-
-    /**
-     * Get idGeo
-     *
-     * @return integer 
-     */
-    public function getIdGeo()
-    {
-        return $this->idGeo;
     }
 
     /**
@@ -230,6 +225,29 @@ class VwLocation
     {
         return $this->idCategory;
     }
+	
+	/**
+     * Set categoryName
+     *
+     * @param string $categoryName
+     * @return VwLocatoin
+     */
+    public function setCategoryName($categoryName)
+    {
+        $this->categoryName = $categoryName;
+    
+        return $this;
+    }
+
+    /**
+     * Get categoryName
+     *
+     * @return string 
+     */
+    public function getCategoryName()
+    {
+        return $this->categoryName;
+    }	
 
     /**
      * Set idInstagram
@@ -275,6 +293,75 @@ class VwLocation
     public function getIdFoursquare()
     {
         return $this->idFoursquare;
+    }
+	
+	/**
+     * Set idCity
+     *
+     * @param string $idCity
+     * @return VwLocation
+     */
+    public function setIdCity($idCity)
+    {
+        $this->idCity = $idCity;
+    
+        return $this;
+    }
+
+    /**
+     * Get idCity
+     *
+     * @return integer 
+     */
+    public function getIdCity()
+    {
+        return $this->idCity;
+    }
+	
+	/**
+     * Set idState
+     *
+     * @param string $idState
+     * @return VwLocation
+     */
+    public function setIdState($idState)
+    {
+        $this->idState = $idState;
+    
+        return $this;
+    }
+
+    /**
+     * Get idState
+     *
+     * @return integer 
+     */
+    public function getIdState()
+    {
+        return $this->idState;
+    }
+	
+	/**
+     * Set idCountry
+     *
+     * @param string $idCountry
+     * @return VwLocation
+     */
+    public function setIdCountry($idCountry)
+    {
+        $this->idCountry = $idCountry;
+    
+        return $this;
+    }
+
+    /**
+     * Get idCountry
+     *
+     * @return integer 
+     */
+    public function getIdCountry()
+    {
+        return $this->idCountry;
     }
 
     /**
@@ -531,52 +618,6 @@ class VwLocation
     }
 
     /**
-     * Set city
-     *
-     * @param string $city
-     * @return VwLocation
-     */
-    public function setCity($city)
-    {
-        $this->city = $city;
-    
-        return $this;
-    }
-
-    /**
-     * Get city
-     *
-     * @return string 
-     */
-    public function getCity()
-    {
-        return $this->city;
-    }
-
-    /**
-     * Set state
-     *
-     * @param string $state
-     * @return VwLocation
-     */
-    public function setState($state)
-    {
-        $this->state = $state;
-    
-        return $this;
-    }
-
-    /**
-     * Get state
-     *
-     * @return string 
-     */
-    public function getState()
-    {
-        return $this->state;
-    }
-
-    /**
      * Set phone
      *
      * @param string $phone
@@ -669,26 +710,72 @@ class VwLocation
     }
 	
     /**
-     * Set country
+     * Set cityName
      *
-     * @param string $country
-     * @return CsLocation
+     * @param string $cityName
+     * @return VwLocation
      */
-    public function setCountry($country)
+    public function setCityName($cityName)
     {
-        $this->country = $country;
+        $this->cityName = $cityName;
     
         return $this;
     }
 
     /**
-     * Get country
+     * Get cityName
      *
      * @return string 
      */
-    public function getCountry()
+    public function getCityName()
     {
-        return $this->country;
+        return $this->cityName;
+    }
+	
+	/**
+     * Set stateName
+     *
+     * @param string $stateName
+     * @return VwLocation
+     */
+    public function setStateName($stateName)
+    {
+        $this->stateName = $stateName;
+    
+        return $this;
+    }
+
+    /**
+     * Get stateName
+     *
+     * @return string 
+     */
+    public function getStateName()
+    {
+        return $this->stateName;
+    }
+	
+	/**
+     * Set countryName
+     *
+     * @param string $countryName
+     * @return VwLocation
+     */
+    public function setCountryName($countryName)
+    {
+        $this->countryName = $countryName;
+    
+        return $this;
+    }
+
+    /**
+     * Get countryName
+     *
+     * @return string 
+     */
+    public function getCountryName()
+    {
+        return $this->countryName;
     }
 	
 }

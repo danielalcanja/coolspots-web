@@ -19,9 +19,7 @@ class PhotoController extends Controller
 		$session = $request->getSession();
 		$request->setLocale($session->get('_locale', 'en_US'));
 		$rsInfo = $em->createQuery('
-					SELECT l, g, c FROM SiteBundle:CsLocation l
-					JOIN l.idGeo g
-					JOIN l.idCategory c
+					SELECT l FROM SiteBundle:VwLocation l
 					WHERE l.id = :id
 					AND l.enabled = :enabled
 					AND l.deleted = :deleted')

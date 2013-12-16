@@ -100,29 +100,22 @@ class CsLocation
     /**
      * @var string
      *
-     * @ORM\Column(name="city", type="string", length=100, nullable=true)
-     */
-    private $city;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="state", type="string", length=4, nullable=true)
-     */
-    private $state;
-	
-    /**
-     * @var string
-	 * @ORM\Column(name="country", type="string", length=5, nullable=true)
-     */
-    private $country;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="phone", type="string", length=20, nullable=true)
      */
     private $phone;
+	
+    /**
+     * @var string
+	 * @ORM\Column(name="enabled", type="string", length=1, nullable=false)
+     */
+    private $enabled;
+
+    /**
+     * @var string
+	 * @ORM\Column(name="deleted", type="string", length=1, nullable=false)
+     */
+    private $deleted;
+
 
     /**
      * @var integer
@@ -142,18 +135,6 @@ class CsLocation
      * })
      */
     private $idCategory;
-
-    /**
-     * @var \CoolSpots\SiteBundle\Entity\CsGeo
-     *
-     * @ORM\ManyToOne(targetEntity="CoolSpots\SiteBundle\Entity\CsGeo")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_geo", referencedColumnName="id")
-     * })
-     */
-    private $idGeo;
-
-
 
     /**
      * Set idInstagram
@@ -409,52 +390,6 @@ class CsLocation
     }
 
     /**
-     * Set city
-     *
-     * @param string $city
-     * @return CsLocation
-     */
-    public function setCity($city)
-    {
-        $this->city = $city;
-    
-        return $this;
-    }
-
-    /**
-     * Get city
-     *
-     * @return string 
-     */
-    public function getCity()
-    {
-        return $this->city;
-    }
-
-    /**
-     * Set state
-     *
-     * @param string $state
-     * @return CsLocation
-     */
-    public function setState($state)
-    {
-        $this->state = $state;
-    
-        return $this;
-    }
-
-    /**
-     * Get state
-     *
-     * @return string 
-     */
-    public function getState()
-    {
-        return $this->state;
-    }
-
-    /**
      * Set phone
      *
      * @param string $phone
@@ -509,40 +444,7 @@ class CsLocation
     {
         return $this->idCategory;
     }
-
-    /**
-     * Set idGeo
-     *
-     * @param \CoolSpots\SiteBundle\Entity\CsGeo $idGeo
-     * @return CsLocation
-     */
-    public function setIdGeo(\CoolSpots\SiteBundle\Entity\CsGeo $idGeo = null)
-    {
-        $this->idGeo = $idGeo;
-    
-        return $this;
-    }
-
-    /**
-     * Get idGeo
-     *
-     * @return \CoolSpots\SiteBundle\Entity\CsGeo 
-     */
-    public function getIdGeo()
-    {
-        return $this->idGeo;
-    }
-    /**
-     * @var string
-     */
-    private $enabled;
-
-    /**
-     * @var string
-     */
-    private $deleted;
-
-
+	
     /**
      * Set enabled
      *
@@ -642,25 +544,87 @@ class CsLocation
     }
 
     /**
-     * Set country
+     * @var \CoolSpots\SiteBundle\Entity\CsGeoCountry
+     */
+    private $idCountry;
+
+    /**
+     * @var \CoolSpots\SiteBundle\Entity\CsGeoState
+     */
+    private $idState;
+
+    /**
+     * @var \CoolSpots\SiteBundle\Entity\CsGeoCity
+     */
+    private $idCity;
+
+
+    /**
+     * Set idCountry
      *
-     * @param string $country
+     * @param \CoolSpots\SiteBundle\Entity\CsGeoCountry $idCountry
      * @return CsLocation
      */
-    public function setCountry($country)
+    public function setIdCountry(\CoolSpots\SiteBundle\Entity\CsGeoCountry $idCountry = null)
     {
-        $this->country = $country;
+        $this->idCountry = $idCountry;
     
         return $this;
     }
 
     /**
-     * Get country
+     * Get idCountry
      *
-     * @return string 
+     * @return \CoolSpots\SiteBundle\Entity\CsGeoCountry 
      */
-    public function getCountry()
+    public function getIdCountry()
     {
-        return $this->country;
+        return $this->idCountry;
+    }
+
+    /**
+     * Set idState
+     *
+     * @param \CoolSpots\SiteBundle\Entity\CsGeoState $idState
+     * @return CsLocation
+     */
+    public function setIdState(\CoolSpots\SiteBundle\Entity\CsGeoState $idState = null)
+    {
+        $this->idState = $idState;
+    
+        return $this;
+    }
+
+    /**
+     * Get idState
+     *
+     * @return \CoolSpots\SiteBundle\Entity\CsGeoState 
+     */
+    public function getIdState()
+    {
+        return $this->idState;
+    }
+
+    /**
+     * Set idCity
+     *
+     * @param \CoolSpots\SiteBundle\Entity\CsGeoCity $idCity
+     * @return CsLocation
+     */
+    public function setIdCity(\CoolSpots\SiteBundle\Entity\CsGeoCity $idCity = null)
+    {
+        $this->idCity = $idCity;
+    
+        return $this;
+    }
+
+    /**
+     * Get idCity
+     *
+     * @return \CoolSpots\SiteBundle\Entity\CsGeoCity 
+     */
+    public function getIdCity()
+    {
+        return $this->idCity;
     }
 }

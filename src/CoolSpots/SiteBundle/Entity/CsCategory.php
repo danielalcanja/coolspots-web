@@ -34,8 +34,7 @@ class CsCategory
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
-
+	
 
     /**
      * Set exid

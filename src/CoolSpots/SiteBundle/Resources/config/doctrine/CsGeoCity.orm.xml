@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="CoolSpots\SiteBundle\Entity\CsGeoCity" table="cs_geo_city">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="cityName" type="string" column="city_name" length="200" nullable="false"/>
+    <field name="enabled" type="string" column="enabled" length="1" nullable="false"/>
+    <field name="deleted" type="string" column="deleted" length="1" nullable="false"/>
+    <many-to-one field="idCountry" target-entity="CsGeoCountry">
+      <join-columns>
+        <join-column name="id_country" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idState" target-entity="CsGeoState">
+      <join-columns>
+        <join-column name="id_state" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>
