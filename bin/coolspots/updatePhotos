@@ -156,7 +156,7 @@ function getJson($id_location, $url)
 		if(!$rsUser)
 		{
 			// user not found. Let's create a new record
-			$sqlUserInsert = sprintf("INSERT INTO cs_users (username, full_name, email, profile_picture, bio) VALUES ('%s', '%s', null, '%s', '%s')",
+			$sqlUserInsert = sprintf("INSERT INTO cs_users (username, full_name, email, profile_picture, bio, access_token, token_date) VALUES ('%s', '%s', null, '%s', '%s', null, null)",
 					$data['user']['username'],
 					substr(str_replace(array("'", '"'), '', $data['user']['full_name']),0,150),
 					substr($data['user']['profile_picture'],0,150),

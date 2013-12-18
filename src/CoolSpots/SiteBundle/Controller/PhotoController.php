@@ -12,7 +12,7 @@ class PhotoController extends Controller
 	 */
 	public function showAction($idLocation, $slug, $page)
 	{
-		$max_per_page = 18;
+		$max_per_page = 27;
 		$em = $this->getDoctrine()->getManager();
 		
 		$request = $this->getRequest();
@@ -42,6 +42,6 @@ class PhotoController extends Controller
 				->getResult();
 		$total_pics = count($rsPics);
 		$next_page = $total_pics > 0 ? $page + 1 : false;
-		return(array('location' => $rsInfo, 'pics' => $rsPics, 'page' => $page, 'total_pics' => $total_pics, 'next_page' => $next_page));
+		return(array('location' => $rsInfo, 'pics' => $rsPics, 'page' => $page, 'total_pics' => $total_pics, 'next_page' => $next_page, 'ul_count' => 1));
 	}
 }

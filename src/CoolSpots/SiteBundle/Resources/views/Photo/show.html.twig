@@ -81,11 +81,11 @@ $b(document).ready(function(){
 	</div>
 </div>
 <input type="hidden" name="next_page" id="next_page" value="{{ next_page }}" />
-<ul class="content location" id="photo-list">
 	{% endif %}
 	
+<ul class="content location" id="photo-list">
 	{% for pic in pics %}
-	<li class="photo eve-pic" data="{{ pic.standardResolution }}">
+	<li class="photo eve-pic ph-{{ ul_count }}" data="{{ pic.standardResolution }}">
 		<a href="#" class="box">
 			<input type="hidden" class="username" value="{{ pic.idUser.username }}">
 			<input type="hidden" class="userpic" value="{{ pic.idUser.profilePicture }}">
@@ -105,7 +105,16 @@ $b(document).ready(function(){
 	<div class="date photo">
 		<span class="day">{{ pic.dateAdded|date('d/m/Y') }}</span>
 	</div>
+		{% set ul_count = ul_count + 1 %}
+	
+		{% if ul_count == 10 %}
+		</ul>
+		<ul class="content location" id="photo-list">
+			{% set ul_count = 1 %}
+		{% endif %}
 	{% endfor %}
+	
+	
 	<script>
 	{% if next_page != false %}
 		$b('#np').val("{{ path('photo_show', { idLocation: location.id, slug: location.slug, page: next_page}) }}");
@@ -114,10 +123,9 @@ $b(document).ready(function(){
 		$b('#np').val("");
 	{% endif %}
 	</script>
+</ul>
 	
 	{% if page == 1%}
-
-</ul>
 <div class="pg-prev"></div>
 <div class="pg-next"></div>
 <div class="create" style="height:1px; display:block;"></div>
