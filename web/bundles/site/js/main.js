@@ -19,9 +19,9 @@ function fetchNextPage() {
 			url: jQuery('#np').val(),
 			dataType: 'html',
 			success: function(data) {
-				jQuery('#photo-list').append(data);
-				montaTudo();
+				//jQuery('#photo-list').append(data);
 				//console.log(data);
+				alert("Chamou próxima página");
 			}
 		});
 	}

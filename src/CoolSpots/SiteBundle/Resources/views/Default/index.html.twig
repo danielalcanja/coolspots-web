@@ -4,28 +4,34 @@
 {% endblock %}
 
 {% block body %}
-<ul class="content">
-	{% for item in rs %}
-		<li class="photo">
-			<a href="{{ path('photo_show', {'idLocation' : item.id, 'slug' : item.slug}) }}" class="box">
-				<div class="time">
-					<div class="clock"></div>
-					<div class="tmp"><span class="timeago" title="{{ item.dateUpdated|date() }}">{{ item.dateUpdated|date('d/m/Y') }}</span></div>
-				</div>
-				<div style="position:absolute; z-index:1;">
-					<img class="lazy" src="{{ asset('bundles/site/images/photo-placeholder.png') }}" data-original="{{ item.lastPic }}" />
-				</div>
-				<div class="info">
-					<h2 class="title">{{ item.name }}</h2>
-					<div class="more">25 Spooters - 2 Friends</div>
-				</div>
-			</a>
-			<div class="back" onclick="document.location='{{ path('photo_show', {'idLocation' : item.id, 'slug' : item.slug}) }}';"></div>
-		</li>
+<div id="photo-list">
+	<ul class="content">
+		{% for item in rs %}
+			<li class="photo li-{{ ul_count }}">
+				<a href="{{ path('photo_show', {'idLocation' : item.id, 'slug' : item.slug}) }}" class="box">
+					<div class="time">
+						<div class="clock"></div>
+						<div class="tmp"><span class="timeago" title="{{ item.dateUpdated|date() }}">{{ item.dateUpdated|date('d/m/Y') }}</span></div>
+					</div>
+					<div style="position:absolute; z-index:1;">
+						<img class="lazy" src="{{ asset('bundles/site/images/photo-placeholder.png') }}" data-original="{{ item.lastPic }}" />
+					</div>
+					<div class="info">
+						<h2 class="title">{{ item.name }}</h2>
+						<div class="more">25 Spooters - 2 Friends</div>
+					</div>
+				</a>
+				<div class="back" onclick="document.location='{{ path('photo_show', {'idLocation' : item.id, 'slug' : item.slug}) }}';"></div>
+			</li>
+			
+			{% set ul_count = ul_count + 1 %}
 		
-	{% endfor %}
-</ul>
-<div class="pg-prev"></div>
-<div class="pg-next"></div>
-<div class="create" style="height:1px; display:block;"></div>
+			{% if ul_count == 3 %}
+			</ul>
+			<ul class="content">
+				{% set ul_count = 1 %}
+			{% endif %}
+		{% endfor %}
+	</ul>
+</div>
 {% endblock %}

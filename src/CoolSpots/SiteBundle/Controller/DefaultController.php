@@ -25,10 +25,10 @@ class DefaultController extends Controller
 				->orderBy('c.dateUpdated', 'desc')
 				->setParameter('enabled', 'Y')
 				->setParameter('deleted', 'N')
-				->setMaxResults(1000)
+				->setMaxResults(12)
 				->getQuery()
 				->getResult();
-        return(array('rs' => $rs));
+        return(array('rs' => $rs, 'ul_count' => 1));
     }
 	
 	public function localeAction($lang)

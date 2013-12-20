@@ -17,12 +17,12 @@
 
 * { margin:0; padding:0; list-style:none; border:0; outline:none; text-decoration:none; }
 html { height:100%; }
-body { height:100%; background:#FFF; overflow:hidden; font-family: 'Museo500-Regular'; font-size:15px; }
+body { height:100%; overflow:hidden; background:#FFF; font-family: 'Museo500-Regular'; font-size:15px; }
 em { font-style:normal; }
 
 .index-shadown { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; z-index:5; display:block; }
 .index-shadown .index-box { width:800px; height:500px; border:2px solid #FFF; position:absolute; top:50%; left:50%; margin:-225px auto auto -400px; overflow:hidden; }
-.index-shadown .index-box .box-geral { width:3250px; height:500px;  } 
+.index-shadown .index-box .box-geral { width:350px; height:500px;  } 
 .index-shadown .index-box .box-geral .box { width:800px; height:500px; display:block; float:left; position:relative; z-index:1; font-family: 'Museo300-Regular'; font-weight:normal; color:#FFF; }
 .index-shadown .index-box .box .content { padding:20px; }
 .index-shadown .index-box .box .content h1 { font-weight:normal; font-size:40px; }
@@ -34,7 +34,7 @@ em { font-style:normal; }
 a.index-sign:link, a.index-sign:visited { color:#D74B70; }
 a.index-get:link, a.index-get:visited { position:absolute; bottom:20px; left:20px; font-size:20px; color:#FFF; }
 
-.top-bar { width:100%; position:absolute; top:0; left:0; z-index:2; }
+.top-bar { width:100%; position:fixed; top:0; left:0; z-index:2; }
 .top-bar-ico { width:53px; height:50px; position:absolute; top:10px; left:20px; line-height:50px; background:url('../images/icons.png') 0px 9px no-repeat #31749B; display:none; cursor:pointer; }
 .top-bar .back { height:50px; margin:10px 20px; background:#31749B; color:#FFF; line-height:50px; }
 
@@ -80,12 +80,29 @@ span.ros { background:#FF5885; }
 .region { float:right; margin-right:15px; }
 .region span { color:#FFF; }
 
-#site { height:100%; margin-top:-55px; overflow:hidden; position:relative; z-index:0; }
-#site .move { height:100%; margin-top:55px; position:relative; z-index:0; left:0; }
+#site { width:100%; height:100%; position:relative; z-index:0; }
+#site .move { width:100%; position:relative; z-index:0; left:0; }
 
-#site .move ul.content { height:100%; position:relative; z-index:0; }
+#site .move ul.content { clear:both; position:relative; z-index:0; }
+#site .move ul.content li { border-bottom:2px solid #FFF; float:left; }
 
-.photo { margin:0; padding:0; display:none; position:absolute; }
+.ul-2 li { width:50%; }
+.ul-2 .li-1 { margin:0 1px 0 -1px; }
+.ul-2 .li-2 { margin:0 -1px 0 1px; }
+
+.ul-3 li { width:33.33333333333333%; }
+.ul-3 .li-1 { margin-left:-2px; }
+.ul-3 .li-2 { margin:0 2px; }
+.ul-3 .li-3 { margin-right:-2px; }
+
+.ul-4 li { width:25%; }
+.ul-4 .li-1, .ul-4 .li-3 { margin:0 1px 0 -1px; }
+.ul-4 .li-2, .ul-4 .li-2 { margin:0 -1px 0 1px; }
+
+.ul-9 .li-1, .ul-9 .li-6  { width:40%; }
+.ul-9 .li-2, .ul-9 .li-3, .ul-9 .li-4, .ul-9 .li-5, .ul-9 .li-7, .ul-9 .li-8, .ul-9 .li-9 { width:19,84189723320158%; }
+
+.photo { display:none; position:relative; }
 .photo .image { position:absolute; z-index:1; }
 .photo img { width:100%; height:100%; }
 .photo .back { width:100%; height:100%; background:url('../images/alpha.png'); position:absolute; top:0; left:0; z-index:1; display:none; cursor:pointer; }

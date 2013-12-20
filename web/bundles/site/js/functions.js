@@ -1,186 +1,116 @@
 var $a = jQuery.noConflict();
 $a(document).ready(function(){
-	montaTudo();
-});
-function montaTudo() {
-	var content = "ul.content";
-	var altTotal, altBox, altG, altP, altDis1, altDis2, altDis3, esp, espL;
-	var ph, blc, wid, widTotal;
-	var col1, col2, col3, col4, col5;
-	var posAtual, totCom, posComent;
+	var content = $a("ul.content");
+	var site	= $a("#site");
+	var photo	= $a(".photo");
+	var timer	= "";
 	
-	if($a(content).hasClass("location") || $a(content).hasClass("event")) 		var LocEve = true;
-	if($a(content).hasClass("explorer") || $a(content).hasClass("favorite")) 	var ExpFav= true;
+	$a(site).height($a(window).height()-55);
 	
-	defineWidth();
-	mountGrid();
-	
-	var delay = (function(){
-		var timer = 0;
-		return function(callback, ms){
-			clearTimeout (timer);
-			timer = setTimeout(callback, ms);
-		};
-	})();
-
-	$a(window).resize(function(){
-		delay(function(e){
-			$a('#site').mCustomScrollbar("update");
-			defineWidth();
-			mountGrid();
-			ajustImage();
-		}, 50);
+	$a(photo).show();
+	$a(content).each(function(){
+		$a(this).addClass("ul-"+$a(this).children("li").size());
+		$a(this).children("li").css("display","block");
 	});
 	
-	function defineWidth(){
-		altTotal = 0; altBox = 0; altG = 0; altP = 0; altDis1 = 0; altDis2 = 0; altDis3 = 0; esp = 2; espL = 0;
-		ph = 1; blc = 0; wid = 0; widTotal = 0;
-		col1 = 0; col2 = 0; col3 = 0; col4 = 0; col5 = 0;
-		comentario = 0; posAtual = 0; totCom = 1; posComent = 0;
-		
-		$a(".page").css({width : $a(window).width(), height : $a(window).height()});
-		
-		altTotal = $a(content).height();
-		altBox = altTotal - 70;
-		altG = Math.round(altBox * (66.66666666666667 / 100));
-		altP = Math.round(altBox * (33.17460317460317 / 100));
-
-		altDis2 = altP + esp;
-		altDis3 = altDis2 * esp;
-
-		if(LocEve) espL = 470; 
-		if(ExpFav) espL = 400;
-		
-		col2 = esp + altP;		col3 = esp + 2 + (2 * altP);		col4 = esp + 4 + (3 * altP);		col5 = esp + 6 + (4 * altP);
-	}
-	function mountGrid(){
-		$a(".photo").each(function(i){
-			if(!($a(this).hasClass("date"))) {
-				if(ph === 1) {
-					posAtual = col1 + wid + espL;
-					$a(this).animate({width : altG, height : altG},500).addClass("phG");
-					$a(this).find("img").animate({width : altG, height : altG},500);
-					$a(this).css({ top : altDis1, left : posAtual });
-					$a(this).find(".info").width(altG - 20);
-					widTotal = widTotal + altG + esp;
-					posComent = posAtual + altG;
-				}
-				if(ph === 2 || ph === 3 || ph === 4 || ph === 5 || ph === 6 || ph === 7 || ph === 8){
-					$a(this).animate({width : altP, height : altP},500).addClass("phP");
-					$a(this).find(".info").width(altP - 20);
-				}
-				if(ph === 2){
-					posAtual = col1 + wid + espL;
-					$a(this).css({ top : altDis3, left : posAtual });
-				}
-				if(ph === 3){
-					posAtual = col2 + wid + espL;
-					$a(this).css({ top : altDis3, left : posAtual });
-				}
-				if(ph === 4){
-					posAtual = col3 + wid + espL;
-					$a(this).css({ top : altDis1, left : posAtual });
-					widTotal = widTotal + altP + esp;
-					posComent = posAtual + altP;
-				}
-				if(ph === 5){
-					posAtual = col3 + wid + espL;
-					$a(this).css({ top : altDis2, left : posAtual });
-				}
-				if(ph === 6){
-					posAtual = col3 + wid + espL;
-					$a(this).css({ top : altDis3, left : posAtual });
-				}
-				if(ph === 7){
-					posAtual = col4 + wid + espL;
-					$a(this).css({ top : altDis1, left : posAtual });
-					widTotal = widTotal + altP + esp;
-					posComent = posAtual + altP;
-				}
-				if(ph === 8) {
-					posAtual = col5 + wid + espL;
-					$a(this).css({ top : altDis1, left : posAtual });
-					widTotal = widTotal + altP + esp;
-					posComent = posAtual + altP;
-				}
-				if(ph === 9){
-					posAtual = col4 + wid + espL;
-					$a(this).animate({width : altG, height : altG},500).addClass("phG");
-					$a(this).find("img").animate({width : altG, height : altG},500);
-					$a(this).css({ top : altDis2, left : posAtual });
-					$a(this).find(".info").width(altG - 20);
-					ph = 0;
-					blc++;
-					wid = blc * (col5 + altP + 2);
-					posComent = posAtual + altG;
-				}
-				if($a(this).next().hasClass("comentario")) {
-					ph = 0;
-					var com = $a(this).next(".comentario");
-					comentario = 270;
-					$a(com).css({ left : posComent });
-					if(totCom === 1) {
-						widTotal = widTotal;
-						totCom++;
-					}
-				}
-				ph++;
-			}else {
-				$a(this).css({ left : posAtual });
-			} 
+	timer = setTimeout(function(){
+		$a(photo).each(function(){
+			$a(this).height($a(this).width());
 		});
-		
-		$a(".create").width(widTotal + espL);
-	}
-
-	var site = $a("#site"); 
-	var time = '';
-	time = setTimeout(function(){
-		$a(site).mCustomScrollbar({
-			horizontalScroll:true,
-			advanced:{
-				updateOnBrowserResize: true,
-				updateOnContentResize: true
-			},
-			callbacks:{
-				onTotalScrollOffset: 300,
-				whileScrolling: function(){
-					updateLazyImages();
-					WhileScrolling();		
-				},
-				onTotalScroll: function(){
-					console.log("scrolled to the end of content.");
-					fetchNextPage();
-				}
-			}
-		});
-
-		$a(".mCSB_container").height(altTotal);
-		$a(".photo").fadeIn('slow');
 		updateLazyImages();
-		
-		var esq = [];
-		var box = [];
-		var cai = "ul .date";
-		var tot = $a(cai).length;
-		
-		$a(cai).each(function(i, obj){
-			esq[i] = $a(this).offset().left;
-			box[i] = obj;
-		});
-		
-		function WhileScrolling(){
-			var moveu = mcs.draggerLeft;
-			for(var j = 0; j <= tot; j++){
-				$a(box[j]).html(j);
-				if (moveu > esq[j] -300){
-					$a(box[j]).css({position : 'fixed', left : 150});
-				} else {
-					$a(box[j]).css({position : 'absolute', left : esq[j]});
-				}
+	},500);
+	
+	$a(site).mCustomScrollbar({
+		scrollInertia: 300,
+		advanced:{
+			updateOnBrowserResize: true,
+			updateOnContentResize: true
+		},
+		callbacks:{
+			whileScrolling: function(){
+				updateLazyImages();
+				// WhileScrolling();		
+			},
+			onTotalScroll: function(){
+				console.log("scrolled to the end of content.");
+				fetchNextPage();
 			}
 		}
-	},1000);
+	});
+	
+	$a(content).hover(function(){
+		$a(".top-bar .back").fadeOut('fast');
+		$a(".top-bar-ico").fadeIn('slow');
+	});
+	$a(".top-bar-ico").click(function(){
+		$a(this).hide();
+		$a(".top-bar .back").fadeIn('fast');
+	});
+	
+	// $a(site).mCustomScrollbar({
+		// advanced:{
+			// updateOnBrowserResize: true,
+			// updateOnContentResize: true
+		// },
+		// callbacks:{
+			// whileScrolling: function(){
+				// updateLazyImages();
+				//WhileScrolling();		
+			// },
+			// onTotalScroll: function(){
+				// console.log("scrolled to the end of content.");
+				// fetchNextPage();
+			// }
+		// }
+	// });
+	
+	// function updateScrollBar(){
+		// var time = '';
+		// time = setTimeout(function(){	
+			// $a(site).mCustomScrollbar({
+				// advanced:{
+					// updateOnBrowserResize: true,
+					// updateOnContentResize: true
+				// },
+				// callbacks:{
+					// onTotalScrollOffset: 300,
+					// whileScrolling: function(){
+						// updateLazyImages();
+						// WhileScrolling();		
+					// },
+					// onTotalScroll: function(){
+						// console.log("scrolled to the end of content.");
+						// fetchNextPage();
+					// }
+				// }
+			// });
+
+			// $a(".photo").fadeIn();
+			// updateLazyImages();
+			
+			// var esq = [];
+			// var box = [];
+			// var cai = "ul .date";
+			// var tot = $a(cai).length;
+			
+			// $a(cai).each(function(i, obj){
+				// esq[i] = $a(this).offset().left;
+				// box[i] = obj;
+			// });
+			
+			// function WhileScrolling(){
+				// var moveu = mcs.draggerLeft;
+				// for(var j = 0; j <= tot; j++){
+					// $a(box[j]).html(j);
+					// if (moveu > esq[j] -300){
+						// $a(box[j]).css({position : 'fixed', left : 150});
+					// } else {
+						// $a(box[j]).css({position : 'absolute', left : esq[j]});
+					// }
+				// }
+			// }
+		// },1000);
+	// }
 	
 	$a(".photo").hover(function(){
 		$a(this).find(".back").fadeIn('fast');
@@ -192,42 +122,38 @@ function montaTudo() {
 		$a(this).find(".back").fadeOut('fast');
 	});
 
-	$a(content).hover(function(){
-		$a(".top-bar .back").fadeOut('fast');
-		$a(".top-bar-ico").fadeIn('slow');
-	});
-	$a(".top-bar-ico").click(function(){
-		$a(this).hide();
-		$a(".top-bar .back").fadeIn('fast');
-	});
-	var content = $a("#site"); //
 	
-	$a(site).mousemove(function(event) {
-		//var posicao = parseInt((event.pageX / $a(window).width()) * 100);
-		if(event.pageX < 45 ) { 
-			$a(".pg-prev").fadeIn("slow");
-		} else {
-			$a(".pg-prev").fadeOut("fast");
-		}
-		if(($a(window).width() - event.pageX) < 50 ) {
-			$a(".pg-next").fadeIn("slow");
-		} else {
-			$a(".pg-next").fadeOut("fast");
-		}
-	});
-	$a(site).mouseout(function(event) {
-		$a(this).mCustomScrollbar("stop");
-	});
-	$a(".pg-prev").hover(function(){
-		site.mCustomScrollbar("scrollTo","left",{ scrollInertia:20000});
-	}, function(){
-		site.mCustomScrollbar("stop");
-	});
-	$a(".pg-next").hover(function(){
-		site.mCustomScrollbar("scrollTo","right",{ scrollInertia:20000});
-	}, function(){
-		site.mCustomScrollbar("stop");
-	});
+	
+	// $a(site).mousemove(function(event) {
+		// var posicao = parseInt((event.pageX / $a(window).width()) * 100);
+		// if(event.pageX < 45 ) { 
+			// $a(".pg-prev").fadeIn("slow");
+		// } else {
+			// $a(".pg-prev").fadeOut("fast");
+		// }
+		// if(($a(window).width() - event.pageX) < 50 ) {
+			// $a(".pg-next").fadeIn("slow");
+		// } else {
+			// $a(".pg-next").fadeOut("fast");
+		// }
+	// });
+	// $a(site).mouseout(function(event) {
+		// $a(this).mCustomScrollbar("stop");
+	// });
+	// $a(".pg-prev").hover(function(){
+		// site.mCustomScrollbar("scrollTo","left",{ scrollInertia:20000});
+	// }, function(){
+		// site.mCustomScrollbar("stop");
+	// });
+	// $a(".pg-next").hover(function(){
+		// site.mCustomScrollbar("scrollTo","right",{ scrollInertia:20000});
+	// }, function(){
+		// site.mCustomScrollbar("stop");
+	// });
+	
+	function updateScrollbar() {
+		$a(site).mCustomScrollbar("update");
+	}
 	
 	var	shadown = ".shadown",
 		box = ".shadown .box",
@@ -510,5 +436,4 @@ function montaTudo() {
 	function shadownClose(){
 		$a(shadown).fadeOut('slow');
 	}
-}
-
+});

@@ -2,7 +2,7 @@
 /* vertical scrollbar */
 .mCSB_container{
 	width:auto;
-	margin-right:30px;
+	margin-right:15px;
 	overflow:hidden;
 }
 .mCSB_container.mCS_no_scrollbar{
@@ -43,7 +43,7 @@
 	height:30px;
 }
 .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{
-	width:4px;
+	width:10px;
 	height:100%;
 	margin:0 auto;
 	-webkit-border-radius:10px;
@@ -232,6 +232,10 @@
 .mCS-dark>.mCSB_scrollTools .mCSB_buttonRight{
 	background-position:-80px -56px;
 }
+
+
+
+
 /*light-2*/
 .mCS-light-2>.mCSB_scrollTools .mCSB_draggerRail{
 	width:4px;
