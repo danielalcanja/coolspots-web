@@ -11,17 +11,3 @@ function updateLazyImages() {
 		effect : "fadeIn"
 	});	
 }
-
-function fetchNextPage() {
-	if(jQuery('#np').val() !== "") {
-		console.log('Fetching next page: ' + jQuery('#np').val());
-		jQuery.ajax({
-			url: jQuery('#np').val(),
-			dataType: 'html',
-			success: function(data) {
-				alert("Chamou próxima página");
-				//jQuery('#photo-list').append(data);
-			}
-		});
-	}
-}

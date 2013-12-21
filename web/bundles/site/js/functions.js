@@ -5,52 +5,87 @@ $a(document).ready(function(){
 	var photo	= $a(".photo");
 	var timer	= "";
 	var qtdUl	= 0;
-	var pgAtual = "", pgNext = $a('#np').val();
+	var pgAtual = "", pgNext = $a('.np:first').val();
 	
 	$a(site).height($a(window).height()-55);
 	
-	start();
+	start(qtdUl,0);
 	
-	function start(){
+	function start(init, init2){
 		$a(photo).show();
-		$a(content).each(function(){
-			var total = $a(this).children("li").size();
-			$a(this).addClass("ul-"+total);
-			if(total==0) $a(this).remove();
-		});
+		var totUl = $a("ul.content").size();
+		var ul = "";
+		
+		for(i=init; i<totUl; i++){
+			ul = $a("ul.content").eq(i);
+			li = $a(ul).children("li").size();
+			$a(ul).addClass("ul-"+li);
+			
+			qtdUl++;
+			if(li==0) { qtdUl--; $a(ul).remove(); }
+		}
+		showImages(init2);
 	}
 	
-	timer = setTimeout(function(){
-		$a(photo).each(function(){
-			$a(this).height($a(this).find("img").width());
-		});
-		
-		$a(content).each(function(){
-			if($a(this).hasClass("ul-9")){
-				$a(this).children(".li-1").wrap("<div class='ph-box-9-1'></div>");
-				var atual = $a(this).children(".ph-box-9-1");
-				$a(atual).css("width","40%");
-				$a(this).children(".li-2").appendTo(atual);
-				$a(this).children(".li-3").appendTo(atual);
-				$a(atual).children(".li-1").css("width","100%"); 
-				$a(atual).children(".li-2").css("width","50%");
-				$a(atual).children(".li-3").css("width","50%");
-				
-				$a(this).children(".li-4").wrap("<div class='ph-box-9-2'></div>");
-				var atual = $a(this).children(".ph-box-9-2");
-				$a(atual).css("width","20%");
-				$a(this).children(".li-5").appendTo(atual);
-				$a(this).children(".li-6").appendTo(atual);
-				$a(atual).children(".li-4").css("width","100%");
-				$a(atual).children(".li-5").css("width","100%");
-				$a(atual).children(".li-6").css("width","100%");
-			}
-		});
-		
-		updateLazyImages();
-	},500);
+	function showImages(start){
+		timer = setTimeout(function(){
+			$a(photo).each(function(){
+				$a(this).height($a(this).find("img").width());
+			});
+			
+			var totUl = $a("ul.content").size();
+			for(i=start; i<totUl; i++){
+				ul = $a("ul.content").eq(i);
+
+			
+				if($a(ul).hasClass("ul-9")){
+					$a(ul).children(".li-1").wrap("<div class='ph-box-9-1'></div>");
+					var atual = $a(ul).children(".ph-box-9-1");
+					$a(atual).css("width","40%");
+					$a(ul).children(".li-2").appendTo(atual);
+					$a(ul).children(".li-3").appendTo(atual);
+					$a(atual).children(".li-1").css("width","100%"); 
+					$a(atual).children(".li-2").css("width","50%");
+					$a(atual).children(".li-3").css("width","50%");
+					
+					$a(ul).children(".li-4").wrap("<div class='ph-box-9-2'></div>");
+					var atual = $a(ul).children(".ph-box-9-2");
+					$a(atual).css("width","20%");
+					$a(ul).children(".li-5").appendTo(atual);
+					$a(ul).children(".li-6").appendTo(atual);
+					$a(atual).children(".li-4").css("width","100%");
+					$a(atual).children(".li-5").css("width","100%");
+					$a(atual).children(".li-6").css("width","100%");
+				}
+			};
+			updateScrollbar()
+			updateLazyImages();
+		},500);
+	}
 	
-	$a(site).mCustomScrollbar({
+	function fetchNextPage() {
+		var sleep = 0;
+		if($a('.np:first').val() !== "") {
+			console.log('Fetching next page: ' + $a('.np:first').val());
+			$a.ajax({
+				url: $a('.np:first').val(),
+				dataType: 'html',
+				success: function(data) {
+					$a("#photo-list").append("<h1 style='font-size:300px;'>Chamou proxima pagina!</h1>");
+					sleep = setTimeout(function(){ start(qtdUl,qtdUl); }, 10);
+				}
+			});
+		}
+	}
+	
+	$a(window).scroll(function() {
+		if(($a(window).scrollTop() + $a(window).height() + 20) >= $a(document).height()) {
+			$a(window).unbind('scroll');
+			fetchNextPage();
+		}
+	});
+	
+	$a("body").mCustomScrollbar({
 		scrollInertia: 300,
 		advanced:{
 			updateOnBrowserResize: true,
@@ -63,16 +98,15 @@ $a(document).ready(function(){
 			onTotalScroll: function(){
 				if(pgAtual != pgNext){
 					fetchNextPage();
-					updateScrollbar();
 				}
 				pgAtual = pgNext;
-				pgNext = $a('#np').val();
+				pgNext = $a('.np:first').val();
 			}
 		}
 	});
 	
 	function updateScrollbar() {
-		$a(site).mCustomScrollbar("update");
+		$a("body").mCustomScrollbar("update");
 	}
 	
 	$a(content).hover(function(){

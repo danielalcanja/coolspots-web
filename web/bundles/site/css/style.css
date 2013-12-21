@@ -16,8 +16,8 @@
 }
 
 * { margin:0; padding:0; list-style:none; border:0; outline:none; text-decoration:none; }
-html { height:100%; }
-body { height:100%; overflow:hidden; background:#FFF; font-family: 'Museo500-Regular'; font-size:15px; }
+html {height:100%;}
+body { background:#FFF; font-family: 'Museo500-Regular'; font-size:15px; }
 em { font-style:normal; }
 
 .index-shadown { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; z-index:5; display:block; }
@@ -80,11 +80,13 @@ span.ros { background:#FF5885; }
 .region { float:right; margin-right:15px; }
 .region span { color:#FFF; }
 
-#site { width:100%; height:100%; position:relative; z-index:0; }
-#site .move { width:100%; position:relative; z-index:0; left:0; }
+#site { width:100%; display:table; position:relative; z-index:0; }
+#site .move { width:100%; display:table; position:relative; z-index:0; left:0; }
 
-#site .move ul.content { clear:both; overflow:hidden; position:relative; z-index:0; }
-#site .move ul.content li { border-bottom:2px solid #FFF; }
+#site #photo-list { width:100%; display:table; }
+
+#site ul.content { clear:both; width:100%; position:relative; z-index:0; }
+#site ul.content li { border-bottom:2px solid #FFF; }
 
 .ul-2 li { width:50%; float:left; }
 .ul-2 .li-1 { margin:0 1px 0 -1px; }

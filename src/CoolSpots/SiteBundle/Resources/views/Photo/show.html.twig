@@ -44,7 +44,7 @@ $b(document).ready(function(){
 	});
 });
 </script>
-<input type="hidden" name="np" id="np" value="" />
+<input type="hidden" name="np" class="np" value="" />
 <div class="location-info">
 	<div class="loc">
 		<h1>{{ location.name }}</h1>
@@ -119,10 +119,10 @@ $b(document).ready(function(){
 	</ul>
 	<script>
 	{% if next_page != false %}
-		$b('#np').val("{{ path('photo_show', { idLocation: location.id, slug: location.slug, page: next_page}) }}");
+		$b('.np:first').val("{{ path('photo_show', { idLocation: location.id, slug: location.slug, page: next_page}) }}");
 		
 	{% else %}
-		$b('#np').val("");
+		$b('.np:first').val("");
 	{% endif %}
 	</script>
 	{% if page == 1%}
