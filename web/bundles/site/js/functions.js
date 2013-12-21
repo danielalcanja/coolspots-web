@@ -4,19 +4,49 @@ $a(document).ready(function(){
 	var site	= $a("#site");
 	var photo	= $a(".photo");
 	var timer	= "";
+	var qtdUl	= 0;
+	var pgAtual = "", pgNext = $a('#np').val();
 	
 	$a(site).height($a(window).height()-55);
 	
-	$a(photo).show();
-	$a(content).each(function(){
-		$a(this).addClass("ul-"+$a(this).children("li").size());
-		$a(this).children("li").css("display","block");
-	});
+	start();
+	
+	function start(){
+		$a(photo).show();
+		$a(content).each(function(){
+			var total = $a(this).children("li").size();
+			$a(this).addClass("ul-"+total);
+			if(total==0) $a(this).remove();
+		});
+	}
 	
 	timer = setTimeout(function(){
 		$a(photo).each(function(){
-			$a(this).height($a(this).width());
+			$a(this).height($a(this).find("img").width());
 		});
+		
+		$a(content).each(function(){
+			if($a(this).hasClass("ul-9")){
+				$a(this).children(".li-1").wrap("<div class='ph-box-9-1'></div>");
+				var atual = $a(this).children(".ph-box-9-1");
+				$a(atual).css("width","40%");
+				$a(this).children(".li-2").appendTo(atual);
+				$a(this).children(".li-3").appendTo(atual);
+				$a(atual).children(".li-1").css("width","100%"); 
+				$a(atual).children(".li-2").css("width","50%");
+				$a(atual).children(".li-3").css("width","50%");
+				
+				$a(this).children(".li-4").wrap("<div class='ph-box-9-2'></div>");
+				var atual = $a(this).children(".ph-box-9-2");
+				$a(atual).css("width","20%");
+				$a(this).children(".li-5").appendTo(atual);
+				$a(this).children(".li-6").appendTo(atual);
+				$a(atual).children(".li-4").css("width","100%");
+				$a(atual).children(".li-5").css("width","100%");
+				$a(atual).children(".li-6").css("width","100%");
+			}
+		});
+		
 		updateLazyImages();
 	},500);
 	
@@ -28,15 +58,22 @@ $a(document).ready(function(){
 		},
 		callbacks:{
 			whileScrolling: function(){
-				updateLazyImages();
-				// WhileScrolling();		
+				updateLazyImages();	
 			},
 			onTotalScroll: function(){
-				console.log("scrolled to the end of content.");
-				fetchNextPage();
+				if(pgAtual != pgNext){
+					fetchNextPage();
+					updateScrollbar();
+				}
+				pgAtual = pgNext;
+				pgNext = $a('#np').val();
 			}
 		}
 	});
+	
+	function updateScrollbar() {
+		$a(site).mCustomScrollbar("update");
+	}
 	
 	$a(content).hover(function(){
 		$a(".top-bar .back").fadeOut('fast');
@@ -47,72 +84,7 @@ $a(document).ready(function(){
 		$a(".top-bar .back").fadeIn('fast');
 	});
 	
-	// $a(site).mCustomScrollbar({
-		// advanced:{
-			// updateOnBrowserResize: true,
-			// updateOnContentResize: true
-		// },
-		// callbacks:{
-			// whileScrolling: function(){
-				// updateLazyImages();
-				//WhileScrolling();		
-			// },
-			// onTotalScroll: function(){
-				// console.log("scrolled to the end of content.");
-				// fetchNextPage();
-			// }
-		// }
-	// });
-	
-	// function updateScrollBar(){
-		// var time = '';
-		// time = setTimeout(function(){	
-			// $a(site).mCustomScrollbar({
-				// advanced:{
-					// updateOnBrowserResize: true,
-					// updateOnContentResize: true
-				// },
-				// callbacks:{
-					// onTotalScrollOffset: 300,
-					// whileScrolling: function(){
-						// updateLazyImages();
-						// WhileScrolling();		
-					// },
-					// onTotalScroll: function(){
-						// console.log("scrolled to the end of content.");
-						// fetchNextPage();
-					// }
-				// }
-			// });
-
-			// $a(".photo").fadeIn();
-			// updateLazyImages();
-			
-			// var esq = [];
-			// var box = [];
-			// var cai = "ul .date";
-			// var tot = $a(cai).length;
-			
-			// $a(cai).each(function(i, obj){
-				// esq[i] = $a(this).offset().left;
-				// box[i] = obj;
-			// });
-			
-			// function WhileScrolling(){
-				// var moveu = mcs.draggerLeft;
-				// for(var j = 0; j <= tot; j++){
-					// $a(box[j]).html(j);
-					// if (moveu > esq[j] -300){
-						// $a(box[j]).css({position : 'fixed', left : 150});
-					// } else {
-						// $a(box[j]).css({position : 'absolute', left : esq[j]});
-					// }
-				// }
-			// }
-		// },1000);
-	// }
-	
-	$a(".photo").hover(function(){
+	$a(photo).hover(function(){
 		$a(this).find(".back").fadeIn('fast');
 		$a(this).find(".time").fadeIn('fast');
 		$a(this).find(".more").slideDown('fast');
@@ -151,9 +123,7 @@ $a(document).ready(function(){
 		// site.mCustomScrollbar("stop");
 	// });
 	
-	function updateScrollbar() {
-		$a(site).mCustomScrollbar("update");
-	}
+	
 	
 	var	shadown = ".shadown",
 		box = ".shadown .box",

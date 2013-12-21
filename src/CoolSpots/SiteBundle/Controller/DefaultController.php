@@ -25,7 +25,7 @@ class DefaultController extends Controller
 				->orderBy('c.dateUpdated', 'desc')
 				->setParameter('enabled', 'Y')
 				->setParameter('deleted', 'N')
-				->setMaxResults(12)
+				->setMaxResults(21)
 				->getQuery()
 				->getResult();
         return(array('rs' => $rs, 'ul_count' => 1));

@@ -13,7 +13,7 @@
 						<div class="clock"></div>
 						<div class="tmp"><span class="timeago" title="{{ item.dateUpdated|date() }}">{{ item.dateUpdated|date('d/m/Y') }}</span></div>
 					</div>
-					<div style="position:absolute; z-index:1;">
+					<div class="image">
 						<img class="lazy" src="{{ asset('bundles/site/images/photo-placeholder.png') }}" data-original="{{ item.lastPic }}" />
 					</div>
 					<div class="info">
@@ -26,7 +26,7 @@
 			
 			{% set ul_count = ul_count + 1 %}
 		
-			{% if ul_count == 3 %}
+			{% if ul_count == 10 %}
 			</ul>
 			<ul class="content">
 				{% set ul_count = 1 %}

@@ -83,36 +83,83 @@ span.ros { background:#FF5885; }
 #site { width:100%; height:100%; position:relative; z-index:0; }
 #site .move { width:100%; position:relative; z-index:0; left:0; }
 
-#site .move ul.content { clear:both; position:relative; z-index:0; }
-#site .move ul.content li { border-bottom:2px solid #FFF; float:left; }
+#site .move ul.content { clear:both; overflow:hidden; position:relative; z-index:0; }
+#site .move ul.content li { border-bottom:2px solid #FFF; }
 
-.ul-2 li { width:50%; }
+.ul-2 li { width:50%; float:left; }
 .ul-2 .li-1 { margin:0 1px 0 -1px; }
 .ul-2 .li-2 { margin:0 -1px 0 1px; }
 
-.ul-3 li { width:33.33333333333333%; }
+.ul-3 li { width:33.33333333333333%; float:left; }
 .ul-3 .li-1 { margin-left:-2px; }
 .ul-3 .li-2 { margin:0 2px; }
 .ul-3 .li-3 { margin-right:-2px; }
 
-.ul-4 li { width:25%; }
-.ul-4 .li-1, .ul-4 .li-3 { margin:0 1px 0 -1px; }
-.ul-4 .li-2, .ul-4 .li-2 { margin:0 -1px 0 1px; }
+.ul-4 li { width:25%; float:left; }
+.ul-4 .li-1 { margin:0 0 0 -4px; }
+.ul-4 .li-2 { margin:0 2px; }
+.ul-4 .li-3 { margin:0 2px 0 0; }
+.ul-4 .li-4 { margin:0 -2px 0 0; }
 
-.ul-9 .li-1, .ul-9 .li-6  { width:40%; }
-.ul-9 .li-2, .ul-9 .li-3, .ul-9 .li-4, .ul-9 .li-5, .ul-9 .li-7, .ul-9 .li-8, .ul-9 .li-9 { width:19,84189723320158%; }
+.ul-5 li { width:25%; float:right; }
+.ul-5 .li-1 { width:50%; margin:0px -2px 0 2px; }
+.ul-5 .li-2 { margin:-2px 0 0 2px; }
+.ul-5 .li-3 { margin:-2px 0 0 -2px; }
+.ul-5 .li-4 { margin:0px 0 0 2px; }
+.ul-5 .li-5 { margin:0px 0 0 -2px; }
+
+.ul-6 li { width:33.33333333333333%; float:left; }
+.ul-6 .li-1 { margin-left:-2px; }
+.ul-6 .li-2 { margin:0 2px; }
+.ul-6 .li-3 { margin-right:-2px; }
+.ul-6 .li-4 { margin-left:-2px; }
+.ul-6 .li-5 { margin:0 2px; }
+.ul-6 .li-6 { margin-right:-2px; }
+
+.ul-7 li { width:20%; float:left; }
+.ul-7 .li-1 { width:40%; margin:0 2px 0 -2px; }
+.ul-7 .li-2 { margin:-2px 2px 0 0; }
+.ul-7 .li-3 { margin:-2px -2px 0 0; }
+.ul-7 .li-4 { margin:-2px -4px 0 4px; }
+.ul-7 .li-5 { margin:0 2px 0 0; }
+.ul-7 .li-6 { margin:0 -2px 0 0; }
+.ul-7 .li-7 { margin:0 -4px 0 4px; }
+
+.ul-8 li { width:25%; float:left; }
+.ul-8 .li-1 { margin:0 0 0 -4px; }
+.ul-8 .li-2 { margin:0 2px; }
+.ul-8 .li-3 { margin:0 2px 0 0; }
+.ul-8 .li-4 { margin:0 -2px 0 0; }
+.ul-8 .li-5 { margin:0 0 0 -4px; }
+.ul-8 .li-6 { margin:0 2px; }
+.ul-8 .li-7 { margin:0 2px 0 0; }
+.ul-8 .li-8 { margin:0 -2px 0 0; }
+
+.ul-9 li { width:20%; float:left; }
+.ul-9 .li-1 { width:40%; margin:0; }
+.ul-9 .li-2 { margin:-1px 2px 0 -2px; }
+.ul-9 .li-3 { margin:-1px 0 0 0; }
+.ul-9 .li-4 { margin:-1px 0 0 0; }
+.ul-9 .li-5 { margin:-1px 0 0 0; }
+.ul-9 .li-6 { margin:-1px 0 0 0; }
+.ul-9 .li-7 { margin:-1px 2px 0 0; }
+.ul-9 .li-8 { margin:-1px -4px 0 0; }
+.ul-9 .li-9 { width:40%; margin:-1px -2px 0 0; }
+
+.ph-box-9-1, .ph-box-9-2 { float:left; }
+.ph-box-9-1 { margin:0 2px 0 -2px; }
+.ph-box-9-2 { margin:0 2px 0 0; }
 
 .photo { display:none; position:relative; }
-.photo .image { position:absolute; z-index:1; }
+.photo .image { width:100%; height:100%; position:absolute; z-index:1; }
 .photo img { width:100%; height:100%; }
 .photo .back { width:100%; height:100%; background:url('../images/alpha.png'); position:absolute; top:0; left:0; z-index:1; display:none; cursor:pointer; }
 .photo a.box { height:100%; display:block; color:#FFF; }
 .photo .time { position:absolute; top:10px; right:15px; z-index:2; display:none; }
 .photo .time .clock { width:14px; height:15px; float:left; background:url('../images/icons.png') 0px -50px no-repeat; }
 .photo .time .tmp { font-size:12px; font-weight:normal; height:15px; float:left; line-height:17px; padding-left:5px; }
-.phG .info, .phP .info { position:absolute; left:10px; bottom:20px; z-index:2; font-family: 'Museo300-Regular'; font-weight:normal; }
-.phG .info h2 { font-size:35px; font-weight:normal; }
-.phP .info h2 { font-size:25px; font-weight:normal; }
+.photo .info { position:absolute; left:10px; bottom:20px; z-index:2; font-family: 'Museo300-Regular'; font-weight:normal; }
+.photo .info h2 { font-size:35px; font-weight:normal; }
 .info .more { margin-top:10px; padding-top:5px; font-family: 'Museo500-Regular'; font-size:15px; border-top:1px solid #FFF; display:none; }
 
 /*COMENTARIO*/

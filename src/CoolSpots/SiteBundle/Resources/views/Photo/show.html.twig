@@ -83,7 +83,9 @@ $b(document).ready(function(){
 <input type="hidden" name="next_page" id="next_page" value="{{ next_page }}" />
 	{% endif %}
 
-<div id="photo-list">	
+	{% if page == 1%}
+<div id="photo-list">
+	{% endif %}	
 	<ul class="content">
 		{% for pic in pics %}
 			<li class="photo eve-pic li-{{ ul_count }}" data="{{ pic.standardResolution }}">
@@ -114,16 +116,16 @@ $b(document).ready(function(){
 				{% set ul_count = 1 %}
 			{% endif %}
 		{% endfor %}
-		
-		
-		<script>
-		{% if next_page != false %}
-			$b('#np').val("{{ path('photo_show', { idLocation: location.id, slug: location.slug, page: next_page}) }}");
-			
-		{% else %}
-			$b('#np').val("");
-		{% endif %}
-		</script>
 	</ul>
+	<script>
+	{% if next_page != false %}
+		$b('#np').val("{{ path('photo_show', { idLocation: location.id, slug: location.slug, page: next_page}) }}");
+		
+	{% else %}
+		$b('#np').val("");
+	{% endif %}
+	</script>
+	{% if page == 1%}
 </div>
+	{% endif %}	
 {% endblock %}
