@@ -5,21 +5,28 @@ $a(document).ready(function(){
 	var photo	= $a(".photo");
 	var timer	= "";
 	var pgAtual = "", pgNext = $a('.np:first').val();
-	$a("body").height($a("body").height()-55); $a(site).height($a(window).height()-55);
+	var hasImage= true, second = false;
 	
+	$a("body").height($a("body").height()-55); 
+	//$a(site).height($a(window).height()-55);
+	
+	$a(site).css("visibility","hidden");
+	$a("body").append("<div class='loading'></div>");
 	start();
 	
 	function start(){
-		$a(".photo").show();
-		var totUl = $a("ul.content").size();
-		var ul = "";
-		
-		for(i = 0; i < totUl; i++){
-			ul = $a("ul.content").eq(i);
-			if(!($a(ul).hasClass("ul-9"))){
-				li = $a(ul).children("li").size();
-				$a(ul).removeClass().addClass("content ul-"+li);
-				if(li==0) { $a(ul).remove(); }
+		if(!hasImage){
+			$a(".photo").show();
+			var totUl = $a("ul.content").size();
+			var ul = "";
+			
+			for(i = 0; i < totUl; i++){
+				ul = $a("ul.content").eq(i);
+				if(!($a(ul).hasClass("ul-9"))){
+					li = $a(ul).children("li").size();
+					$a(ul).removeClass().addClass("content ul-"+li);
+					if(li==0) { $a(ul).remove(); }
+				}
 			}
 		}
 		showImages();
@@ -27,40 +34,62 @@ $a(document).ready(function(){
 	
 	function showImages(){
 		timer = setTimeout(function(){
-			$a(".photo").each(function(){
-				$a(this).height($a(this).find("img").width());
-			});
-			
-			var totUl = $a("ul.content").size();
-			for(i = 0; i < totUl; i++){
-				ul = $a("ul.content").eq(i);
-			
-				if($a(ul).hasClass("ul-9")){
-					if(!($a(ul).children("div").hasClass("ph-box-9-1")))
-					{
-						$a(ul).children(".li-1").wrap("<div class='ph-box-9-1'></div>");
-						var atual = $a(ul).children(".ph-box-9-1");
-						$a(atual).css("width","40%");
-						$a(ul).children(".li-2").appendTo(atual);
-						$a(ul).children(".li-3").appendTo(atual);
-						$a(atual).children(".li-1").css("width","100%"); 
-						$a(atual).children(".li-2").css("width","50%");
-						$a(atual).children(".li-3").css("width","50%");
-						
-						$a(ul).children(".li-4").wrap("<div class='ph-box-9-2'></div>");
-						var atual = $a(ul).children(".ph-box-9-2");
-						$a(atual).css("width","20%");
-						$a(ul).children(".li-5").appendTo(atual);
-						$a(ul).children(".li-6").appendTo(atual);
-						$a(atual).children(".li-4").css("width","100%");
-						$a(atual).children(".li-5").css("width","100%");
-						$a(atual).children(".li-6").css("width","100%");
+			if(!hasImage){
+				$a(".photo").each(function(){
+					$a(this).height($a(this).find("img").width());
+					//if($a(this).find("img").attr("src") == "/coolspots-web/web/bundles/site/images/photo-placeholder.png") $a(this).remove();
+				});
+				var totUl = $a("ul.content").size();
+				for(i = 0; i < totUl; i++){
+					ul = $a("ul.content").eq(i);
+				
+					if($a(ul).hasClass("ul-9")){
+						if(!($a(ul).children("div").hasClass("ph-box-9-1")))
+						{
+							$a(ul).children(".li-1").wrap("<div class='ph-box-9-1'></div>");
+							var atual = $a(ul).children(".ph-box-9-1");
+							$a(atual).css("width","40%");
+							$a(ul).children(".li-2").appendTo(atual);
+							$a(ul).children(".li-3").appendTo(atual);
+							$a(atual).children(".li-1").css("width","100%"); 
+							$a(atual).children(".li-2").css("width","50%");
+							$a(atual).children(".li-3").css("width","50%");
+							
+							$a(ul).children(".li-4").wrap("<div class='ph-box-9-2'></div>");
+							var atual = $a(ul).children(".ph-box-9-2");
+							$a(atual).css("width","20%");
+							$a(ul).children(".li-5").appendTo(atual);
+							$a(ul).children(".li-6").appendTo(atual);
+							$a(atual).children(".li-4").css("width","100%");
+							$a(atual).children(".li-5").css("width","100%");
+							$a(atual).children(".li-6").css("width","100%");
+						}
 					}
 				}
-			};
-			updateScrollbar()
+			}
+			updateScrollbar();
 			updateLazyImages();
+			if(($a('.np:first').val()) != undefined) slideGallery();
 		},500);
+	}
+	
+	function foundImage(){
+		hasImage = false;
+		start();
+		timer = setTimeout(function(){
+			$a(".loading").hide();
+			$a(site).css("visibility","visible"); 
+		}, 500);
+	}
+	
+	function updateLazyImages() {
+		$a("img.lazy").lazyload({ 
+			container: $a("#site"),
+			threshold: 200,
+			failure_limit : 20,
+			effect : "fadeIn"
+		});
+		if(hasImage) foundImage();
 	}
 	
 	function fetchNextPage() {
@@ -104,7 +133,7 @@ $a(document).ready(function(){
 				pgAtual = pgNext;
 				pgNext = $a('.np:first').val();
 			},
-			onTotalScrollOffset: $a(site).height()-100
+			onTotalScrollOffset: $a(site).height()+200
 		}
 	});
 	
@@ -127,33 +156,6 @@ $a(document).ready(function(){
 		$a(this).find(".more").slideToggle('fast');
 		//$a(this).find(".more").slideToggle( event.type === 'mouseenter' );
 	});	
-	
-	// $a(site).mousemove(function(event) {
-		// var posicao = parseInt((event.pageX / $a(window).width()) * 100);
-		// if(event.pageX < 45 ) { 
-			// $a(".pg-prev").fadeIn("slow");
-		// } else {
-			// $a(".pg-prev").fadeOut("fast");
-		// }
-		// if(($a(window).width() - event.pageX) < 50 ) {
-			// $a(".pg-next").fadeIn("slow");
-		// } else {
-			// $a(".pg-next").fadeOut("fast");
-		// }
-	// });
-	// $a(site).mouseout(function(event) {
-		// $a(this).mCustomScrollbar("stop");
-	// });
-	// $a(".pg-prev").hover(function(){
-		// site.mCustomScrollbar("scrollTo","left",{ scrollInertia:20000});
-	// }, function(){
-		// site.mCustomScrollbar("stop");
-	// });
-	// $a(".pg-next").hover(function(){
-		// site.mCustomScrollbar("scrollTo","right",{ scrollInertia:20000});
-	// }, function(){
-		// site.mCustomScrollbar("stop");
-	// });
 	
 	
 	
@@ -284,11 +286,8 @@ $a(document).ready(function(){
 	});
 	
 	$a(".top-ico").hover(function(){
-		$a(this).find("span").addClass("ros");
-		$a(this).prev().find(".br").removeClass("nor");
-	}, function(){
-		$a(this).find("span").removeClass("ros");
-		$a(this).prev().find(".br").addClass("nor");
+		$a(this).find("span").toggleClass("ros");
+		$a(this).prev().find(".br").toggleClass("nor");
 	});
 	
 	//BOTTOM - BAR
@@ -310,42 +309,41 @@ $a(document).ready(function(){
 	});
 	
 	$a(".bottom-bar ul li").hover(function(){
-		$a(this).find("span").addClass("ros");
-		$a(this).prev().find(".br").removeClass("nor");
-	}, function(){
-		$a(this).find("span").removeClass("ros");
-		$a(this).prev().find(".br").addClass("nor");
+		$a(this).find("span").toggleClass("ros");
+		$a(this).prev().find(".br").toggleClass("nor");
 	});
 	
 	//GALLERY
-	var widBox = 0, heiBox = 0;
-	$a(".eve-pic").each(function(index){
-		pic[index] 	= $a(this);
-		var imagem 	= $a(this).attr("data");
-		var user 	= $a(this).find(".username").val();
-		var userpic	= $a(this).find(".userpic").val();
-		var data_add= $a(this).find(".dateadded").val();
-		var name_loc= $a(this).find(".name_location").val();
-		var caption	= $a(this).find(".caption").val();
-		var altCap	= $a(this).find(".caption").height();
-		
-		$a(pic[index]).click(function(){
-			$a(shadown).fadeIn('slow');
-			$a(".box .img img").attr("src",imagem);
-			$a(".author img").attr("src",userpic);
-			$a("strong.user").html(user);
-			$a("span.data_pic").html(data_add);
-			$a("strong.name_location").html(name_loc);
-			$a("span.caption").html(caption);
-			ajustImage(altCap);
-			$a(box).fadeIn('slow');
-			atual = index;
-			return false;
+	function slideGallery(){
+		$a(".eve-pic").each(function(index){
+			pic[index] 	= $a(this);
+			var imagem 	= $a(this).attr("data");
+			var user 	= $a(this).find(".username").val();
+			var userpic	= $a(this).find(".userpic").val();
+			var data_add= $a(this).find(".dateadded").val();
+			var name_loc= $a(this).find(".name_location").val();
+			var caption	= $a(this).find(".caption").val();
+			var altCap	= $a(this).find(".caption").height();
+			
+			$a(pic[index]).click(function(){
+				$a(shadown).fadeIn('slow');
+				$a(".box .img img").attr("src",imagem);
+				$a(".author img").attr("src",userpic);
+				$a("strong.user").html(user);
+				$a("span.data_pic").html(data_add);
+				$a("strong.name_location").html(name_loc);
+				$a("span.caption").html(caption);
+				ajustImage(altCap);
+				$a(box).fadeIn('slow');
+				atual = index;
+				return false;
+			});
 		});
-	});
+	}
 	function ajustImage(heiCap){
+		var widBox = 0, heiBox = 0;
 		if($a(window).height() > 500){
-			heiBox = altTotal - 100;
+			heiBox = $a("body").height() - 100;
 			widBox = heiBox - 50;
 			$a(box + " .content").css({ width : widBox - 25 });
 			$a(box + " .content .img").css({ height : widBox - 25 });
