@@ -4,58 +4,58 @@ $a(document).ready(function(){
 	var site	= $a("#site");
 	var photo	= $a(".photo");
 	var timer	= "";
-	var qtdUl	= 0;
 	var pgAtual = "", pgNext = $a('.np:first').val();
+	$a("body").height($a("body").height()-55); $a(site).height($a(window).height()-55);
 	
-	$a(site).height($a(window).height()-55);
+	start();
 	
-	start(qtdUl,0);
-	
-	function start(init, init2){
-		$a(photo).show();
+	function start(){
+		$a(".photo").show();
 		var totUl = $a("ul.content").size();
 		var ul = "";
 		
-		for(i=init; i<totUl; i++){
+		for(i = 0; i < totUl; i++){
 			ul = $a("ul.content").eq(i);
-			li = $a(ul).children("li").size();
-			$a(ul).addClass("ul-"+li);
-			
-			qtdUl++;
-			if(li==0) { qtdUl--; $a(ul).remove(); }
+			if(!($a(ul).hasClass("ul-9"))){
+				li = $a(ul).children("li").size();
+				$a(ul).removeClass().addClass("content ul-"+li);
+				if(li==0) { $a(ul).remove(); }
+			}
 		}
-		showImages(init2);
+		showImages();
 	}
 	
-	function showImages(start){
+	function showImages(){
 		timer = setTimeout(function(){
-			$a(photo).each(function(){
+			$a(".photo").each(function(){
 				$a(this).height($a(this).find("img").width());
 			});
 			
 			var totUl = $a("ul.content").size();
-			for(i=start; i<totUl; i++){
+			for(i = 0; i < totUl; i++){
 				ul = $a("ul.content").eq(i);
-
 			
 				if($a(ul).hasClass("ul-9")){
-					$a(ul).children(".li-1").wrap("<div class='ph-box-9-1'></div>");
-					var atual = $a(ul).children(".ph-box-9-1");
-					$a(atual).css("width","40%");
-					$a(ul).children(".li-2").appendTo(atual);
-					$a(ul).children(".li-3").appendTo(atual);
-					$a(atual).children(".li-1").css("width","100%"); 
-					$a(atual).children(".li-2").css("width","50%");
-					$a(atual).children(".li-3").css("width","50%");
-					
-					$a(ul).children(".li-4").wrap("<div class='ph-box-9-2'></div>");
-					var atual = $a(ul).children(".ph-box-9-2");
-					$a(atual).css("width","20%");
-					$a(ul).children(".li-5").appendTo(atual);
-					$a(ul).children(".li-6").appendTo(atual);
-					$a(atual).children(".li-4").css("width","100%");
-					$a(atual).children(".li-5").css("width","100%");
-					$a(atual).children(".li-6").css("width","100%");
+					if(!($a(ul).children("div").hasClass("ph-box-9-1")))
+					{
+						$a(ul).children(".li-1").wrap("<div class='ph-box-9-1'></div>");
+						var atual = $a(ul).children(".ph-box-9-1");
+						$a(atual).css("width","40%");
+						$a(ul).children(".li-2").appendTo(atual);
+						$a(ul).children(".li-3").appendTo(atual);
+						$a(atual).children(".li-1").css("width","100%"); 
+						$a(atual).children(".li-2").css("width","50%");
+						$a(atual).children(".li-3").css("width","50%");
+						
+						$a(ul).children(".li-4").wrap("<div class='ph-box-9-2'></div>");
+						var atual = $a(ul).children(".ph-box-9-2");
+						$a(atual).css("width","20%");
+						$a(ul).children(".li-5").appendTo(atual);
+						$a(ul).children(".li-6").appendTo(atual);
+						$a(atual).children(".li-4").css("width","100%");
+						$a(atual).children(".li-5").css("width","100%");
+						$a(atual).children(".li-6").css("width","100%");
+					}
 				}
 			};
 			updateScrollbar()
@@ -71,22 +71,22 @@ $a(document).ready(function(){
 				url: $a('.np:first').val(),
 				dataType: 'html',
 				success: function(data) {
-					$a("#photo-list").append("<h1 style='font-size:300px;'>Chamou proxima pagina!</h1>");
-					sleep = setTimeout(function(){ start(qtdUl,qtdUl); }, 10);
+					$a("#photo-list").append(data);
+					sleep = setTimeout(function(){ start(); }, 100);
 				}
 			});
 		}
 	}
 	
-	$a(window).scroll(function() {
-		if(($a(window).scrollTop() + $a(window).height() + 20) >= $a(document).height()) {
-			$a(window).unbind('scroll');
-			fetchNextPage();
-		}
-	});
+	// $a(window).scroll(function() {
+		// if(($a(window).scrollTop() + $a(window).height() + 100) >= $a(document).height()) {
+			// $a(window).unbind('scroll');
+			// fetchNextPage();
+		// }
+	// });
 	
 	$a("body").mCustomScrollbar({
-		scrollInertia: 300,
+		scrollInertia: 0,
 		advanced:{
 			updateOnBrowserResize: true,
 			updateOnContentResize: true
@@ -97,11 +97,14 @@ $a(document).ready(function(){
 			},
 			onTotalScroll: function(){
 				if(pgAtual != pgNext){
-					fetchNextPage();
+					if(($a('.np:first').val()) != undefined){
+						fetchNextPage();
+					}
 				}
 				pgAtual = pgNext;
 				pgNext = $a('.np:first').val();
-			}
+			},
+			onTotalScrollOffset: $a(site).height()-100
 		}
 	});
 	
@@ -118,17 +121,12 @@ $a(document).ready(function(){
 		$a(".top-bar .back").fadeIn('fast');
 	});
 	
-	$a(photo).hover(function(){
-		$a(this).find(".back").fadeIn('fast');
-		$a(this).find(".time").fadeIn('fast');
-		$a(this).find(".more").slideDown('fast');
-	}, function(){
-		$a(this).find(".more").slideUp('fast');
-		$a(this).find(".time").fadeOut('fast');
-		$a(this).find(".back").fadeOut('fast');
-	});
-
-	
+	$a("#photo-list").delegate(".photo",'mouseenter mouseleave', function(event) {
+		$a(this).find(".back").fadeToggle();  
+		$a(this).find(".time").fadeToggle();
+		$a(this).find(".more").slideToggle('fast');
+		//$a(this).find(".more").slideToggle( event.type === 'mouseenter' );
+	});	
 	
 	// $a(site).mousemove(function(event) {
 		// var posicao = parseInt((event.pageX / $a(window).width()) * 100);

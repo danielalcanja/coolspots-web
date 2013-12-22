@@ -12,7 +12,7 @@ class PhotoController extends Controller
 	 */
 	public function showAction($idLocation, $slug, $page)
 	{
-		$max_per_page = 27;
+		$max_per_page = 18;
 		$em = $this->getDoctrine()->getManager();
 		
 		$request = $this->getRequest();

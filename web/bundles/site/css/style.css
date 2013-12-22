@@ -16,9 +16,10 @@
 }
 
 * { margin:0; padding:0; list-style:none; border:0; outline:none; text-decoration:none; }
-html {height:100%;}
-body { background:#FFF; font-family: 'Museo500-Regular'; font-size:15px; }
+html,body {height:100%;}
+body { background:#FFF; overflow:hidden; font-family: 'Museo500-Regular'; font-size:15px; }
 em { font-style:normal; }
+::selection { background: transparent; } ::-moz-selection { background: transparent; }
 
 .index-shadown { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; z-index:5; display:block; }
 .index-shadown .index-box { width:800px; height:500px; border:2px solid #FFF; position:absolute; top:50%; left:50%; margin:-225px auto auto -400px; overflow:hidden; }
@@ -81,11 +82,9 @@ span.ros { background:#FF5885; }
 .region span { color:#FFF; }
 
 #site { width:100%; display:table; position:relative; z-index:0; }
-#site .move { width:100%; display:table; position:relative; z-index:0; left:0; }
-
 #site #photo-list { width:100%; display:table; }
 
-#site ul.content { clear:both; width:100%; position:relative; z-index:0; }
+#site ul.content { clear:both; width:100%; overflow:hidden; position:relative; z-index:0; }
 #site ul.content li { border-bottom:2px solid #FFF; }
 
 .ul-2 li { width:50%; float:left; }
@@ -137,8 +136,8 @@ span.ros { background:#FF5885; }
 .ul-8 .li-7 { margin:0 2px 0 0; }
 .ul-8 .li-8 { margin:0 -2px 0 0; }
 
-.ul-9 li { width:20%; float:left; }
-.ul-9 .li-1 { width:40%; margin:0; }
+.ul-9 li { width:20%; margin:0; float:left; }
+.ul-9 .li-1 { width:40%; }
 .ul-9 .li-2 { margin:-1px 2px 0 -2px; }
 .ul-9 .li-3 { margin:-1px 0 0 0; }
 .ul-9 .li-4 { margin:-1px 0 0 0; }

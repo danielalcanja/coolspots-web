@@ -120,7 +120,6 @@ $b(document).ready(function(){
 	<script>
 	{% if next_page != false %}
 		$b('.np:first').val("{{ path('photo_show', { idLocation: location.id, slug: location.slug, page: next_page}) }}");
-		
 	{% else %}
 		$b('.np:first').val("");
 	{% endif %}
