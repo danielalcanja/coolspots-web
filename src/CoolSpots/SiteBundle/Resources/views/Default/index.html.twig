@@ -4,7 +4,11 @@
 {% endblock %}
 
 {% block body %}
+{% if page == 1 %}
+<input type="hidden" name="np" class="np" value="" />
+<input type="hidden" name="next_page" id="next_page" value="{{ next_page }}" />
 <div id="photo-list">
+{% endif %}
 	<ul class="content">
 		{% for item in rs %}
 			<li class="photo li-{{ ul_count }}">
@@ -33,5 +37,14 @@
 			{% endif %}
 		{% endfor %}
 	</ul>
+	<script>
+	{% if next_page != false %}
+		$b('.np:first').val("{{ path('main') }}?page={{ next_page}}");
+	{% else %}
+		$b('.np:first').val("");
+	{% endif %}
+	</script>
+{% if page == 1 %}
 </div>
+{% endif %}
 {% endblock %}

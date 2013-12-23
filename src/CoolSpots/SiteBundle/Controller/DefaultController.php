@@ -13,6 +13,10 @@ class DefaultController extends Controller
     public function indexAction()
     {
 		$request = $this->getRequest();
+		$page = $request->get('page', 1);
+		$max_per_page = $this->container->getParameter('max_items_per_page');
+		$offset = $max_per_page * ($page - 1);
+		
 		$session = $request->getSession();
 		$request->setLocale($session->get('_locale', 'en_US'));
 		
@@ -25,10 +29,14 @@ class DefaultController extends Controller
 				->orderBy('c.dateUpdated', 'desc')
 				->setParameter('enabled', 'Y')
 				->setParameter('deleted', 'N')
-				->setMaxResults(18)
+				->setFirstResult($offset)
+				->setMaxResults($max_per_page)
 				->getQuery()
 				->getResult();
-        return(array('rs' => $rs, 'ul_count' => 1));
+		$total_locations = count($rs);
+		$next_page = $total_locations > 0 ? $page + 1 : false;
+		
+        return(array('rs' => $rs, 'ul_count' => 1, 'total_locations' => $total_locations, 'page' => $page, 'next_page' => $next_page));
     }
 	
 	public function localeAction($lang)
