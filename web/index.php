@@ -8,7 +8,7 @@ function Autorizacao()
 	exit();
 }
 
-if($_SERVER['SERVER_NAME'] != 'localhost') {
+if($_SERVER['SERVER_NAME'] != 'localhost' && $_SERVER['SERVER_NAME'] != 'coolspot' ) {
 	if(!strstr($_SERVER['SERVER_NAME'], 'api')) {
 		if(!isset($_SERVER['PHP_AUTH_USER'])) {
 			Autorizacao();
