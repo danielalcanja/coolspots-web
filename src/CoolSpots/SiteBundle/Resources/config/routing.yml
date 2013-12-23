@@ -43,18 +43,3 @@ login:
 login_auth:
     pattern: /login/auth
     defaults: { _controller: SiteBundle:Login:auth }
-
-#### JSON routings ####
-json_location:
-    pattern: /json/location
-    defaults: { _controller: SiteBundle:JSON:location }
-    
-json_location_info:
-    pattern: /json/location/{id}/{slug}
-    defaults: { _controller: SiteBundle:JSON:locationInfo }
-
-json_photos:
-    pattern: /json/photos/{idLocation}/{slug}
-    defaults: { _controller: SiteBundle:JSON:photos }
-        
-

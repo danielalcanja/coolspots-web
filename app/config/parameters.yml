@@ -34,3 +34,6 @@ parameters:
     instagram_auth_client_id: 4f04a39438c74a6db3f07c2f84ccd8f3
     instagram_auth_client_secret: e02973d56bc643849d14535b6b0a59f8
     instagram_auth_redirect_url: http://beta.coolspots.com.br/login/auth
+    
+    # pagination
+    max_items_per_page: 18

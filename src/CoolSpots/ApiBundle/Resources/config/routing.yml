@@ -15,3 +15,17 @@ instagram_callback:
 #    requirements:
 #        _method:  GET
 #        object_id: \d+
+
+json_location:
+    pattern: /json/location
+    defaults: { _controller: ApiBundle:JSON:location }
+    
+json_location_info:
+    pattern: /json/location/{id}/{slug}
+    defaults: { _controller: ApiBundle:JSON:locationInfo }
+
+json_photos:
+    pattern: /json/photos/{idLocation}/{slug}
+    defaults: { _controller: ApiBundle:JSON:photos }
+        
+

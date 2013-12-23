@@ -1,6 +1,6 @@
 <?php
 
-namespace CoolSpots\SiteBundle\Controller;
+namespace CoolSpots\ApiBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +13,12 @@ class JSONController extends Controller
     public function locationAction()
     {
 		/*
-		 * Filters
+		 * ----------------
+		 * Parameters
+		 * ----------------
+		 * 
+		 * Get specific page (see max_items_per_page in parameters.yml)
+		 * /json/location?page=4
 		 * 
 		 * Get a especific location
 		 * /json/location?id=9
@@ -31,9 +36,11 @@ class JSONController extends Controller
 		 * /json/locations?category=1
 		 * 
 		 * Combinations:
-		 * /json/locations?city=1&category=8
+		 * /json/locations?city=1&category=8&page=2
 		 */
 		$request = $this->getRequest();
+		$offset = ($request->get('page', 1) - 1) * $this->container->getParameter('max_items_per_page');
+		
 		$repository = $this->getDoctrine()->getRepository('SiteBundle:VwLocation');
 		$rs = $repository->createQueryBuilder('c')
 				->where('c.coverPic is not null');
@@ -57,7 +64,8 @@ class JSONController extends Controller
 				->andWhere('c.deleted = :deleted')
 				->setParameter('deleted', 'N')
 				->orderBy('c.dateUpdated', 'desc')
-				->setMaxResults(1000)
+				->setFirstResult($offset)
+				->setMaxResults($this->container->getParameter('max_items_per_page'))
 				->getQuery()
 				->getResult();
 		
@@ -144,6 +152,17 @@ class JSONController extends Controller
 	
 	public function photosAction($idLocation, $slug)
 	{
+		/*
+		 * ----------------
+		 * Parameters
+		 * ----------------
+		 * 
+		 * Get specific page (see max_items_per_page in parameters.yml)
+		 * /json/photos/1/getulio-loft?page=4
+		 */
+		
+		$request = $this->getRequest();
+		$offset = ($request->get('page', 1) - 1) * $this->container->getParameter('max_items_per_page');
 		$rs = $this->getDoctrine()
 				->getManager()
 				->createQuery('SELECT p, u, l FROM SiteBundle:CsPics p
@@ -151,7 +170,10 @@ class JSONController extends Controller
 								JOIN p.idLocation l
 								WHERE p.idLocation = :id
 								ORDER BY p.dateAdded DESC')
+				->setFirstResult($offset)
+				->setMaxResults($this->container->getParameter('max_items_per_page'))
 				->setParameter('id', $idLocation)->getResult();
+		
 		
 		$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
 		$json = $serializer->serialize($rs, 'json');
