@@ -8,14 +8,14 @@ use Doctrine\ORM\Mapping as ORM;
  * CsEvents
  *
  * @ORM\Table(name="cs_events")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CoolSpots\SiteBundle\Entity\CsEventsRepository")
  */
 class CsEvents
 {
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_added", type="datetime", nullable=true)
+     * @ORM\Column(name="date_added", type="datetime", nullable=false)
      */
     private $dateAdded;
 
@@ -41,20 +41,6 @@ class CsEvents
     private $coverPic;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="last_min_id", type="string", length=100, nullable=true)
-     */
-    private $lastMinId;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="next_max_id", type="string", length=100, nullable=true)
-     */
-    private $nextMaxId;
-
-    /**
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
@@ -72,18 +58,6 @@ class CsEvents
      * })
      */
     private $idLocation;
-
-    /**
-     * @var \CoolSpots\SiteBundle\Entity\CsGeo
-     *
-     * @ORM\ManyToOne(targetEntity="CoolSpots\SiteBundle\Entity\CsGeo")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_geo", referencedColumnName="id")
-     * })
-     */
-    private $idGeo;
-
-
 
     /**
      * Set dateAdded
@@ -178,52 +152,6 @@ class CsEvents
     }
 
     /**
-     * Set lastMinId
-     *
-     * @param string $lastMinId
-     * @return CsEvents
-     */
-    public function setLastMinId($lastMinId)
-    {
-        $this->lastMinId = $lastMinId;
-    
-        return $this;
-    }
-
-    /**
-     * Get lastMinId
-     *
-     * @return string 
-     */
-    public function getLastMinId()
-    {
-        return $this->lastMinId;
-    }
-
-    /**
-     * Set nextMaxId
-     *
-     * @param string $nextMaxId
-     * @return CsEvents
-     */
-    public function setNextMaxId($nextMaxId)
-    {
-        $this->nextMaxId = $nextMaxId;
-    
-        return $this;
-    }
-
-    /**
-     * Get nextMaxId
-     *
-     * @return string 
-     */
-    public function getNextMaxId()
-    {
-        return $this->nextMaxId;
-    }
-
-    /**
      * Get id
      *
      * @return integer 
@@ -257,25 +185,119 @@ class CsEvents
     }
 
     /**
-     * Set idGeo
+     * @var string
+	 * @ORM\Column(name="description", type="string", length=1000, nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var \DateTime
+	 * @ORM\Column(name="date_start", type="datetime", nullable=false)
+     */
+    private $dateStart;
+
+    /**
+     * @var \DateTime
+	 * @ORM\Column(name="date_end", type="datetime", nullable=false)
+     */
+    private $dateEnd;
+
+    /**
+     * @var string
+	 * @ORM\Column(name="deleted", type="string", length=1, nullable=false)
+     */
+    private $deleted;
+
+
+    /**
+     * Set description
      *
-     * @param \CoolSpots\SiteBundle\Entity\CsGeo $idGeo
+     * @param string $description
      * @return CsEvents
      */
-    public function setIdGeo(\CoolSpots\SiteBundle\Entity\CsGeo $idGeo = null)
+    public function setDescription($description)
     {
-        $this->idGeo = $idGeo;
+        $this->description = $description;
     
         return $this;
     }
 
     /**
-     * Get idGeo
+     * Get description
      *
-     * @return \CoolSpots\SiteBundle\Entity\CsGeo 
+     * @return string 
      */
-    public function getIdGeo()
+    public function getDescription()
     {
-        return $this->idGeo;
+        return $this->description;
+    }
+
+    /**
+     * Set dateStart
+     *
+     * @param \DateTime $dateStart
+     * @return CsEvents
+     */
+    public function setDateStart($dateStart)
+    {
+        $this->dateStart = $dateStart;
+    
+        return $this;
+    }
+
+    /**
+     * Get dateStart
+     *
+     * @return \DateTime 
+     */
+    public function getDateStart()
+    {
+        return $this->dateStart;
+    }
+
+    /**
+     * Set dateEnd
+     *
+     * @param \DateTime $dateEnd
+     * @return CsEvents
+     */
+    public function setDateEnd($dateEnd)
+    {
+        $this->dateEnd = $dateEnd;
+    
+        return $this;
+    }
+
+    /**
+     * Get dateEnd
+     *
+     * @return \DateTime 
+     */
+    public function getDateEnd()
+    {
+        return $this->dateEnd;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param string $deleted
+     * @return CsEvents
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+    
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return string 
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
     }
 }

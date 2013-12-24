@@ -183,7 +183,24 @@ function getJson($id_location, $url)
 					   substr(str_replace(array("'", '"'), '', $data['caption']['text']),0,150),
 					   $data['likes']['count']);
 		
+		
 		if($db->exec($sqlPic) === FALSE) throw new Exception('Error inserting photo: ' . $sqlPic);
+		
+		// get the photo's id
+		$sqlId = sprintf("SELECT MAX(id) AS id FROM cs_pics");
+		$stId = $db->prepare($sqlId);
+		$stId->execute();
+		$rsId = $stId->fetch();
+		
+		// add the photo's tags
+		foreach($data['tags'] as $tag) {
+			$sqlTag = sprintf("INSERT INTO cs_tags (id_pic, id_location, tag) VALUES (%d, %d, '%s')",
+						$rsId['id'], $id_location, $tag
+				);
+			if($db->exec($sqlTag) === FALSE) throw new Exception('Error inserting photo: ' . $sqlTag);
+		}
+		
+		
 		$last_max_timestamp = ($data['caption']['created_time'] > $last_max_timestamp) ? $data['caption']['created_time'] : $last_max_timestamp;
 		$photo_count++;
 	}

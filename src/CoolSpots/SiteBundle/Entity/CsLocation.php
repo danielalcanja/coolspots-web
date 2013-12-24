@@ -627,4 +627,34 @@ class CsLocation
     {
         return $this->idCity;
     }
+	
+    /**
+     * @var integer
+	 * @ORM\Column(name="likes_count", type="integer", nullable=true)
+     */
+    private $likesCount;
+
+
+    /**
+     * Set likesCount
+     *
+     * @param integer $likesCount
+     * @return CsLocation
+     */
+    public function setLikesCount($likesCount)
+    {
+        $this->likesCount = $likesCount;
+    
+        return $this;
+    }
+
+    /**
+     * Get likesCount
+     *
+     * @return integer 
+     */
+    public function getLikesCount()
+    {
+        return $this->likesCount;
+    }
 }
