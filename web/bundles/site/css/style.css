@@ -19,7 +19,6 @@
 html,body {height:100%;}
 body { background:#FFF; overflow:hidden; font-family: 'Museo500-Regular'; font-size:15px; }
 em { font-style:normal; }
-::selection { background: transparent; } ::-moz-selection { background: transparent; }
 
 .loading { width:100%; height:100%; background:url('../images/loading.gif') no-repeat center; background-color:rgba(255,255,255,0.5); position:fixed; top:0; left:0; z-index:10; }
 
@@ -166,16 +165,19 @@ span.ros { background:#FF5885; }
 .info .more { margin-top:10px; padding-top:5px; font-family: 'Museo500-Regular'; font-size:15px; border-top:1px solid #FFF; display:none; }
 
 /*COMENTARIO*/
-.comentario { width:270px; height:100%; background:#FFF; position:absolute; z-index:10; top:0; left:50%; }
-.comentario .espace { width:240px; margin:15px auto; }
-.comentario h2 { font-weight:normal; color:#999; }
-.comentario h2 span { font-size:15px; color:#31749B; font-weight:normal; }
-.comentario .com { clear:both; display:table; margin-top:10px; }
-.comentario .com h3 { font-size:12px; color:#333; font-weight:normal; }
-.comentario .com h3 strong { color:#31749B; }
-.comentario .com span { font-size:11px; color:#999; float:left; line-height:20px; }
-.comentario .com a:link, .comentario .com a:visited { font-size:11px; color:#999; float:right; line-height:20px; }
-.comentario .com a:hover { color:#31749B; }
+.comment { width:300px; height:100%; background:#FFF; position:fixed; z-index:10; top:0; right:-353px; }
+.comment .com-back { width:53px; height:50px; position:absolute; top:0; left:-53px; line-height:50px; background-color:#31749B; cursor:pointer; }
+.comment .com-back span { width:23px; height:50px; display:block; margin: 14px 0 0 14px; background:url('../images/icons.png') -320px -130px no-repeat; }
+.comment .com-back:hover { background-color:#144059; }
+.comment .espace { padding:10px 20px 15px 10px; }
+.comment .espace h2 { font-weight:normal; color:#999; }
+.comment .espace h2 span { font-size:15px; color:#31749B; font-weight:normal; }
+.comment .espace .com { clear:both; display:table; margin-top:10px; }
+.comment .espace .com h3 { font-size:12px; color:#333; font-weight:normal; }
+.comment .espace .com h3 strong { color:#31749B; }
+.comment .espace .com span { font-size:11px; color:#999; float:left; line-height:20px; }
+.comment .espace .com a:link, .comment .espace .com a:visited { font-size:11px; color:#999; float:right; line-height:20px; }
+.comment .espace .com a:hover { color:#31749B; }
 
 /*GALERIA*/
 .shadown { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; z-index:5; display:none; }
@@ -223,16 +225,19 @@ select { color:#999; font-family:'Museo500-Regular'; font-size:12px; font-weight
 .shadown .box-ind-location .space .row span.col1 { width:65px; display:inline-block; font-size:12px; line-height:20px; float:left; text-align:right; }
 .shadown .box-ind-location .space .row .col2 { width:210px; margin-right:10px; float:right; }
 
+.location-date { width:240px; height:140px; background:#31749B; border-left:10px solid #FFF; position:fixed; z-index:2; top:70px; color:#FFF; }
+.location-date .day { font-family: 'Museo300-Regular'; font-size:80px; font-weight:normal; position:absolute; top:0px; right:10px; }
+.location-date .time { font-family: 'Museo500-Regular'; font-size:12px; position:absolute; bottom:10px; left:10px; }
 .location-info { width:40%; min-width:40%; height:100%; background:#FFF; position:fixed; z-index:1; top:0; left:0; color:#888; }
-.location-info .loc { width:100%; height:140px; background:#FFF; position:absolute; z-index:2; top:75px; }
-.location-info .loc h1 { width:410px; padding:20px 0 0 30px; font-size:45px; font-weight:normal; float:left; }
-.location-info .loc .date { width:240px; height:140px; background:#31749B; float:left; position:absolute; top:0; right:-240px;  color:#FFF; }
-.location-info .loc .date .day { font-family: 'Museo300-Regular'; font-size:80px; font-weight:normal; position:absolute; top:0px; right:10px; }
-.location-info .loc .date .time { font-family: 'Museo500-Regular'; font-size:12px; position:absolute; bottom:10px; left:10px; }
-.location-info .content { margin-top:230px; padding:0px 50px 0 60px; }
+.location-info h1 { width:100%; margin-left:-10px; padding-top:20px; color:#666; font-size:45px; font-weight:normal; float:left; }
+.location-info .content { margin-top:70px; padding:0px 50px 0 60px; }
 .location-info .content h3 { font-size:15px; margin-bottom:10px; }
 .location-info .content span { font-size:13px; font-weight:normal; }
 .location-info .content .divide { clear:both; width:345px; height:1px; margin:15px 0 10px 0; border-bottom:1px solid #CCC; }
+
+.location-date .comment-ico { width:53px; height:50px; position:absolute; bottom:-60px; left:10px; line-height:50px; background-color:#31749B; display:none; cursor:pointer; }
+.location-date .comment-ico span { width:23px; height:50px; display:block; margin: 14px 0 0 14px; background:url('../images/icons.png') -175px -50px no-repeat; }
+.location-date .comment-ico:hover { background-color:#296689; }
 
 ul .date { width:140px; height:50px; background:#CCC; float:left; position:absolute; top:75px; z-index:99990; color:#31749B; }
 ul .date .day { font-family: 'Museo300-Regular'; font-size:30px; font-weight:normal; position:absolute; top:0px; right:10px; }
@@ -246,6 +251,7 @@ ul.pho-menu li a:hover { background:#143F58; }
 ul.pho-menu li span.ind { background-position:-292px -103px; }
 ul.pho-menu li span.add { background-position:-316px -103px; }
 ul.pho-menu li span.fav { background-position:-341px -103px; }
+ul.pho-menu li span.com { background-position:-291px -127px; }
 
 .pg-next, .pg-prev { width:25px; height:125px; background-image:url('../images/icons.png'); position:fixed; top:50%; margin-top:-62px; cursor:pointer; z-index:10; display:none; }
 .pg-prev { background-position:-380px -100px; left:10px; }
@@ -261,7 +267,7 @@ ul.pho-menu li span.fav { background-position:-341px -103px; }
 .bottom-bar .search { background:url('../images/icons.png') -250px 0px no-repeat; }
 .bottom-bar .inp-search { width:0; height:30px; margin:13px 0 0 10px; border:0; line-height:30px; background:#FFF; color:#AAA; float:left; display:none; }
 
-.bottom-bar ul { float:left; }
+.bottom-bar ul { float:left; } .bottom-bar ul.login { float:right; }
 .bottom-bar ul.dir { float:right; }
 .bottom-bar ul li { float:left; }
 .bottom-bar ul li a { padding:0 20px; height:55px; line-height:55px; display:block; color:#FFF; position:relative; }
@@ -272,10 +278,12 @@ ul.pho-menu li span.fav { background-position:-341px -103px; }
 .bottom-bar ul li a em.mes { width:23px; height:100%; display:block; background:url('../images/icons.png') -175px -35px no-repeat; position:relative; }
 .bottom-bar ul li a em.mes em.tot { width:17px; height:17px; display:block; background:url('../images/icons.png') -198px -50px no-repeat; position:absolute; top:10px; right:-8px; text-align:center; line-height:18px; letter-spacing:-1px; color:#FFF; font-size:10px; }
 
-.bottom-bar .info { float:right; padding:0 20px; height:55px; display:block; color:#FFF; position:relative; background:#296689; }
+.bottom-bar .info, .bottom-bar a.login:link, .bottom-bar a.login:visited { float:right; padding:0 20px; height:55px; display:block; color:#FFF; position:relative; background:#296689; }
 .bottom-bar .info .name { display:block; padding-top:15px; font-size:13px; }
 .bottom-bar .info .fav-fri { display:block; font-size:11px; font-weight:normal; }
 
+.bottom-bar a.login:link, .bottom-bar a.login:visited { border-left:5px solid #143F58; border-right:5px solid #143F58; line-height:55px; background-color:#143F58; }
+.bottom-bar a.login:hover { background-color:#FF5885; border-color:#FF5885; }
 /*SOBRE*/
 .sobre { width:100%; height:100%; background-color:#F4F4F4; color:#999; font-family: 'Museo300-Regular'; }
 .sobre .sobre-menu { width:235px; height:100%; float:left; background-color:#E8E8E8; }

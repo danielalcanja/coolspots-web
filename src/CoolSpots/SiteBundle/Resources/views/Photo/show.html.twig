@@ -5,22 +5,45 @@
 <script>
 var $b = jQuery.noConflict();
 $b(document).ready(function(){
-	var timer = "", time = 0, wid = 0, locInfo = $b(".location-info"), bar = $b(".location-bar"), site = $b("#site");
+	var	timer = "", 
+		time = 0, 
+		wid = 0, 
+		locInfo = $b(".location-info"), 
+		locDate = $b(".location-date"),
+		comment = $b(".comment"),
+		comIco = $b(".location-date .comment-ico"),
+		site = $b("#site");
 	
 	locationInfo(false,3000);
 	
-	$b(locInfo).hover(function(event) {
+	$b(locInfo).hover(function() {
 		locationInfo(true,10);
 	},function(){
 		locationInfo(false,10);
 	});
 	
+	$b(".ph-menu-com").click(function() {
+		$b(comment).animate({"right" : 0}, 500);
+		return false;
+	});
+	$b(comIco).click(function() {
+		$b(comment).animate({"right" : 0}, 500);
+		return false;
+	});
+	$b(".comment .com-back").click(function() {
+		$b(comment).animate({"right" : -353}, 500);
+		return false;
+	});
+	
+	$b(locDate).css("left",$b(locInfo).width()-10);
 	function locationInfo(action,time){
-		wid = !(action) ? -($b(locInfo).width()-10) : 0 ;
-		loc = !(action) ? -10 : 0 ;
+		wid = !(action) ? -($b(locInfo).width()-10) : 0;
+		opa = !(action) ? 0.5 : 1;
+		dat = !(action) ? 0 : $b(locInfo).width()-10;
 		timer = setTimeout(function(){
-			$b(locInfo).animate({"left" : wid }, 300);
-			$b(".location-info .loc").animate({"left" : loc }, 300);
+			$b(locInfo).animate({"left" : wid , "opacity" : opa}, 300);
+			$b(locDate).animate({"left" : dat }, 300);
+			$b(comIco).fadeToggle();
 			clearTimeout(timer);
 		}, time);
 	}
@@ -65,15 +88,15 @@ $b(document).ready(function(){
 });
 </script>
 <input type="hidden" name="np" class="np" value="" />
+<div class="location-date">
+	<span class="day">{{ location.dateUpdated|date('d') }}</span>
+	<span class="time">Sábado</span>
+	<div title="Exibir comentários" class="comment-ico"><span></span></div>
+</div>
 <div class="location-info">
-	<div class="loc">
-		<h1>{{ location.name }}</h1>
-		<div class="date">
-			<span class="day">{{ location.dateUpdated|date('d') }}</span>
-			<span class="time">Sábado</span>
-		</div>
-	</div>
 	<div class="content">
+		<h1>{{ location.name }}</h1>
+		
 		<span>145 Pessoas indicaram este lugar.</span>
 		
 		<div class="divide"></div>
@@ -97,10 +120,31 @@ $b(document).ready(function(){
 			<li><span class="ind"></span> <a href="">{% trans %}location.info.indicate{% endtrans %}</a></li>
 			<li><span class="add"></span> <a href="">{% trans %}location.info.favorite{% endtrans %}</a></li>
 			<li><span class="fav"></span> <a href="">{% trans %}location.info.favlist{% endtrans %}</a></li>
+			<li><span class="com"></span> <a class="ph-menu-com" href="">Exibir comentários</a></li>
 		</ul>
 	</div>
 </div>
-<div class="location-bar"></div>
+<div class="comment">
+	<div class="com-back"><span></span></div>
+	<div class="espace">
+		<h2>Comentários <span>(10)</span></h2>
+		<div class="com">
+			<h3><strong>Givanildo</strong> Muito bacana asfljk asflja sfoiua sdfou asflj asfljkasfozuv asf kaasf.</h3>
+			<span>5 horas atrás</span>
+			<a href="">Responder</a>
+		</div>
+		<div class="com">
+			<h3><strong>Givanildo</strong> Muito bacana asfljk asflja sfoiua sdfou asflj asfljkasfozuv asf kaasf.</h3>
+			<span>5 horas atrás</span>
+			<a href="">Responder</a>
+		</div>
+		<div class="com">
+			<h3><strong>Givanildo</strong> Muito bacana asfljk asflja sfoiua sdfou asflj asfljkasfozuv asf kaasf.</h3>
+			<span>5 horas atrás</span>
+			<a href="">Responder</a>
+		</div>
+	</div>
+</div>
 <input type="hidden" name="next_page" id="next_page" value="{{ next_page }}" />
 	{% endif %}
 
