@@ -223,10 +223,10 @@ select { color:#999; font-family:'Museo500-Regular'; font-size:12px; font-weight
 .shadown .box-ind-location .space .row span.col1 { width:65px; display:inline-block; font-size:12px; line-height:20px; float:left; text-align:right; }
 .shadown .box-ind-location .space .row .col2 { width:210px; margin-right:10px; float:right; }
 
-.location-info { width:470px; height:100%; position:absolute; z-index:1; top:0; left:0; color:#888; }
-.location-info .loc { width:680px; height:140px; background:#FFF; position:absolute; top:75px; left:30px; }
+.location-info { width:40%; min-width:40%; height:100%; background:#FFF; position:fixed; z-index:1; top:0; left:0; color:#888; }
+.location-info .loc { width:100%; height:140px; background:#FFF; position:absolute; z-index:2; top:75px; }
 .location-info .loc h1 { width:410px; padding:20px 0 0 30px; font-size:45px; font-weight:normal; float:left; }
-.location-info .loc .date { width:240px; height:140px; background:#31749B; float:left; position:relative;  color:#FFF; }
+.location-info .loc .date { width:240px; height:140px; background:#31749B; float:left; position:absolute; top:0; right:-240px;  color:#FFF; }
 .location-info .loc .date .day { font-family: 'Museo300-Regular'; font-size:80px; font-weight:normal; position:absolute; top:0px; right:10px; }
 .location-info .loc .date .time { font-family: 'Museo500-Regular'; font-size:12px; position:absolute; bottom:10px; left:10px; }
 .location-info .content { margin-top:230px; padding:0px 50px 0 60px; }

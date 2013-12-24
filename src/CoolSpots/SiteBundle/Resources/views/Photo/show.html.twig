@@ -5,6 +5,26 @@
 <script>
 var $b = jQuery.noConflict();
 $b(document).ready(function(){
+	var timer = "", time = 0, wid = 0, locInfo = $b(".location-info"), bar = $b(".location-bar"), site = $b("#site");
+	
+	locationInfo(false,3000);
+	
+	$b(locInfo).hover(function(event) {
+		locationInfo(true,10);
+	},function(){
+		locationInfo(false,10);
+	});
+	
+	function locationInfo(action,time){
+		wid = !(action) ? -($b(locInfo).width()-10) : 0 ;
+		loc = !(action) ? -10 : 0 ;
+		timer = setTimeout(function(){
+			$b(locInfo).animate({"left" : wid }, 300);
+			$b(".location-info .loc").animate({"left" : loc }, 300);
+			clearTimeout(timer);
+		}, time);
+	}
+	
 	var	shadown = '.shadown';
 	var html = '';
 	html += '<div class=\"box\">                                                        ';
@@ -80,6 +100,7 @@ $b(document).ready(function(){
 		</ul>
 	</div>
 </div>
+<div class="location-bar"></div>
 <input type="hidden" name="next_page" id="next_page" value="{{ next_page }}" />
 	{% endif %}
 
