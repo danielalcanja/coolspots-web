@@ -11,7 +11,7 @@ $b(document).ready(function(){
 		locInfo = $b(".location-info"), 
 		locDate = $b(".location-date"),
 		comment = $b(".comment"),
-		comIco = $b(".location-date .comment-ico"),
+		comIco = $b(".comment-ico"),
 		site = $b("#site");
 	
 	locationInfo(false,3000);
@@ -30,12 +30,20 @@ $b(document).ready(function(){
 		$b(comment).animate({"right" : 0}, 500);
 		return false;
 	});
+	$b(comIco).hover(function() {
+		locationInfo(false,10);
+	});
 	$b(".comment .com-back").click(function() {
 		$b(comment).animate({"right" : -353}, 500);
 		return false;
 	});
 	
 	$b(locDate).css("left",$b(locInfo).width()-10);
+	$b(locDate).hover(function(){
+		locationInfo(true,10);
+	},function(){
+		locationInfo(false,10);
+	});
 	function locationInfo(action,time){
 		wid = !(action) ? -($b(locInfo).width()-10) : 0;
 		opa = !(action) ? 0.5 : 1;
@@ -43,7 +51,6 @@ $b(document).ready(function(){
 		timer = setTimeout(function(){
 			$b(locInfo).animate({"left" : wid , "opacity" : opa}, 300);
 			$b(locDate).animate({"left" : dat }, 300);
-			$b(comIco).fadeToggle();
 			clearTimeout(timer);
 		}, time);
 	}
@@ -87,12 +94,11 @@ $b(document).ready(function(){
 	});
 });
 </script>
-<input type="hidden" name="np" class="np" value="" />
 <div class="location-date">
 	<span class="day">{{ location.dateUpdated|date('d') }}</span>
 	<span class="time">Sábado</span>
-	<div title="Exibir comentários" class="comment-ico"><span></span></div>
 </div>
+<div title="Exibir comentários" class="comment-ico"><span></span></div>
 <div class="location-info">
 	<div class="content">
 		<h1>{{ location.name }}</h1>
@@ -145,10 +151,11 @@ $b(document).ready(function(){
 		</div>
 	</div>
 </div>
-<input type="hidden" name="next_page" id="next_page" value="{{ next_page }}" />
 	{% endif %}
 
 	{% if page == 1%}
+<input type="hidden" name="np" class="np" value="" />
+<input type="hidden" name="next_page" id="next_page" value="{{ next_page }}" />
 <div id="photo-list">
 	{% endif %}	
 	<ul class="content">
@@ -173,6 +180,7 @@ $b(document).ready(function(){
 			<div class="date photo">
 				<span class="day">{{ pic.dateAdded|date('d/m/Y') }}</span>
 			</div>
+			
 			{% set ul_count = ul_count + 1 %}
 		
 			{% if ul_count == 10 %}
@@ -189,7 +197,7 @@ $b(document).ready(function(){
 		$b('.np:first').val("");
 	{% endif %}
 	</script>
-	{% if page == 1%}
+	{% if page == 1 %}
 </div>
 	{% endif %}	
 {% endblock %}

@@ -150,14 +150,19 @@ $a(document).ready(function(){
 		$a(".top-bar .back").fadeIn('fast');
 	});
 	
+	$a("#photo-list").delegate(".favorite",'click', function(event) {
+		if($a(this).hasClass("this-fav")) alert("Remove da lista Favoritos!")
+		else alert("Adiciona na lista Favoritos!");
+		return false;
+	});
+	
 	$a("#photo-list").delegate(".photo",'mouseenter mouseleave', function(event) {
+		if(!($a(this).find(".favorite").hasClass("this-fav"))) $a(this).find(".favorite").fadeToggle();
 		$a(this).find(".back").fadeToggle();  
 		$a(this).find(".time").fadeToggle();
 		$a(this).find(".more").slideToggle('fast');
 		//$a(this).find(".more").slideToggle( event.type === 'mouseenter' );
 	});	
-	
-	
 	
 	var	shadown = ".shadown",
 		box = ".shadown .box",
@@ -313,6 +318,10 @@ $a(document).ready(function(){
 		$a(this).prev().find(".br").toggleClass("nor");
 	});
 	
+	$a(document).delegate(".photo .back", "click", function(){
+		var link = $a(this).attr("data");
+		location.href = link;
+	});
 	//GALLERY
 	function slideGallery(){
 		$a(".eve-pic").each(function(index){

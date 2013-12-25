@@ -161,6 +161,8 @@ span.ros { background:#FF5885; }
 .photo .time .clock { width:14px; height:15px; float:left; background:url('../images/icons.png') 0px -50px no-repeat; }
 .photo .time .tmp { font-size:12px; font-weight:normal; height:15px; float:left; line-height:17px; padding-left:5px; }
 .photo .info { position:absolute; left:10px; bottom:20px; z-index:2; font-family: 'Museo300-Regular'; font-weight:normal; }
+.photo .info .favorite { width:42px; height:40px; background:url('../images/icons.png') -392px 0px; display:none; }
+.photo .info .this-fav { display:block; }
 .photo .info h2 { font-size:35px; font-weight:normal; }
 .info .more { margin-top:10px; padding-top:5px; font-family: 'Museo500-Regular'; font-size:15px; border-top:1px solid #FFF; display:none; }
 
@@ -235,9 +237,9 @@ select { color:#999; font-family:'Museo500-Regular'; font-size:12px; font-weight
 .location-info .content span { font-size:13px; font-weight:normal; }
 .location-info .content .divide { clear:both; width:345px; height:1px; margin:15px 0 10px 0; border-bottom:1px solid #CCC; }
 
-.location-date .comment-ico { width:53px; height:50px; position:absolute; bottom:-60px; left:10px; line-height:50px; background-color:#31749B; display:none; cursor:pointer; }
-.location-date .comment-ico span { width:23px; height:50px; display:block; margin: 14px 0 0 14px; background:url('../images/icons.png') -175px -50px no-repeat; }
-.location-date .comment-ico:hover { background-color:#296689; }
+.comment-ico { width:53px; height:50px; position:absolute; z-index:1; top:220px; left:20px; line-height:50px; background-color:#31749B; display:block; cursor:pointer; }
+.comment-ico span { width:23px; height:50px; display:block; margin: 14px 0 0 14px; background:url('../images/icons.png') -175px -50px no-repeat; }
+.comment-ico:hover { background-color:#296689; }
 
 ul .date { width:140px; height:50px; background:#CCC; float:left; position:absolute; top:75px; z-index:99990; color:#31749B; }
 ul .date .day { font-family: 'Museo300-Regular'; font-size:30px; font-weight:normal; position:absolute; top:0px; right:10px; }
