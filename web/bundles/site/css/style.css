@@ -163,6 +163,7 @@ span.ros { background:#FF5885; }
 .photo .info { position:absolute; left:10px; bottom:20px; z-index:2; font-family: 'Museo300-Regular'; font-weight:normal; }
 .photo .info .favorite { width:42px; height:40px; background:url('../images/icons.png') -392px 0px; display:none; }
 .photo .info .this-fav { display:block; }
+.photo .info .this-fav:hover { background:url('../images/icons.png') -392px -40px; }
 .photo .info h2 { font-size:35px; font-weight:normal; }
 .info .more { margin-top:10px; padding-top:5px; font-family: 'Museo500-Regular'; font-size:15px; border-top:1px solid #FFF; display:none; }
 
@@ -183,24 +184,24 @@ span.ros { background:#FF5885; }
 
 /*GALERIA*/
 .shadown { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; z-index:5; display:none; }
-.shadown .box { background:#FFF; position:absolute; top:50%; left:50%; display:none; }
-.shadown .box .content { width:425px; margin:12px auto 0 auto; }
-.shadown .box .content .img { width:100%; height:425px; }
-.shadown .box .content .img img { width:100%; height:425px; }
-.shadown .box .content .author { width:100%; margin-top:10px; font-size:10px; color:#333; }
-.shadown .box .content .author img { float:left; margin-right:5px; }
-.shadown .box .content .author h3 { font-size:12px; font-weight:normal; }
-.shadown .box .slide-eve-next, .shadown .box .slide-eve-prev { width:25px; height:125px; background-image:url('../images/icons.png'); position:absolute; top:50%; margin-top:-62px; cursor:pointer; }
-.shadown .box .slide-eve-prev { background-position:-380px -100px; left:-35px; }
-.shadown .box .slide-eve-prev:hover { background-position:-380px -225px; }
-.shadown .box .slide-eve-next { background-position:-405px -100px; right:-35px; }
-.shadown .box .slide-eve-next:hover { background-position:-405px -225px; }
-.shadown .box .slide-close { width:24px; height:23px; background:url('../images/icons.png') 0px -150px no-repeat; position:absolute; top:0; right:-35px; cursor:pointer; }
-.shadown .box .slide-close:hover { background-position:-24px -150px; }
-.shadown .box .slide-icos { width:29px; height:29px; background:url('../images/icons.png') no-repeat; position:absolute; left:460px; cursor:pointer; }
-.shadown .box .slide-fav { top:30px; background-position:-0px -185px; }
-.shadown .box .slide-lug { top:60px; background-position:-0px -215px; }
-.shadown .box .slide-com { top:90px; background-position:-0px -245px; }
+.shadown .gallery-box { width:100%; height:100%; overflow:auto; position:fixed; top:0; left:0; }
+.shadown .gallery-box .box { width:600px; max-width:600px; display:table; margin-top:10px; margin-left:-300px; padding:10px; background:#FFF; position:absolute; top:0; left:50%; }
+.shadown .gallery-box .box .content { width:100%; }
+.shadown .gallery-box .box .content img { width:100%; height:600px; }
+.shadown .gallery-box .box .content .author { width:100%; margin-top:10px; font-size:10px; color:#333; }
+.shadown .gallery-box .box .content .author img { width:40px; height:40px; float:left; margin-right:5px; }
+.shadown .gallery-box .box .content .author h3 { font-size:12px; font-weight:normal; }
+.shadown .gallery-box .box .slide-eve-next, .shadown .gallery-box .box .slide-eve-prev { width:25px; height:125px; background-image:url('../images/icons.png'); position:fixed; top:250px; cursor:pointer; }
+.shadown .gallery-box .box .slide-eve-prev { background-position:-380px -100px; left:50%; margin-left:-350px; }
+.shadown .gallery-box .box .slide-eve-prev:hover { background-position:-380px -225px; }
+.shadown .gallery-box .box .slide-eve-next { background-position:-405px -100px; right:50%; margin-right:-350px; }
+.shadown .gallery-box .box .slide-eve-next:hover { background-position:-405px -225px; }
+.shadown .gallery-box .box .content .slide-close { width:24px; height:23px; background:url('../images/icons.png') 0px -150px no-repeat; position:fixed; display:block; top:10px; right:-35px; cursor:pointer; }
+.shadown .gallery-box .box .content .slide-close:hover { background-position:-24px -150px; }
+.shadown .gallery-box .box .content .slide-icos { width:29px; height:29px; background:url('../images/icons.png') no-repeat; position:fixed; right:-35px; z-index:1000; cursor:pointer; }
+.shadown .gallery-box .slide-fav { top:40px; background-position:-0px -185px; }
+.shadown .gallery-box .slide-lug { top:70px; background-position:-0px -215px; }
+.shadown .gallery-box .slide-com { top:100px; background-position:-0px -245px; }
 
 .shadown .box-criar-evento { width:310px; height:320px; background:#FFF; position:absolute; top:50%; left:50%; margin:-160px auto auto -155px; }
 .shadown .box-criar-evento .space { margin:10px; }
@@ -237,7 +238,7 @@ select { color:#999; font-family:'Museo500-Regular'; font-size:12px; font-weight
 .location-info .content span { font-size:13px; font-weight:normal; }
 .location-info .content .divide { clear:both; width:345px; height:1px; margin:15px 0 10px 0; border-bottom:1px solid #CCC; }
 
-.comment-ico { width:53px; height:50px; position:absolute; z-index:1; top:220px; left:20px; line-height:50px; background-color:#31749B; display:block; cursor:pointer; }
+.comment-ico { width:53px; height:50px; position:fixed; z-index:1; top:220px; left:20px; line-height:50px; background-color:#31749B; display:block; cursor:pointer; }
 .comment-ico span { width:23px; height:50px; display:block; margin: 14px 0 0 14px; background:url('../images/icons.png') -175px -50px no-repeat; }
 .comment-ico:hover { background-color:#296689; }
 

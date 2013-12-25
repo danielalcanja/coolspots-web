@@ -57,7 +57,8 @@ $b(document).ready(function(){
 	
 	var	shadown = '.shadown';
 	var html = '';
-	html += '<div class=\"box\">                                                        ';
+	html += '<div class=\"gallery-box\">					                            ';
+	html += '<div class=\"box\">														';
 	html += '	<div class=\"slide-eve-prev\"></div><div class=\"slide-eve-next\"></div>';
 	html += '	<div class=\"content\">                                                 ';
 	html += '		<div class=\"img\"><img src=\"\" /></div>                           ';
@@ -71,12 +72,12 @@ $b(document).ready(function(){
 	html += '				<br /><span class=\"data_pic\"></span>	                    ';
 	html += '			</h3>                                                           ';
 	html += '		</div>                                                              ';
+	html += '		<div class=\"slide-close\"></div>                                   ';
+	html += '		<div class=\"slide-icos slide-fav\"></div>                          ';
+	html += '		<div class=\"slide-icos slide-lug\"></div>                          ';
+	html += '		<div class=\"slide-icos slide-com\"></div>                          ';
 	html += '	</div>                                                                  ';
-	html += '	<div class=\"slide-close\"></div>                                       ';
-	html += '	<div class=\"slide-icos slide-fav\"></div>                              ';
-	html += '	<div class=\"slide-icos slide-lug\"></div>                              ';
-	html += '	<div class=\"slide-icos slide-com\"></div>                              ';
-	html += '</div>                                                                     ';
+	html += '</div> </div>                                                              ';
 	
 	$b(shadown).html(html);
 	
