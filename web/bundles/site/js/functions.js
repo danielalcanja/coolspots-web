@@ -150,14 +150,19 @@ $a(document).ready(function(){
 		$a(".top-bar .back").fadeIn('fast');
 	});
 	
+	$a("#photo-list").delegate(".favorite",'click', function(event) {
+		if($a(this).hasClass("this-fav")) alert("Remove da lista Favoritos!")
+		else alert("Adiciona na lista Favoritos!");
+		return false;
+	});
+	
 	$a("#photo-list").delegate(".photo",'mouseenter mouseleave', function(event) {
+		if(!($a(this).find(".favorite").hasClass("this-fav"))) $a(this).find(".favorite").fadeToggle();
 		$a(this).find(".back").fadeToggle();  
 		$a(this).find(".time").fadeToggle();
 		$a(this).find(".more").slideToggle('fast');
 		//$a(this).find(".more").slideToggle( event.type === 'mouseenter' );
 	});	
-	
-	
 	
 	var	shadown = ".shadown",
 		box = ".shadown .box",
@@ -313,6 +318,10 @@ $a(document).ready(function(){
 		$a(this).prev().find(".br").toggleClass("nor");
 	});
 	
+	$a(document).delegate(".photo .back", "click", function(){
+		var link = $a(this).attr("data");
+		location.href = link;
+	});
 	//GALLERY
 	function slideGallery(){
 		$a(".eve-pic").each(function(index){
@@ -342,15 +351,15 @@ $a(document).ready(function(){
 	}
 	function ajustImage(heiCap){
 		var widBox = 0, heiBox = 0;
-		if($a(window).height() > 500){
-			heiBox = $a("body").height() - 100;
-			widBox = heiBox - 50;
-			$a(box + " .content").css({ width : widBox - 25 });
-			$a(box + " .content .img").css({ height : widBox - 25 });
-			$a(box + " .content .img img").css({ height : widBox - 25 });
-			$a(".slide-icos").css({ left : widBox + 10 });
-			$a(box).css({ width : widBox, height: heiBox + heiCap, marginTop: -(heiBox / 2), marginLeft : -(widBox / 2) });
-		}
+		// if($a(window).height() > 500){
+			// heiBox = $a("body").height() - 100;
+			// widBox = heiBox - 50;
+			// $a(box + " .content").css({ width : widBox - 25 });
+			// $a(box + " .content .img").css({ height : widBox - 25 });
+			// $a(box + " .content .img img").css({ height : widBox - 25 });
+			// $a(".slide-icos").css({ left : widBox + 10 });
+			// $a(box).css({ width : widBox, height: heiBox + heiCap, marginTop: -(heiBox / 2), marginLeft : -(widBox / 2) });
+		// }
 	}
 	$a(document).delegate(".slide-eve-prev", "click", function(){
 		$a(pic[atual-1]).click();

@@ -5,9 +5,60 @@
 <script>
 var $b = jQuery.noConflict();
 $b(document).ready(function(){
+	var	timer = "", 
+		time = 0, 
+		wid = 0, 
+		locInfo = $b(".location-info"), 
+		locDate = $b(".location-date"),
+		comment = $b(".comment"),
+		comIco = $b(".comment-ico"),
+		site = $b("#site");
+	
+	locationInfo(false,3000);
+	
+	$b(locInfo).hover(function() {
+		locationInfo(true,10);
+	},function(){
+		locationInfo(false,10);
+	});
+	
+	$b(".ph-menu-com").click(function() {
+		$b(comment).animate({"right" : 0}, 500);
+		return false;
+	});
+	$b(comIco).click(function() {
+		$b(comment).animate({"right" : 0}, 500);
+		return false;
+	});
+	$b(comIco).hover(function() {
+		locationInfo(false,10);
+	});
+	$b(".comment .com-back").click(function() {
+		$b(comment).animate({"right" : -353}, 500);
+		return false;
+	});
+	
+	$b(locDate).css("left",$b(locInfo).width()-10);
+	$b(locDate).hover(function(){
+		locationInfo(true,10);
+	},function(){
+		locationInfo(false,10);
+	});
+	function locationInfo(action,time){
+		wid = !(action) ? -($b(locInfo).width()-10) : 0;
+		opa = !(action) ? 0.5 : 1;
+		dat = !(action) ? 0 : $b(locInfo).width()-10;
+		timer = setTimeout(function(){
+			$b(locInfo).animate({"left" : wid , "opacity" : opa}, 300);
+			$b(locDate).animate({"left" : dat }, 300);
+			clearTimeout(timer);
+		}, time);
+	}
+	
 	var	shadown = '.shadown';
 	var html = '';
-	html += '<div class=\"box\">                                                        ';
+	html += '<div class=\"gallery-box\">					                            ';
+	html += '<div class=\"box\">														';
 	html += '	<div class=\"slide-eve-prev\"></div><div class=\"slide-eve-next\"></div>';
 	html += '	<div class=\"content\">                                                 ';
 	html += '		<div class=\"img\"><img src=\"\" /></div>                           ';
@@ -21,12 +72,12 @@ $b(document).ready(function(){
 	html += '				<br /><span class=\"data_pic\"></span>	                    ';
 	html += '			</h3>                                                           ';
 	html += '		</div>                                                              ';
+	html += '		<div class=\"slide-close\"></div>                                   ';
+	html += '		<div class=\"slide-icos slide-fav\"></div>                          ';
+	html += '		<div class=\"slide-icos slide-lug\"></div>                          ';
+	html += '		<div class=\"slide-icos slide-com\"></div>                          ';
 	html += '	</div>                                                                  ';
-	html += '	<div class=\"slide-close\"></div>                                       ';
-	html += '	<div class=\"slide-icos slide-fav\"></div>                              ';
-	html += '	<div class=\"slide-icos slide-lug\"></div>                              ';
-	html += '	<div class=\"slide-icos slide-com\"></div>                              ';
-	html += '</div>                                                                     ';
+	html += '</div> </div>                                                              ';
 	
 	$b(shadown).html(html);
 	
@@ -44,16 +95,15 @@ $b(document).ready(function(){
 	});
 });
 </script>
-<input type="hidden" name="np" class="np" value="" />
+<div class="location-date">
+	<span class="day">{{ location.dateUpdated|date('d') }}</span>
+	<span class="time">Sábado</span>
+</div>
+<div title="Exibir comentários" class="comment-ico"><span></span></div>
 <div class="location-info">
-	<div class="loc">
-		<h1>{{ location.name }}</h1>
-		<div class="date">
-			<span class="day">{{ location.dateUpdated|date('d') }}</span>
-			<span class="time">Sábado</span>
-		</div>
-	</div>
 	<div class="content">
+		<h1>{{ location.name }}</h1>
+		
 		<span>145 Pessoas indicaram este lugar.</span>
 		
 		<div class="divide"></div>
@@ -77,13 +127,36 @@ $b(document).ready(function(){
 			<li><span class="ind"></span> <a href="">{% trans %}location.info.indicate{% endtrans %}</a></li>
 			<li><span class="add"></span> <a href="">{% trans %}location.info.favorite{% endtrans %}</a></li>
 			<li><span class="fav"></span> <a href="">{% trans %}location.info.favlist{% endtrans %}</a></li>
+			<li><span class="com"></span> <a class="ph-menu-com" href="">Exibir comentários</a></li>
 		</ul>
 	</div>
 </div>
-<input type="hidden" name="next_page" id="next_page" value="{{ next_page }}" />
+<div class="comment">
+	<div class="com-back"><span></span></div>
+	<div class="espace">
+		<h2>Comentários <span>(10)</span></h2>
+		<div class="com">
+			<h3><strong>Givanildo</strong> Muito bacana asfljk asflja sfoiua sdfou asflj asfljkasfozuv asf kaasf.</h3>
+			<span>5 horas atrás</span>
+			<a href="">Responder</a>
+		</div>
+		<div class="com">
+			<h3><strong>Givanildo</strong> Muito bacana asfljk asflja sfoiua sdfou asflj asfljkasfozuv asf kaasf.</h3>
+			<span>5 horas atrás</span>
+			<a href="">Responder</a>
+		</div>
+		<div class="com">
+			<h3><strong>Givanildo</strong> Muito bacana asfljk asflja sfoiua sdfou asflj asfljkasfozuv asf kaasf.</h3>
+			<span>5 horas atrás</span>
+			<a href="">Responder</a>
+		</div>
+	</div>
+</div>
 	{% endif %}
 
 	{% if page == 1%}
+<input type="hidden" name="np" class="np" value="" />
+<input type="hidden" name="next_page" id="next_page" value="{{ next_page }}" />
 <div id="photo-list">
 	{% endif %}	
 	<ul class="content">
@@ -108,6 +181,7 @@ $b(document).ready(function(){
 			<div class="date photo">
 				<span class="day">{{ pic.dateAdded|date('d/m/Y') }}</span>
 			</div>
+			
 			{% set ul_count = ul_count + 1 %}
 		
 			{% if ul_count == 10 %}
@@ -124,7 +198,7 @@ $b(document).ready(function(){
 		$b('.np:first').val("");
 	{% endif %}
 	</script>
-	{% if page == 1%}
+	{% if page == 1 %}
 </div>
 	{% endif %}	
 {% endblock %}

@@ -1,14 +1,11 @@
 {% extends page == 1 ? 'SiteBundle::layout.html.twig' : 'SiteBundle::blank.html.twig' %}
 
-{% block custom_javascripts %}
-{% endblock %}
-
 {% block body %}
-{% if page == 1 %}
+	{% if page == 1 %}
 <input type="hidden" name="np" class="np" value="" />
 <input type="hidden" name="next_page" id="next_page" value="{{ next_page }}" />
 <div id="photo-list">
-{% endif %}
+	{% endif %}
 	<ul class="content">
 		{% for item in rs %}
 			<li class="photo li-{{ ul_count }}">
@@ -21,11 +18,12 @@
 						<img class="lazy" src="{{ asset('bundles/site/images/photo-placeholder.png') }}" data-original="{{ item.lastPic }}" />
 					</div>
 					<div class="info">
+						<div class="favorite {% if ul_count % 2 == 0 %} this-fav {% endif %}" title="{% if ul_count % 2 == 0 %} Remover dos meus Favoritos {% else %} Adicionar aos meus Favoritos {% endif %}"></div>
 						<h2 class="title">{{ item.name }}</h2>
 						<div class="more">25 Spooters - 2 Friends</div>
 					</div>
 				</a>
-				<div class="back" onclick="document.location='{{ path('photo_show', {'idLocation' : item.id, 'slug' : item.slug}) }}';"></div>
+				<div class="back" data="{{ path('photo_show', {'idLocation' : item.id, 'slug' : item.slug}) }}"></div>
 			</li>
 			
 			{% set ul_count = ul_count + 1 %}
@@ -39,12 +37,12 @@
 	</ul>
 	<script>
 	{% if next_page != false %}
-		$b('.np:first').val("{{ path('main') }}?page={{ next_page}}");
+		$a('.np:first').val("{{ path('main') }}?page={{ next_page}}");
 	{% else %}
-		$b('.np:first').val("");
+		$a('.np:first').val("");
 	{% endif %}
 	</script>
-{% if page == 1 %}
+	{% if page == 1 %}
 </div>
-{% endif %}
+	{% endif %}
 {% endblock %}

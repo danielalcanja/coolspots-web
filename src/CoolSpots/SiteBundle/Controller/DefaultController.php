@@ -20,7 +20,6 @@ class DefaultController extends Controller
 		$session = $request->getSession();
 		$request->setLocale($session->get('_locale', 'en_US'));
 		
-		
 		$repository = $this->getDoctrine()->getRepository('SiteBundle:VwLocation');
 		$rs = $repository->createQueryBuilder('c')
 				->where('c.lastPic is not null')
