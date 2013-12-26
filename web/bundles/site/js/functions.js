@@ -342,25 +342,13 @@ $a(document).ready(function(){
 				$a("span.data_pic").html(data_add);
 				$a("strong.name_location").html(name_loc);
 				$a("span.caption").html(caption);
-				ajustImage(altCap);
 				$a(box).fadeIn('slow');
 				atual = index;
 				return false;
 			});
 		});
 	}
-	function ajustImage(heiCap){
-		var widBox = 0, heiBox = 0;
-		// if($a(window).height() > 500){
-			// heiBox = $a("body").height() - 100;
-			// widBox = heiBox - 50;
-			// $a(box + " .content").css({ width : widBox - 25 });
-			// $a(box + " .content .img").css({ height : widBox - 25 });
-			// $a(box + " .content .img img").css({ height : widBox - 25 });
-			// $a(".slide-icos").css({ left : widBox + 10 });
-			// $a(box).css({ width : widBox, height: heiBox + heiCap, marginTop: -(heiBox / 2), marginLeft : -(widBox / 2) });
-		// }
-	}
+
 	$a(document).delegate(".slide-eve-prev", "click", function(){
 		$a(pic[atual-1]).click();
 	});

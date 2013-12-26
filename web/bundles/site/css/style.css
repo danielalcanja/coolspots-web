@@ -185,20 +185,25 @@ span.ros { background:#FF5885; }
 /*GALERIA*/
 .shadown { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; z-index:5; display:none; }
 .shadown .gallery-box { width:100%; height:100%; overflow:auto; position:fixed; top:0; left:0; }
-.shadown .gallery-box .box { width:600px; max-width:600px; display:table; margin-top:10px; margin-left:-300px; padding:10px; background:#FFF; position:absolute; top:0; left:50%; }
-.shadown .gallery-box .box .content { width:100%; }
-.shadown .gallery-box .box .content img { width:100%; height:600px; }
-.shadown .gallery-box .box .content .author { width:100%; margin-top:10px; font-size:10px; color:#333; }
-.shadown .gallery-box .box .content .author img { width:40px; height:40px; float:left; margin-right:5px; }
-.shadown .gallery-box .box .content .author h3 { font-size:12px; font-weight:normal; }
-.shadown .gallery-box .box .slide-eve-next, .shadown .gallery-box .box .slide-eve-prev { width:25px; height:125px; background-image:url('../images/icons.png'); position:fixed; top:250px; cursor:pointer; }
-.shadown .gallery-box .box .slide-eve-prev { background-position:-380px -100px; left:50%; margin-left:-350px; }
+.shadown .gallery-box .box { width:600px; margin:-310px auto auto -310px; padding:10px; background-color:#FFF; position:fixed; top:50%; left:50%; }
+.shadown .gallery-box .box .content { width:100%; display:table; position:relative;  }
+.shadown .gallery-box .box .content img { width:100%; display:block; }
+.shadown .gallery-box .box .content .img .sh { width:30px; height:16px; display:block; cursor:pointer; position:absolute; z-index:10; bottom:0px; right:0; background:url('../images/icons.png') -230px -50px;; }
+.shadown .gallery-box .box .content .img .shb { background-position:-230px -66px; }
+.shadown .gallery-box .box .content .img .description { width:100%; padding:5px 0; background:url('../images/alpha.png'); position:absolute; bottom:0px; color:#FFF; }
+.shadown .gallery-box .box .content .img .description .caption { display:block; margin:0 5px 5px 5px; font-family: 'Museo300-Regular'; font-weight:normal; }
+.shadown .gallery-box .box .content .img .description .author { width:100%; margin:5px; }
+.shadown .gallery-box .box .content .img .description .author img { width:40px; height:40px; float:left; border:1px solid #FFF; margin-right:5px; }
+.shadown .gallery-box .box .content .img .description .author h3 { font-family: 'Museo300-Regular'; font-size:12px; font-weight:normal; }
+.shadown .gallery-box .box .content .img .description .author h3 strong { color:#296689; }
+.shadown .gallery-box .box .slide-eve-next, .shadown .gallery-box .box .slide-eve-prev { width:25px; height:125px; background-image:url('../images/icons.png'); position:absolute; top:50%; margin-top:-65px; z-index:10; cursor:pointer; }
+.shadown .gallery-box .box .slide-eve-prev { background-position:-380px -100px; left:-30px; }
 .shadown .gallery-box .box .slide-eve-prev:hover { background-position:-380px -225px; }
-.shadown .gallery-box .box .slide-eve-next { background-position:-405px -100px; right:50%; margin-right:-350px; }
+.shadown .gallery-box .box .slide-eve-next { background-position:-405px -100px; right:-30px; }
 .shadown .gallery-box .box .slide-eve-next:hover { background-position:-405px -225px; }
 .shadown .gallery-box .box .content .slide-close { width:24px; height:23px; background:url('../images/icons.png') 0px -150px no-repeat; position:fixed; display:block; top:10px; right:-35px; cursor:pointer; }
 .shadown .gallery-box .box .content .slide-close:hover { background-position:-24px -150px; }
-.shadown .gallery-box .box .content .slide-icos { width:29px; height:29px; background:url('../images/icons.png') no-repeat; position:fixed; right:-35px; z-index:1000; cursor:pointer; }
+.shadown .gallery-box .box .content .slide-icos { width:29px; height:29px; background:url('../images/icons.png') no-repeat; position:fixed; right:-35px; z-index:10; cursor:pointer; }
 .shadown .gallery-box .slide-fav { top:40px; background-position:-0px -185px; }
 .shadown .gallery-box .slide-lug { top:70px; background-position:-0px -215px; }
 .shadown .gallery-box .slide-com { top:100px; background-position:-0px -245px; }
@@ -387,3 +392,9 @@ a.toggle em { float:right; margin-right:25px; color:#666; font-weight:normal; }
 .marRig05 { margin-right:5px; }
 .marTop25 { margin-top:25px; }
 .borRad02 { -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; }
+
+@media only screen and (max-width : 670px) {
+    .shadown .gallery-box .box { width:100%; top:0; left:-10px; margin:auto; }
+	.shadown .gallery-box .box .slide-eve-prev { left:5px; }
+	.shadown .gallery-box .box .slide-eve-next { right:5px; }
+}

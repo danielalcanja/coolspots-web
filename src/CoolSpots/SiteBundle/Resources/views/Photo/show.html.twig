@@ -57,27 +57,30 @@ $b(document).ready(function(){
 	
 	var	shadown = '.shadown';
 	var html = '';
-	html += '<div class=\"gallery-box\">					                            ';
-	html += '<div class=\"box\">														';
-	html += '	<div class=\"slide-eve-prev\"></div><div class=\"slide-eve-next\"></div>';
-	html += '	<div class=\"content\">                                                 ';
-	html += '		<div class=\"img\"><img src=\"\" /></div>                           ';
-	html += '		<span class=\"caption\"></span>	 									';
-	html += '		<div class=\"author\">                                              ';
-	html += '			<img src=\"\" width=\"30\" height=\"30\" />                     ';
-	html += '			<h3>	                                                        ';
-	html += '				<strong class=\"user\"></strong>	                        ';
-	html += '				enviou essa foto de 	                                    ';
-	html += '				<strong><strong class=\"name_location\"></strong></strong>  ';
-	html += '				<br /><span class=\"data_pic\"></span>	                    ';
-	html += '			</h3>                                                           ';
-	html += '		</div>                                                              ';
-	html += '		<div class=\"slide-close\"></div>                                   ';
-	html += '		<div class=\"slide-icos slide-fav\"></div>                          ';
-	html += '		<div class=\"slide-icos slide-lug\"></div>                          ';
-	html += '		<div class=\"slide-icos slide-com\"></div>                          ';
-	html += '	</div>                                                                  ';
-	html += '</div> </div>                                                              ';
+	html += '<div class=\"gallery-box\"><div class=\"box\">                                   ';
+	html += '	<div class=\"slide-eve-prev\"></div><div class=\"slide-eve-next\"></div>      ';
+	html += '	<div class=\"content\">                                                       ';
+	html += '		<div class=\"img\"><span class=\"sh\"></span><img src=\"\" />             ';
+	html += '			<div class=\"description\">                                           ';
+	html += '				<span class=\"caption\"></span>	 							      ';
+	html += '				<div class=\"author\">                                            ';
+	html += '					<img src=\"\" width=\"30\" height=\"30\" />                   ';
+	html += '					<h3>	                                                      ';
+	html += '						<strong class=\"user\"></strong>	                      ';
+	html += '						enviou essa foto de 	                                  ';
+	html += '						<strong><strong class=\"name_location\"></strong></strong>';
+	html += '						<br /><span class=\"data_pic\"></span>	                  ';
+	html += '					</h3>                                                         ';
+	html += '				</div>                                                            ';
+	html += ' 			</div>                                                                ';
+	html += ' 		</div>                                                                	  ';
+	html += '		<div class=\"slide-close\"></div>                                     	  ';
+	html += '		<div class=\"slide-icos slide-fav\"></div>                            	  ';
+	html += '		<div class=\"slide-icos slide-lug\"></div>                            	  ';
+	html += '		<div class=\"slide-icos slide-com\"></div>                            	  ';
+	html += '	</div>                                                                    	  ';
+	html += '</div>                                                                       	  ';
+	html += '</div>                                                                           ';
 	
 	$b(shadown).html(html);
 	
@@ -92,6 +95,11 @@ $b(document).ready(function(){
 			widthIco = 29;
 			$b(this).animate({ width : widthIco}, 200);
 		}
+	});
+	
+	$b(".gallery-box").delegate(".sh",'click', function(event) {
+		$b(".gallery-box .description").slideToggle();
+		$b(this).toggleClass("shb");
 	});
 });
 </script>
