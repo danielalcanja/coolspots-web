@@ -1,4 +1,4 @@
-{% extends 'SiteBundle::layout.html.twig' %}
+{% extends page == 1 ? 'SiteBundle::layout.html.twig' : 'SiteBundle::blank.html.twig' %}
 
 {% block custom_javascripts %}
 {% endblock %}
