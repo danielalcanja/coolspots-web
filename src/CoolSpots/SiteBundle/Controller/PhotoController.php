@@ -35,13 +35,13 @@ class PhotoController extends Controller
 					JOIN p.idUser u
 					JOIN p.idLocation l
 					WHERE p.idLocation = :id
-					ORDER BY p.dateAdded DESC')
+					ORDER BY p.createdTime DESC')
 				->setParameter('id', $idLocation)
 				->setFirstResult($offset)
 				->setMaxResults($max_per_page)
 				->getResult();
 		$total_pics = count($rsPics);
 		$next_page = $total_pics > 0 ? $page + 1 : false;
-		return(array('location' => $rsInfo, 'pics' => $rsPics, 'page' => $page, 'total_pics' => $total_pics, 'next_page' => $next_page, 'ul_count' => 1));
+		return(array('location' => $rsInfo, 'pics' => $rsPics, 'page' => $page, 'total_pics' => $total_pics, 'next_page' => $next_page, 'ul_count' => 1, 'last_date' => $request->get('last_date')));
 	}
 }

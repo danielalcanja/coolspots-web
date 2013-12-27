@@ -174,16 +174,25 @@ $b(document).ready(function(){
 	{% endif %}	
 	<ul class="content">
 		{% for pic in pics %}
+			{% if last_date != pic.createdTime|date('Ymd') and last_date != '' %}
+			</ul>
+			<ul class="content">
+			<div class="date photo">
+				<span class="day">{{ pic.createdTime|date('d') }}</span>
+				<span class="time">{{ pic.createdTime|date('l') }}</span>
+			</div>
+			{% endif %}
+			
 			<li id="{{ pic.id }}" class="photo eve-pic li-{{ ul_count }}" data="{{ pic.standardResolution }}">
 				<a href="#" class="box">
 					<input type="hidden" class="username" value="{{ pic.idUser.username }}">
 					<input type="hidden" class="userpic" value="{{ pic.idUser.profilePicture }}">
-					<input type="hidden" class="dateadded" value="{{ pic.dateAdded|date('d/m/Y') }}">
+					<input type="hidden" class="dateadded" value="{{ pic.createdTime|date('d/m/Y') }}">
 					<input type="hidden" class="name_location" value="{{ location.name }}">
 					<input type="hidden" class="caption" value="{{ pic.caption }}">
 					<div class="time">
 						<div class="clock"></div>
-						<div class="tmp"><span class="timeago" title="{{ pic.dateAdded|date() }}">{{ pic.dateAdded|date('d/m/Y') }}</span></div>
+						<div class="tmp"><span class="timeago" title="{{ pic.createdTime|date() }}">{{ pic.createdTime|date('d/m/Y') }}</span></div>
 					</div>
 					<div class="image">
 						<img class="lazy" src="{{ asset('bundles/site/images/photo-placeholder.png') }}" data-original="{{ pic.standardResolution }}" />
@@ -191,10 +200,6 @@ $b(document).ready(function(){
 				</a>
 				<div class="back"></div>
 			</li>
-			<div class="date photo">
-				<span class="day">{{ pic.dateAdded|date('d') }}</span>
-				<span class="time">Sábado</span>
-			</div>
 			
 			{% set ul_count = ul_count + 1 %}
 		
@@ -203,11 +208,12 @@ $b(document).ready(function(){
 			<ul class="content">
 				{% set ul_count = 1 %}
 			{% endif %}
+			{% set last_date = pic.createdTime|date('Ymd') %}
 		{% endfor %}
 	</ul>
 	<script>
 	{% if next_page != false %}
-		$b('.np:first').val("{{ path('photo_show', { idLocation: location.id, slug: location.slug, page: next_page}) }}");
+		$b('.np:first').val("{{ path('photo_show', { idLocation: location.id, slug: location.slug, page: next_page}) }}?last_date={{ last_date }}");
 	{% else %}
 		$b('.np:first').val("");
 	{% endif %}
