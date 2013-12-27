@@ -74,26 +74,33 @@ $b(document).ready(function(){
 	html += '				</div>                                                            ';
 	html += ' 			</div>                                                                ';
 	html += ' 		</div>                                                                	  ';
-	html += '		<div class=\"slide-close\"></div>                                     	  ';
-	html += '		<div class=\"slide-icos slide-fav\"></div>                            	  ';
-	html += '		<div class=\"slide-icos slide-lug\"></div>                            	  ';
-	html += '		<div class=\"slide-icos slide-com\"></div>                            	  ';
 	html += '	</div>                                                                    	  ';
+	html += '	<div class=\"slide-close\"></div>                                  	  	      ';
+	html += '	<div class="slide-icos">                             	                      ';
+	html += '		<div class=\"line\">            										  ';
+	html += '			<div class=\"icos cur\"></div><span class=\"p1\"></span>			  ';
+	html += '			<span>Curtir esta foto</span>	  					  				  ';
+	html += '			<span class=\"p2\"></span></div>									  ';
+	html += '		<div class=\"line\">            										  ';
+	html += '			<div class=\"icos men\"></div><span class=\"p1\"></span> 			  ';
+	html += '			<span>Enviar mensagem ao usuário</span>	  					  	  	  ';
+	html += '			<span class=\"p2\"></span></div>									  ';
+	html += '		<div class=\"line\">            										  ';
+	html += '			<div class=\"icos com\"></div><span class=\"p1\"></span> 			  ';
+	html += '			<span>Compartilhar</span>	  							  			  ';
+	html += '			<span class=\"p2\"></span></div>									  ';
+	html += '	</div>                                                                        ';
 	html += '</div>                                                                       	  ';
 	html += '</div>                                                                           ';
 	
 	$b(shadown).html(html);
 	
 	var widthIco = 0;
-	$b(".slide-icos").hover(function(event){
+	$b(".line").hover(function(event){
 		if (event.type === 'mouseenter') {
-			if($b(this).hasClass("slide-fav")) { widthIco = 202; }
-			if($b(this).hasClass("slide-lug")) { widthIco = 130; }
-			if($b(this).hasClass("slide-com")) { widthIco = 114; }
-			$b(this).animate({ width : widthIco}, 200);
+			$b(this).find("span").fadeIn();
 		} else {
-			widthIco = 29;
-			$b(this).animate({ width : widthIco}, 200);
+			$b(this).find("span").fadeOut('fast');
 		}
 	});
 	
@@ -160,16 +167,14 @@ $b(document).ready(function(){
 		</div>
 	</div>
 </div>
-	{% endif %}
 
-	{% if page == 1%}
 <input type="hidden" name="np" class="np" value="" />
 <input type="hidden" name="next_page" id="next_page" value="{{ next_page }}" />
 <div id="photo-list">
 	{% endif %}	
 	<ul class="content">
 		{% for pic in pics %}
-			<li class="photo eve-pic li-{{ ul_count }}" data="{{ pic.standardResolution }}">
+			<li id="{{ pic.id }}" class="photo eve-pic li-{{ ul_count }}" data="{{ pic.standardResolution }}">
 				<a href="#" class="box">
 					<input type="hidden" class="username" value="{{ pic.idUser.username }}">
 					<input type="hidden" class="userpic" value="{{ pic.idUser.profilePicture }}">
@@ -187,7 +192,8 @@ $b(document).ready(function(){
 				<div class="back"></div>
 			</li>
 			<div class="date photo">
-				<span class="day">{{ pic.dateAdded|date('d/m/Y') }}</span>
+				<span class="day">{{ pic.dateAdded|date('d') }}</span>
+				<span class="time">Sábado</span>
 			</div>
 			
 			{% set ul_count = ul_count + 1 %}

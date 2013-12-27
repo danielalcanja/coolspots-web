@@ -31,14 +31,17 @@ $a(document).ready(function(){
 		}
 		showImages();
 	}
-	
+	function ajustImage(){
+		$a(".photo").each(function(){
+			if(!$a(this).hasClass("date")) $a(this).animate({height : $a(this).find("img").width()},500);
+			//if($a(this).find("img").attr("src") == "/coolspots-web/web/bundles/site/images/photo-placeholder.png") $a(this).remove();
+		});
+	}
 	function showImages(){
 		timer = setTimeout(function(){
 			if(!hasImage){
-				$a(".photo").each(function(){
-					$a(this).height($a(this).find("img").width());
-					//if($a(this).find("img").attr("src") == "/coolspots-web/web/bundles/site/images/photo-placeholder.png") $a(this).remove();
-				});
+				ajustImage();
+				
 				var totUl = $a("ul.content").size();
 				for(i = 0; i < totUl; i++){
 					ul = $a("ul.content").eq(i);
@@ -113,6 +116,10 @@ $a(document).ready(function(){
 			// fetchNextPage();
 		// }
 	// });
+	
+	$a(window).resize(function(){
+		ajustImage();
+	});
 	
 	$a("body").mCustomScrollbar({
 		scrollInertia: 0,
@@ -357,6 +364,15 @@ $a(document).ready(function(){
 	});
 	$a(document).delegate(".slide-close", "click", function(){
 		shadownClose();
+	});
+	$a(document).delegate(".slide-icos .cur", "click", function(){
+		alert("CURTIR IMAGEM DE ID: " + $a(pic[atual]).attr("id"));
+	});
+	$a(document).delegate(".slide-icos .men", "click", function(){
+		alert("ENVIAR MENSAGEM AO USUÁRIO: " + $a(pic[atual]).find(".username").val());
+	});
+	$a(document).delegate(".slide-icos .com", "click", function(){
+		alert("COMPARTIHAR IMAGEM: " + $a(pic[atual]).attr("data"));
 	});
 	$a(document).delegate(shadown, "click", function(){
 		$a(this).fadeOut('slow');

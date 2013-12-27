@@ -201,12 +201,19 @@ span.ros { background:#FF5885; }
 .shadown .gallery-box .box .slide-eve-prev:hover { background-position:-380px -225px; }
 .shadown .gallery-box .box .slide-eve-next { background-position:-405px -100px; right:-30px; }
 .shadown .gallery-box .box .slide-eve-next:hover { background-position:-405px -225px; }
-.shadown .gallery-box .box .content .slide-close { width:24px; height:23px; background:url('../images/icons.png') 0px -150px no-repeat; position:fixed; display:block; top:10px; right:-35px; cursor:pointer; }
-.shadown .gallery-box .box .content .slide-close:hover { background-position:-24px -150px; }
-.shadown .gallery-box .box .content .slide-icos { width:29px; height:29px; background:url('../images/icons.png') no-repeat; position:fixed; right:-35px; z-index:10; cursor:pointer; }
-.shadown .gallery-box .slide-fav { top:40px; background-position:-0px -185px; }
-.shadown .gallery-box .slide-lug { top:70px; background-position:-0px -215px; }
-.shadown .gallery-box .slide-com { top:100px; background-position:-0px -245px; }
+.shadown .gallery-box .box .slide-close { width:24px; height:23px; background:url('../images/icons.png') 0px -150px no-repeat; position:absolute; display:block; top:0; right:-30px; cursor:pointer; }
+.shadown .gallery-box .box .slide-close:hover { background-position:-24px -150px; }
+.shadown .gallery-box .box .slide-icos { position:absolute; top:40px; left:625px; cursor:pointer; }
+.shadown .gallery-box .box .slide-icos .line { clear:both; width:250px; height:29px; line-height:29px; margin-bottom:3px; display:block; }
+.shadown .gallery-box .box .slide-icos .icos { width:29px; height:29px; display:block; float:left; background:url('../images/icons.png') no-repeat; }
+.shadown .gallery-box .box .slide-icos .fav { background-position:-0px -185px; }
+.shadown .gallery-box .box .slide-icos .lug { background-position:-0px -215px; }
+.shadown .gallery-box .box .slide-icos .com { background-position:-0px -245px; }
+.shadown .gallery-box .box .slide-icos .cur { background-position:-0px -275px; }
+.shadown .gallery-box .box .slide-icos .men { background-position:-0px -304px; }
+.shadown .gallery-box .box .slide-icos .line span { padding:0 5px; color:#000; font-size:11px; display:none; float:left; height:29px; line-height:29px; background:url('../images/slide-icos-back.png') center repeat-x; }
+.shadown .gallery-box .box .slide-icos .line span.p1 { width:7px; padding:0; background:url('../images/slide-icos-esqdir.png') center left no-repeat; }
+.shadown .gallery-box .box .slide-icos .line span.p2 { width:7px; padding:0; background:url('../images/slide-icos-esqdir.png') center right no-repeat; }
 
 .shadown .box-criar-evento { width:310px; height:320px; background:#FFF; position:absolute; top:50%; left:50%; margin:-160px auto auto -155px; }
 .shadown .box-criar-evento .space { margin:10px; }
@@ -247,8 +254,8 @@ select { color:#999; font-family:'Museo500-Regular'; font-size:12px; font-weight
 .comment-ico span { width:23px; height:50px; display:block; margin: 14px 0 0 14px; background:url('../images/icons.png') -175px -50px no-repeat; }
 .comment-ico:hover { background-color:#296689; }
 
-ul .date { width:140px; height:50px; background:#CCC; float:left; position:absolute; top:75px; z-index:99990; color:#31749B; }
-ul .date .day { font-family: 'Museo300-Regular'; font-size:30px; font-weight:normal; position:absolute; top:0px; right:10px; }
+ul .date { width:240px; height:140px; background:#31749B; border-left:10px solid #FFF; position:absolute; z-index:2; top:0; color:#FFF; }
+ul .date .day { font-family: 'Museo300-Regular'; font-size:80px; font-weight:normal; position:absolute; top:0px; right:10px; }
 ul .date .time { font-family: 'Museo500-Regular'; font-size:12px; position:absolute; bottom:10px; left:10px; }
 
 ul.pho-menu {  }
@@ -393,8 +400,14 @@ a.toggle em { float:right; margin-right:25px; color:#666; font-weight:normal; }
 .marTop25 { margin-top:25px; }
 .borRad02 { -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; }
 
-@media only screen and (max-width : 670px) {
-    .shadown .gallery-box .box { width:100%; top:0; left:-10px; margin:auto; }
+@media only screen and (max-width : 680px) {
+    .shadown .gallery-box .box { width:100%; top:0; left:0px; margin:auto; padding:0 0 10px 0; }
 	.shadown .gallery-box .box .slide-eve-prev { left:5px; }
 	.shadown .gallery-box .box .slide-eve-next { right:5px; }
+	.shadown .gallery-box .box .slide-close { top:12px; right:10px; cursor:pointer; }
+	.shadown .gallery-box .box .slide-icos { left:auto; right:8px; cursor:pointer; }
+	.shadown .gallery-box .box .slide-icos .icos { float:right; }
+	.shadown .gallery-box .box .slide-icos .line span { float:right; }
+	.shadown .gallery-box .box .slide-icos .line span.p1 { background:url('../images/slide-icos-diresq.png') center right; }
+	.shadown .gallery-box .box .slide-icos .line span.p2 { background:url('../images/slide-icos-diresq.png') center left; }
 }
