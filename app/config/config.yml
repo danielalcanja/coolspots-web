@@ -20,6 +20,7 @@ framework:
     trusted_proxies: ~
     session:
         save_path:   "%kernel.root_dir%/sessions"
+        cookie_lifetime:   864000
     fragments:       ~
 
 # Twig Configuration

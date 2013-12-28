@@ -1,0 +1,32 @@
+{% if app.session.get('username') == '' %}
+<ul class="login">
+	<li>
+		<a href="{{ signin_url }}" /><span class="bor bl"></span>{{ app.session.get('isAuth') }}{% trans %}login.signinbutton{% endtrans %}<span class="bor br nor"></span></a>
+		<br />
+		
+	</li>
+</ul>
+{% else %}
+<div class="info">
+	<span class="name">
+	{% if app.session.get('full_name') %}
+		{{ app.session.get('full_name') }}
+	{% else %}
+		{{ app.session.get('username') }}
+	{% endif %}
+	</span>
+	<span class="fav-fri">{{ total_favorites }} {% trans %}bottom.bar.favorites{% endtrans %} | {{ total_friends }} {% trans %}bottom.bar.friends{% endtrans %}</span>
+	<span class="logout"><a href="{{ path('logout') }}">Logout</a></span>
+</div>
+<ul class="dir">
+	{% if total_favorites > 0 %}
+	<li><a href="{{ path('favorites') }}"><span class="bor bl nor"></span><em class="fav"></em><span class="bor br nor"></span></a></li>
+	{% endif %}
+	<li><a href="{{ path('messages') }}"><span class="bor bl"></span><em class="mes"><em class="tot">{{ total_messages }}</em></em><span class="bor br"></span></a></li>
+	<li>
+		<div class="user_picture">
+			<img src="{{ app.session.get('profile_picture') }}" />
+		</div>
+	</li>
+</ul>
+{% endif %}

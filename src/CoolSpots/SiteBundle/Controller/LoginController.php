@@ -18,13 +18,33 @@ class LoginController extends Controller
 		return(array('signin_url' => $signin_url));
     }
 	
+	/**
+	 * @Template("SiteBundle:Login:connect.html.twig")
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function connectAction() {
+		$signin_url = str_replace(array('@CLIENT_ID@', '@REDIRECT_URI@'), array($this->container->getParameter('instagram_auth_client_id'), urldecode($this->container->getParameter('instagram_auth_redirect_url'))), $this->container->getParameter('instagram_auth_api'));
+		$session = $this->getRequest()->getSession();
+		$total_favorites = 0;
+		$total_messages = 0;
+		$total_friends = 0;
+		if($session->has('userid')) {
+			$em = $this->getDoctrine()->getManager();
+			$Friends = $em->getRepository('SiteBundle:CsFriends')->findBy(array('idUser' => $session->get('userid')));
+			$Favorites = $em->getRepository('SiteBundle:CsLocationFavorites')->findBy(array('idUser' => $session->get('userid'), 'deleted' => 'N'));
+			$total_friends = count($Friends);
+			$total_favorites = count($Favorites);
+		}
+		return(array('signin_url' => $signin_url, 'total_messages' => $total_messages, 'total_favorites' => $total_favorites, 'total_friends' => $total_friends));
+	}
+	
 	public function authAction(){
 		$request = $this->getRequest();
+		$session = $request->getSession();
 		if($request->get('error')) {
 			return new Response('<h2>Error</h2><p>' . $request->get('error_description') . '</p>');
 		}
 		$code = $request->get('code');
-		// TODO: curl POST to grab the auth token
 		$ch = curl_init();
 		$url = $this->container->getParameter('instagram_auth_token_url');
 		curl_setopt($ch, CURLOPT_URL,$url);
@@ -57,11 +77,22 @@ class LoginController extends Controller
 			$user->setTokenDate(new \DateTime());
 			$em->persist($user);
 			$em->flush();
+			
+			// write cookies
+			$session->set('username', $ret['user']['username']);
+			$session->set('full_name', $ret['user']['full_name']);
+			$session->set('profile_picture', $ret['user']['profile_picture']);
+			$session->set('access_token', $ret['access_token']);
+			$session->set('userid', $user->getId());
 			return $this->redirect($this->generateUrl('main'));
 		} else {
 			return new Response('Authentication error!');
 		}
-		
+	}
+	
+	public function disconnectAction() {
+		$this->getRequest()->getSession()->clear();
+		return $this->redirect($this->generateUrl('main'));
 	}
 
 }

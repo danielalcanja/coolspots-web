@@ -6,14 +6,14 @@
     </id>
     <field name="dateAdded" type="datetime" column="date_added" nullable="false"/>
     <field name="deleted" type="string" column="deleted" length="1" nullable="false"/>
-    <many-to-one field="idLocation" target-entity="CsLocation">
-      <join-columns>
-        <join-column name="id_location" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
     <many-to-one field="idUser" target-entity="CsUsers">
       <join-columns>
         <join-column name="id_user" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idLocation" target-entity="CsLocation">
+      <join-columns>
+        <join-column name="id_location" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

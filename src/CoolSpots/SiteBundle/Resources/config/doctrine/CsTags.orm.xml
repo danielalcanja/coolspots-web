@@ -5,14 +5,14 @@
       <generator strategy="IDENTITY"/>
     </id>
     <field name="tag" type="string" column="tag" length="50" nullable="false"/>
-    <many-to-one field="idLocation" target-entity="CsLocation">
-      <join-columns>
-        <join-column name="id_location" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
     <many-to-one field="idPic" target-entity="CsPics">
       <join-columns>
         <join-column name="id_pic" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idLocation" target-entity="CsLocation">
+      <join-columns>
+        <join-column name="id_location" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

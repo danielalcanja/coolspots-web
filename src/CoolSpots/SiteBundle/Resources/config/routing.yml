@@ -43,3 +43,7 @@ login:
 login_auth:
     pattern: /login/auth
     defaults: { _controller: SiteBundle:Login:auth }
+
+logout:
+  pattern: /logout
+  defaults: { _controller: SiteBundle:Login:disconnect }
