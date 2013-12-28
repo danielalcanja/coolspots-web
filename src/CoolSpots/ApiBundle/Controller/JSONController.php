@@ -24,19 +24,19 @@ class JSONController extends Controller
 		 * /json/location?id=9
 		 * 
 		 * Get all locations from a city
-		 * /json/locations?city=1
+		 * /json/location?city=1
 		 * 
 		 * Get all locations from a specific state
-		 * /json/locations?state=14
+		 * /json/location?state=14
 		 * 
 		 * Get all locations from a specific country
-		 * /json/locations?country=1
+		 * /json/location?country=1
 		 * 
 		 * Get all locations from a specific category
-		 * /json/locations?category=1
+		 * /json/location?category=1
 		 * 
 		 * Combinations:
-		 * /json/locations?city=1&category=8&page=2
+		 * /json/location?city=1&category=8&page=2
 		 */
 		$request = $this->getRequest();
 		$offset = ($request->get('page', 1) - 1) * $this->container->getParameter('max_items_per_page');
