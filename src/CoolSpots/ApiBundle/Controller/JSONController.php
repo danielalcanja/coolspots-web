@@ -7,12 +7,23 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Doctrine\ORM\NoResultException;
+use CoolSpots\SiteBundle\Library\CSUtil;
+use CoolSpots\SiteBundle\Entity\CsGeoCountry;
+use CoolSpots\SiteBundle\Entity\CsGeoState;
+use CoolSpots\SiteBundle\Entity\CsGeoCity;
 
 class JSONController extends Controller
 {
     public function locationAction()
     {
 		/*
+		 * ----------------
+		 * Usage
+		 * ----------------
+		 * 
+		 * /json/location
+		 * 
 		 * ----------------
 		 * Parameters
 		 * ----------------
@@ -131,6 +142,13 @@ class JSONController extends Controller
 	
     public function locationInfoAction($id, $slug)
     {
+		/*
+		 * ----------------
+		 * Usage
+		 * ----------------
+		 * 
+		 * /json/locatonInfo/1/getulio-loft
+		 */
 		$repository = $this->getDoctrine()->getRepository('SiteBundle:CsLocation');
 		$rs = $repository->createQueryBuilder('c')
 				->where('c.id = :id')
@@ -153,6 +171,12 @@ class JSONController extends Controller
 	public function photosAction($idLocation, $slug)
 	{
 		/*
+		 * ----------------
+		 * Usage
+		 * ----------------
+		 * 
+		 * /json/photos/1/getulio-loft
+		 * 
 		 * ----------------
 		 * Parameters
 		 * ----------------
@@ -181,6 +205,119 @@ class JSONController extends Controller
 		$response = new Response($json);
 		$response->headers->set('content-type', 'application/json');
 		
+		return $response;
+	}
+	
+	public function getGeoAction($countryName, $countryCode, $stateName, $stateAbbr, $cityName) {
+		/*
+		 * ----------------
+		 * Usage
+		 * ----------------
+		 * 
+		 * /json/getgeo/Brazil/BR/Mato Grosso/MT/Sinop
+		 */
+		
+		$em = $this->getDoctrine()->getManager();
+		
+		// check if the country is already in the database
+		try {
+			$Country = $this->getDoctrine()->getRepository('SiteBundle:CsGeoCountry')->createQueryBuilder('c')
+					->where('LOWER(c.countryName) = :countryName')
+					->andWhere('LOWER(c.countryCode) = :countryCode')
+					->andWhere('c.enabled = :enabled')
+					->andWhere('c.deleted = :deleted')
+					->setParameter('countryName', strtolower($countryName))
+					->setParameter('countryCode', strtolower($countryCode))
+					->setParameter('enabled', 'Y')
+					->setParameter('deleted', 'N')
+					->getQuery()
+					->getSingleResult();
+		} catch(NoResultException $e) {
+			try {
+				$Country = new CsGeoCountry();
+				$Country->setCountryName($countryName);
+				$Country->setCountryCode($countryCode);
+				$Country->setEnabled('Y');
+				$Country->setDeleted('N');
+				$em->persist($Country);
+				$em->flush();
+			} catch(Exception $e) {
+				$json = json_encode(array('Error' => $e->getMessage()));
+				$response = new Response($json);
+				$response->headers->set('content-type', 'application/json');
+				return($response);
+			}
+		}
+		
+		// check if the state is already in the database
+		try {
+			$State = $this->getDoctrine()->getRepository('SiteBundle:CsGeoState')->createQueryBuilder('c')
+					->where('LOWER(c.stateName) = :stateName')
+					->andWhere('LOWER(c.stateAbbr) = :stateAbbr')
+					->andWhere('c.idCountry = :idCountry')
+					->andWhere('c.enabled = :enabled')
+					->andWhere('c.deleted = :deleted')
+					->setParameter('stateName', strtolower($stateName))
+					->setParameter('stateAbbr', strtolower($stateAbbr))
+					->setParameter('idCountry', $Country->getId())
+					->setParameter('enabled', 'Y')
+					->setParameter('deleted', 'N')
+					->getQuery()
+					->getSingleResult();
+		} catch(NoResultException $e) {
+			try {
+				$State = new CsGeoState();
+				$State->setIdCountry($Country);
+				$State->setStateName($stateName);
+				$State->setStateAbbr($stateAbbr);
+				$State->setEnabled('Y');
+				$State->setDeleted('N');
+				$em->persist($State);
+				$em->flush();
+			} catch(Exception $e) {
+				$json = json_encode(array('Error' => $e->getMessage()));
+				$response = new Response($json);
+				$response->headers->set('content-type', 'application/json');
+				return($response);
+			}
+		}
+		
+		// check if the city is already in the database
+		try {
+			$City = $this->getDoctrine()->getRepository('SiteBundle:CsGeoCity')->createQueryBuilder('c')
+					->where('LOWER(c.cityName) = :cityName')
+					->andWhere('c.idCountry = :idCountry')
+					->andWhere('c.idState = :idState')
+					->andWhere('c.enabled = :enabled')
+					->andWhere('c.deleted = :deleted')
+					->setParameter('cityName', strtolower($cityName))
+					->setParameter('idCountry', $Country->getId())
+					->setParameter('idState', $State->getId())
+					->setParameter('enabled', 'Y')
+					->setParameter('deleted', 'N')
+					->getQuery()
+					->getSingleResult();
+		} catch(NoResultException $e) {
+			try {
+				$City = new CsGeoCity();
+				$City->setIdCountry($Country);
+				$City->setIdState($State);
+				$City->setCityName($cityName);
+				$City->setEnabled('Y');
+				$City->setDeleted('N');
+				$em->persist($City);
+				$em->flush();
+			} catch(Exception $e) {
+				$json = json_encode(array('Error' => $e->getMessage()));
+				$response = new Response($json);
+				$response->headers->set('content-type', 'application/json');
+				return($response);
+			}
+		}
+		
+		$json = json_encode(array('id_contry' => $Country->getId(), 'id_state' => $State->getId(), 'id_city' => $City->getId()));
+		$response = new Response($json);
+		$response->headers->set('content-type', 'application/json');
 		return $response;
 	}
 }
