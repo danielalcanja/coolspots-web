@@ -226,8 +226,8 @@ class JSONController extends Controller
 					->andWhere('LOWER(c.countryCode) = :countryCode')
 					->andWhere('c.enabled = :enabled')
 					->andWhere('c.deleted = :deleted')
-					->setParameter('countryName', strtolower($countryName))
-					->setParameter('countryCode', strtolower($countryCode))
+					->setParameter('countryName', strtolower(utf8_decode($countryName)))
+					->setParameter('countryCode', strtolower(utf8_decode($countryCode)))
 					->setParameter('enabled', 'Y')
 					->setParameter('deleted', 'N')
 					->getQuery()
@@ -235,8 +235,8 @@ class JSONController extends Controller
 		} catch(NoResultException $e) {
 			try {
 				$Country = new CsGeoCountry();
-				$Country->setCountryName($countryName);
-				$Country->setCountryCode($countryCode);
+				$Country->setCountryName(utf8_decode($countryName));
+				$Country->setCountryCode(utf8_decode($countryCode));
 				$Country->setEnabled('Y');
 				$Country->setDeleted('N');
 				$em->persist($Country);
@@ -257,8 +257,8 @@ class JSONController extends Controller
 					->andWhere('c.idCountry = :idCountry')
 					->andWhere('c.enabled = :enabled')
 					->andWhere('c.deleted = :deleted')
-					->setParameter('stateName', strtolower($stateName))
-					->setParameter('stateAbbr', strtolower($stateAbbr))
+					->setParameter('stateName', strtolower(utf8_decode($stateName)))
+					->setParameter('stateAbbr', strtolower(utf8_decode($stateAbbr)))
 					->setParameter('idCountry', $Country->getId())
 					->setParameter('enabled', 'Y')
 					->setParameter('deleted', 'N')
@@ -268,8 +268,8 @@ class JSONController extends Controller
 			try {
 				$State = new CsGeoState();
 				$State->setIdCountry($Country);
-				$State->setStateName($stateName);
-				$State->setStateAbbr($stateAbbr);
+				$State->setStateName(utf8_decode($stateName));
+				$State->setStateAbbr(utf8_decode($stateAbbr));
 				$State->setEnabled('Y');
 				$State->setDeleted('N');
 				$em->persist($State);
@@ -290,7 +290,7 @@ class JSONController extends Controller
 					->andWhere('c.idState = :idState')
 					->andWhere('c.enabled = :enabled')
 					->andWhere('c.deleted = :deleted')
-					->setParameter('cityName', strtolower($cityName))
+					->setParameter('cityName', strtolower(utf8_decode($cityName)))
 					->setParameter('idCountry', $Country->getId())
 					->setParameter('idState', $State->getId())
 					->setParameter('enabled', 'Y')
@@ -302,7 +302,7 @@ class JSONController extends Controller
 				$City = new CsGeoCity();
 				$City->setIdCountry($Country);
 				$City->setIdState($State);
-				$City->setCityName($cityName);
+				$City->setCityName(utf8_decode($cityName));
 				$City->setEnabled('Y');
 				$City->setDeleted('N');
 				$em->persist($City);
