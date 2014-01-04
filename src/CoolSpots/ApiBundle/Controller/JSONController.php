@@ -132,11 +132,8 @@ class JSONController extends Controller
 			);
 		}
 		$json = json_encode($arrLocations);
-		
-		
 		$response = new Response($json);
 		$response->headers->set('content-type', 'application/json');
-		
 		return $response;
     }
 	
@@ -226,8 +223,8 @@ class JSONController extends Controller
 					->andWhere('LOWER(c.countryCode) = :countryCode')
 					->andWhere('c.enabled = :enabled')
 					->andWhere('c.deleted = :deleted')
-					->setParameter('countryName', strtolower(utf8_decode($countryName)))
-					->setParameter('countryCode', strtolower(utf8_decode($countryCode)))
+					->setParameter('countryName', mb_strtolower($countryName, 'UTF-8'))
+					->setParameter('countryCode', mb_strtolower($countryCode, 'UTF-8'))
 					->setParameter('enabled', 'Y')
 					->setParameter('deleted', 'N')
 					->getQuery()
@@ -235,8 +232,8 @@ class JSONController extends Controller
 		} catch(NoResultException $e) {
 			try {
 				$Country = new CsGeoCountry();
-				$Country->setCountryName(utf8_decode($countryName));
-				$Country->setCountryCode(utf8_decode($countryCode));
+				$Country->setCountryName($countryName);
+				$Country->setCountryCode($countryCode);
 				$Country->setEnabled('Y');
 				$Country->setDeleted('N');
 				$em->persist($Country);
@@ -257,8 +254,8 @@ class JSONController extends Controller
 					->andWhere('c.idCountry = :idCountry')
 					->andWhere('c.enabled = :enabled')
 					->andWhere('c.deleted = :deleted')
-					->setParameter('stateName', strtolower(utf8_decode($stateName)))
-					->setParameter('stateAbbr', strtolower(utf8_decode($stateAbbr)))
+					->setParameter('stateName', mb_strtolower($stateName, 'UTF-8'))
+					->setParameter('stateAbbr', mb_strtolower($stateAbbr, 'UTF-8'))
 					->setParameter('idCountry', $Country->getId())
 					->setParameter('enabled', 'Y')
 					->setParameter('deleted', 'N')
@@ -268,8 +265,8 @@ class JSONController extends Controller
 			try {
 				$State = new CsGeoState();
 				$State->setIdCountry($Country);
-				$State->setStateName(utf8_decode($stateName));
-				$State->setStateAbbr(utf8_decode($stateAbbr));
+				$State->setStateName($stateName);
+				$State->setStateAbbr($stateAbbr);
 				$State->setEnabled('Y');
 				$State->setDeleted('N');
 				$em->persist($State);
@@ -290,7 +287,7 @@ class JSONController extends Controller
 					->andWhere('c.idState = :idState')
 					->andWhere('c.enabled = :enabled')
 					->andWhere('c.deleted = :deleted')
-					->setParameter('cityName', strtolower(utf8_decode($cityName)))
+					->setParameter('cityName', mb_strtolower($cityName, 'UTF-8'))
 					->setParameter('idCountry', $Country->getId())
 					->setParameter('idState', $State->getId())
 					->setParameter('enabled', 'Y')
@@ -302,7 +299,7 @@ class JSONController extends Controller
 				$City = new CsGeoCity();
 				$City->setIdCountry($Country);
 				$City->setIdState($State);
-				$City->setCityName(utf8_decode($cityName));
+				$City->setCityName($cityName);
 				$City->setEnabled('Y');
 				$City->setDeleted('N');
 				$em->persist($City);
@@ -319,5 +316,71 @@ class JSONController extends Controller
 		$response = new Response($json);
 		$response->headers->set('content-type', 'application/json');
 		return $response;
+	}
+	
+	public function addLocationAction() {
+		/*
+		 * ----------------
+		 * Usage
+		 * ----------------
+		 * 
+		 * (POST METHOD) /json/addlocation
+		 * 
+		 * ----------------
+		 * Parameters
+		 * ----------------
+		 * * Mandatory:
+		 *   - id_country
+		 *   - id_state
+		 *   - id_city
+		 *   - id_instagram
+		 *   - id_foursquare
+		 *   - id_category (0 = create at runtime)
+		 *   - category_name
+		 *   - category_exid
+		 *   - name
+		 * 
+		 * * Optional:
+		 *   - address
+		 *   - postal_code
+		 *   - phone
+		 */
+		
+		$request = $this->getRequest();
+		
+		// check if all parameters are passed to the controler
+		if($request->get('id_country') === null || $request->get('id_state') === null || $request->get('id_city') === null
+			|| $request->get('id_instagram') === null || $request->get('id_foursquare') === null || $request->get('id_category') === null 
+			|| $request->get('category_name') === null || $request->get('category_exid') === null || $request->get('name') === null) {
+			$json = json_encode(array('status' => 'ERROR', 'message' => 'Missing mantatory parameters'));
+			$response = new Response($json);
+			$response->headers->set('content-type', 'application/json');
+			return $response;
+		}
+		
+		// first, check if instagram id isn't already registered
+		$Location = $this->getDoctrine()->getRepository('SiteBundle:CsLocation')->createQueryBuilder('c')
+					->where('c.idInstagram = :idInstagram')
+					->andWhere('c.idFoursquare = :idFoursquare')
+					->andWhere('c.enabled = :enabled')
+					->andWhere('c.deleted = :deleted')
+					->setParameter('idInstagram', $request->get('id_instagram'))
+					->setParameter('idFoursquare', $request->get('id_foursquare'))
+					->setParameter('enabled', 'Y')
+					->setParameter('deleted', 'N')
+					->getQuery()
+					->getResult();
+		if(count($Location) > 0) {
+			$json = json_encode(array('status' => 'ERROR', 'message' => 'Location already exists!'));
+			$response = new Response($json);
+			$response->headers->set('content-type', 'application/json');
+			return $response;
+		}
+		
+		$json = json_encode(array('status' => 'OK', 'message' => 'Location successful registered!'));
+		$response = new Response($json);
+		$response->headers->set('content-type', 'application/json');
+		return $response;
+		
 	}
 }

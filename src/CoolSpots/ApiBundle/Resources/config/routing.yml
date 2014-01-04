@@ -28,8 +28,12 @@ json_photos:
     pattern: /json/photos/{idLocation}/{slug}
     defaults: { _controller: ApiBundle:JSON:photos }
         
-
 json_getgeo:
     pattern: /json/getgeo/{countryName}/{countryCode}/{stateName}/{stateAbbr}/{cityName}
     defaults: { _controller: ApiBundle:JSON:getGeo }
-  
+
+json_addlocation:
+    pattern: /json/addlocation
+    defaults: { _controller: ApiBundle:JSON:addLocation }
+    requirements:
+        _method: GET
