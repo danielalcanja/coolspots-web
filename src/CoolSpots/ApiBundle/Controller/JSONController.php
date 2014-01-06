@@ -12,6 +12,8 @@ use CoolSpots\SiteBundle\Library\CSUtil;
 use CoolSpots\SiteBundle\Entity\CsGeoCountry;
 use CoolSpots\SiteBundle\Entity\CsGeoState;
 use CoolSpots\SiteBundle\Entity\CsGeoCity;
+use CoolSpots\SiteBundle\Entity\CsCategory;
+use CoolSpots\SiteBundle\Entity\CsLocation;
 
 class JSONController extends Controller
 {
@@ -359,7 +361,7 @@ class JSONController extends Controller
 		}
 		
 		// first, check if instagram id isn't already registered
-		$Location = $this->getDoctrine()->getRepository('SiteBundle:CsLocation')->createQueryBuilder('c')
+		$rsLocation = $this->getDoctrine()->getRepository('SiteBundle:CsLocation')->createQueryBuilder('c')
 					->where('c.idInstagram = :idInstagram')
 					->andWhere('c.idFoursquare = :idFoursquare')
 					->andWhere('c.enabled = :enabled')
@@ -370,17 +372,69 @@ class JSONController extends Controller
 					->setParameter('deleted', 'N')
 					->getQuery()
 					->getResult();
-		if(count($Location) > 0) {
+		if(count($rsLocation) > 0) {
 			$json = json_encode(array('status' => 'ERROR', 'message' => 'Location already exists!'));
 			$response = new Response($json);
 			$response->headers->set('content-type', 'application/json');
 			return $response;
 		}
 		
-		$json = json_encode(array('status' => 'OK', 'message' => 'Location successful registered!'));
+		// get entity manager
+		$em = $this->getDoctrine()->getManager();
+		
+		// get country, state and city objects
+		$Country = $em->getRepository('SiteBundle:CsGeoCountry')->find($request->get('id_country'));
+		$State = $em->getRepository('SiteBundle:CsGeoState')->find($request->get('id_state'));
+		$City = $em->getRepository('SiteBundle:CsGeoCity')->find($request->get('id_city'));
+		$Category = null;
+		
+		// check if category exists
+		if($request->get('id_category') == 0) {
+			$Category = new CsCategory();
+			$Category->setExid($request->get('category_exid'));
+			$Category->setName($request->get('category_name'));
+			$em->persist($Category);
+			$em->flush();
+		} else {
+			$Category = $em->getRepository('SiteBundle:CsCategory')->find($request->get('id_category'));
+		}
+		
+		try {
+			// insert the new location
+			$Location = new CsLocation();
+			$Location->setAddress($request->get('address'));
+			$Location->setCheckinsCount(0);
+			$Location->setCoverPic(null);
+			$Location->setDateAdded(new \DateTime());
+			$Location->setDateUpdated(null);
+			$Location->setDeleted('N');
+			$Location->setEnabled('Y');
+			$Location->setIdCategory($Category);
+			$Location->setIdCity($City);
+			$Location->setIdCountry($Country);
+			$Location->setIdFoursquare($request->get('id_foursquare'));
+			$Location->setIdInstagram($request->get('id_instagram'));
+			$Location->setIdState($State);
+			$Location->setLastMinId(null);
+			$Location->setLikesCount(0);
+			$Location->setMinTimestamp(null);
+			$Location->setName($request->get('name'));
+			$Location->setNextMaxId(null);
+			$Location->setPhone($request->get('phone'));
+			$Location->setPostalCode($request->get('postal_code'));
+			$Location->setSlug(CSUtil::slugify($request->get('name')));
+			$em->persist($Location);
+			$em->flush();
+		} catch(Exception $e) {
+			$json = json_encode(array('status' => 'ERROR', 'message' => $e->getMessage()));
+			$response = new Response($json);
+			$response->headers->set('content-type', 'application/json');
+			return $response;
+		}
+		
+		$json = json_encode(array('status' => 'OK', 'message' => 'Location successful registered!', 'id' => $Location->getId()));
 		$response = new Response($json);
 		$response->headers->set('content-type', 'application/json');
 		return $response;
-		
 	}
 }

@@ -36,4 +36,4 @@ json_addlocation:
     pattern: /json/addlocation
     defaults: { _controller: ApiBundle:JSON:addLocation }
     requirements:
-        _method: GET
+        _method: POST

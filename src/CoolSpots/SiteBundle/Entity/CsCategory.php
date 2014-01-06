@@ -22,7 +22,7 @@ class CsCategory
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=20, nullable=true)
+     * @ORM\Column(name="name", type="string", length=100, nullable=true)
      */
     private $name;
 
