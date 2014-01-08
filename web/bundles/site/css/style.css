@@ -168,10 +168,10 @@ span.ros { background:#FF5885; }
 .info .more { margin-top:10px; padding-top:5px; font-family: 'Museo500-Regular'; font-size:15px; border-top:1px solid #FFF; display:none; }
 
 /*COMENTARIO*/
-.comment { width:300px; height:100%; background:#FFF; position:fixed; z-index:10; top:0; right:-353px; }
-.comment .com-back { width:53px; height:50px; position:absolute; top:0; left:-53px; line-height:50px; background-color:#31749B; cursor:pointer; }
-.comment .com-back span { width:23px; height:50px; display:block; margin: 14px 0 0 14px; background:url('../images/icons.png') -320px -130px no-repeat; }
-.comment .com-back:hover { background-color:#144059; }
+.comment { width:300px; height:100%; padding-right:2px; background:#FFF; position:fixed; z-index:10; top:0; right:-353px; }
+.com-back { width:53px; height:50px; position:fixed; top:0; right:-53px; z-index:10; line-height:50px; background-color:#31749B; cursor:pointer; }
+.com-back span { width:23px; height:50px; display:block; margin: 14px 0 0 14px; background:url('../images/icons.png') -320px -130px no-repeat; }
+.com-back:hover { background-color:#144059; }
 .comment .espace { padding:10px 20px 15px 10px; }
 .comment .espace h2 { font-weight:normal; color:#999; }
 .comment .espace h2 span { font-size:15px; color:#31749B; font-weight:normal; }
@@ -250,9 +250,14 @@ select { color:#999; font-family:'Museo500-Regular'; font-size:12px; font-weight
 .location-info .content span { font-size:13px; font-weight:normal; }
 .location-info .content .divide { clear:both; width:345px; height:1px; margin:15px 0 10px 0; border-bottom:1px solid #CCC; }
 
-.comment-ico { width:53px; height:50px; position:fixed; z-index:1; top:220px; left:20px; line-height:50px; background-color:#31749B; display:block; cursor:pointer; }
-.comment-ico span { width:23px; height:50px; display:block; margin: 14px 0 0 14px; background:url('../images/icons.png') -175px -50px no-repeat; }
-.comment-ico:hover { background-color:#296689; }
+.comment-ico, .calendar-ico { width:53px; height:50px; position:fixed; z-index:1; left:20px; line-height:50px; background-color:#31749B; display:block; cursor:pointer; }
+.comment-ico { top:220px; }
+.calendar-ico { top:275px; }
+.comment-ico span, .calendar-ico span { width:32px; height:50px; display:block; margin:10px 0 0 10px; }
+.comment-ico span {  background:url('../images/icons.png') -80px -195px no-repeat; }
+.calendar-ico span {  background:url('../images/icons.png') -115px -195px no-repeat; }
+.comment-ico:hover, .calendar-ico:hover { background-color:#144059; }
+#datepicker { position:fixed; top:275px; left:73px; z-index:1; background-color:#FFF; }
 
 ul .date { width:240px; height:140px; background:#31749B; border-left:10px solid #FFF; position:absolute; z-index:2; top:0; color:#FFF; }
 ul .date .day { font-family: 'Museo300-Regular'; font-size:80px; font-weight:normal; position:absolute; top:0px; right:10px; }
