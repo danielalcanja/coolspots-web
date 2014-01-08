@@ -2,6 +2,7 @@ parameters:
 #    site.example.class: CoolSpots\SiteBundle\Example
 
 services:
-#    site.example:
-#        class: %site.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    site.twig.site_extension:
+        class: CoolSpots\SiteBundle\Twig\SiteExtension
+        tags:
+            - { name: twig.extension }

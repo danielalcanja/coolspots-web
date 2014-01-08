@@ -11,7 +11,7 @@ class DefaultController extends Controller
 	 * @Template("SiteBundle:Default:index.html.twig")
 	 */
     public function indexAction()
-    {
+    {		
 		$request = $this->getRequest();
 		$page = $request->get('page', 1);
 		$max_per_page = $this->container->getParameter('max_items_per_page');

@@ -18,7 +18,10 @@
 						<img class="lazy" src="{{ asset('bundles/site/images/photo-placeholder.png') }}" data-original="{{ item.lastPic }}" />
 					</div>
 					<div class="info">
-						<div class="favorite {% if ul_count % 2 == 0 %} this-fav {% endif %}" title="{% if ul_count % 2 == 0 %} Remover dos meus Favoritos {% else %} Adicionar aos meus Favoritos {% endif %}"></div>
+						{% if app.session.get('userid') %}
+						<div class="favorite {% if item.id|isFavorite(app.session.get('favorites')) %} this-fav {% endif %}" title="{% if item.id|isFavorite(app.session.get('favorites')) %} Remover dos meus Favoritos {% else %} Adicionar aos meus Favoritos {% endif %}"></div>
+						{% endif %}
+						
 						<h2 class="title">{{ item.name }}</h2>
 						<div class="more">25 Spooters - 2 Friends</div>
 					</div>

@@ -35,5 +35,8 @@ parameters:
     instagram_auth_client_secret: e02973d56bc643849d14535b6b0a59f8
     instagram_auth_redirect_url: http://beta.coolspots.com.br/login/auth
     
+    instagram_photo_update_url: https://api.instagram.com/v1/locations/@OBJECT_ID@/media/recent?client_id=@CLIENT_ID@
+    instagram_photo_update_extra_params: '&min_timestamp=@MIN_TIMESTAMP@'
+    
     # pagination
     max_items_per_page: 18

@@ -19,19 +19,21 @@ instagram_callback:
 json_location:
     pattern: /json/location
     defaults: { _controller: ApiBundle:JSON:location }
-    
-json_location_info:
-    pattern: /json/location/{id}/{slug}
-    defaults: { _controller: ApiBundle:JSON:locationInfo }
-
-json_photos:
-    pattern: /json/photos/{idLocation}/{slug}
-    defaults: { _controller: ApiBundle:JSON:photos }
+    requirements:
+        _method: POST
         
-json_getgeo:
-    pattern: /json/getgeo/{countryName}/{countryCode}/{stateName}/{stateAbbr}/{cityName}
-    defaults: { _controller: ApiBundle:JSON:getGeo }
-
+json_location_info:
+    pattern: /json/locationinfo
+    defaults: { _controller: ApiBundle:JSON:locationInfo }
+    requirements:
+        _method: POST
+        
+json_photos:
+    pattern: /json/photos
+    defaults: { _controller: ApiBundle:JSON:photos }
+    requirements:
+        _method: POST
+        
 json_addlocation:
     pattern: /json/addlocation
     defaults: { _controller: ApiBundle:JSON:addLocation }

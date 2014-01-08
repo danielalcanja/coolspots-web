@@ -1,25 +1,25 @@
 <?php
 
 // PARA REMOVER A SENHA, REMOVA DAQUI ....
-function Autorizacao()
-{
-	header('WWW-Authenticate: Basic realm="CoolSpots!"');
-	header('HTTP/1.0 401 Unauthorized');
-	echo 'Acesso não autorizado';
-	exit();
-}
-
-if($_SERVER['SERVER_NAME'] != 'localhost' && $_SERVER['SERVER_NAME'] != 'coolspot' ) {
-	if(!strstr($_SERVER['SERVER_NAME'], 'api')) {
-		if(!isset($_SERVER['PHP_AUTH_USER'])) {
-			Autorizacao();
-		} else {
-			if($_SERVER['PHP_AUTH_USER'] != 'coolspots' || $_SERVER['PHP_AUTH_PW'] != 'c00lsp0ts!') {
-			 Autorizacao();
-			}
-		}
-	}
-}
+//function Autorizacao()
+//{
+//	header('WWW-Authenticate: Basic realm="CoolSpots!"');
+//	header('HTTP/1.0 401 Unauthorized');
+//	echo 'Acesso não autorizado';
+//	exit();
+//}
+//
+//if($_SERVER['SERVER_NAME'] != 'localhost' && $_SERVER['SERVER_NAME'] != 'coolspot' ) {
+//	if(!strstr($_SERVER['SERVER_NAME'], 'api')) {
+//		if(!isset($_SERVER['PHP_AUTH_USER'])) {
+//			Autorizacao();
+//		} else {
+//			if($_SERVER['PHP_AUTH_USER'] != 'coolspots' || $_SERVER['PHP_AUTH_PW'] != 'c00lsp0ts!') {
+//			 Autorizacao();
+//			}
+//		}
+//	}
+//}
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Debug\Debug;

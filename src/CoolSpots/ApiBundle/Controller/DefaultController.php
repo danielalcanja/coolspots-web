@@ -13,27 +13,40 @@ class DefaultController extends Controller
         return new Response();
     }
 	
+	private function jsonResponse($arrResponse) {
+		$json = json_encode($arrResponse);
+		$response = new Response($json);
+		$response->headers->set('content-type', 'application/json');
+		return $response;
+	}
+	
+	
 	public function subscriptionAction($object, $object_id)
-	{		
+	{	
+		$request = $this->getRequest();
 		$repository = $this->getDoctrine()->getRepository('SiteBundle:CsSubscriptions');
 		$subscription = $repository->findBy(array('object' => $object, 'objectId' => $object_id));
 		
-		if(count($subscription) > 0) return new Response('Duplicated subscription');
+		if(count($subscription) > 0) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Duplicated subscription'), 'data' => null));
 		
 		$em = $this->getDoctrine()->getManager();
-		$max_subscriptions = $this->container->getParameter('instagram_max_subscriptions');
-		$rsInstagram = $em->createQuery('
-					SELECT i FROM SiteBundle:VwInstagramApi i
-					WHERE i.totalSubscriptions < :max
-					ORDER BY i.id')
-				->setParameter('max', $max_subscriptions)
-				->setMaxResults(1)
-				->getSingleResult();
-		if(!$rsInstagram) return new Response('No more instagram client id for subscriptions');
-		$client_id = $rsInstagram->getClientId();
-		$client_secret = $rsInstagram->getClientSecret();
 		
-		$Instagram = $this->getDoctrine()->getRepository('SiteBundle:CsInstagramApi')->find($rsInstagram->getId());
+		if(!$request->get('client_id')) {
+			$max_subscriptions = $this->container->getParameter('instagram_max_subscriptions');
+			$rsInstagram = $em->createQuery('
+						SELECT i FROM SiteBundle:VwInstagramApi i
+						WHERE i.totalSubscriptions < :max
+						ORDER BY i.id')
+					->setParameter('max', $max_subscriptions)
+					->setMaxResults(1)
+					->getSingleResult();
+			if(!$rsInstagram) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'No more instagram client id for subscriptions'), 'data' => null));;
+			$client_id = $rsInstagram->getClientId();
+			$client_secret = $rsInstagram->getClientSecret();
+			$Instagram = $this->getDoctrine()->getRepository('SiteBundle:CsInstagramApi')->find($rsInstagram->getId());
+		} else {
+			$Instagram = $this->getDoctrine()->getRepository('SiteBundle:CsInstagramApi')->find($request->get('client_id'));
+		}
 		
 		$attachment =  array(
 			'client_id' => $client_id,
@@ -72,7 +85,11 @@ class DefaultController extends Controller
 			$Subscription->setObjectId($object_id);
 			$Subscription->setChangedAspect(null);
 			$Subscription->setTime(null);
-			$Subscription->setUpdated('N');
+			if($request->get('jsonapi')) {
+				$Subscription->setUpdated('P');
+			} else {
+				$Subscription->setUpdated('N');
+			}
 			$Subscription->setCycleCount(0);
 			$Subscription->setIdInstagramApi($Instagram);
 			$Subscription->setSubscriptionId($response['data']['id']);
@@ -83,12 +100,9 @@ class DefaultController extends Controller
 		}
 		else
 		{
-			echo "<h2>Error:</h2>";
-			echo "<pre>";
-			print_r($response);
-			echo "</pre>";
+			return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Fail executing instagram API call: ' . $response['meta']['error_message']), 'data' => null));;
 		}
-		return new Response();
+		return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Subscription successful'), 'data' => array('id' => $Subscription->getId())));;
 	}
 	
 	public function callbackAction()

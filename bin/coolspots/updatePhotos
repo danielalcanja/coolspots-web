@@ -36,7 +36,7 @@ if(!$db) {
 
 // apply default charset
 echo "=> Appling default database charset: ";
-$db->exec("SET NAMES 'latin1'");
+$db->exec("SET NAMES 'utf8'");
 echo "success\n";
 
 // query for subscriptions update
@@ -58,6 +58,19 @@ if(count($rsSubscriptions) == 0)
 
 echo count($rsSubscriptions) . " locations found\n";
 $db->beginTransaction();
+
+echo "=> Selecting the list of API Keys: ";
+// grap the list of API's client_id
+$sqlApi = sprintf("SELECT * FROM cs_instagram_api WHERE deleted = 'N' AND enabled = 'Y'");
+$stApi = $db->prepare($sqlApi);
+$stApi->execute();
+$rsApi = $stApi->fetchAll();
+$arrApi = array();
+foreach($rsApi as $api) {
+	array_push($arrApi, $api['client_id']);
+}
+echo count($arrApi) . " found\n";
+
 try 
 {
 	foreach($rsSubscriptions as $subscription) 
@@ -84,7 +97,8 @@ try
 		echo $rsLocation['name'] . " ... ";
 
 		// pick a random client_id
-		$client_id = $settings['instagram']['client_id'][rand(0, (count($settings['instagram']['client_id']) - 1))];
+		//$client_id = $settings['instagram']['client_id'][rand(0, (count($settings['instagram']['client_id']) - 1))];
+		$client_id = $arrApi[rand(0, count($arrApi) - 1)];
 
 		$url = str_replace(array('@OBJECT_ID@', '@CLIENT_ID@'), array($subscription['object_id'], $client_id), $settings['instagram']['api_url']);
 		// check if there is a min_timestamp

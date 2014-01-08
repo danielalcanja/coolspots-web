@@ -78,12 +78,21 @@ class LoginController extends Controller
 			$em->persist($user);
 			$em->flush();
 			
+			// get user's favorites
+			$userFavorites = array();
+			$Favorites = $em->getRepository('SiteBundle:CsLocationFavorites')->findBy(array('idUser' => $user->getId()));
+			foreach($Favorites as $fav) {
+				array_push($userFavorites, $fav->getIdLocation());
+			}
+			
 			// write cookies
 			$session->set('username', $ret['user']['username']);
 			$session->set('full_name', $ret['user']['full_name']);
 			$session->set('profile_picture', $ret['user']['profile_picture']);
 			$session->set('access_token', $ret['access_token']);
 			$session->set('userid', $user->getId());
+			$session->set('favorites', $userFavorites);
+			
 			return $this->redirect($this->generateUrl('main'));
 		} else {
 			return new Response('Authentication error!');
