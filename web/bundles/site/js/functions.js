@@ -1,17 +1,18 @@
 var $a = jQuery.noConflict();
 $a(document).ready(function(){
-	var content = $a("ul.content");
-	var site	= $a("#site");
-	var photo	= $a(".photo");
-	var timer	= "";
-	var pgAtual = "", pgNext = $a('.np:first').val();
-	var hasImage= true, second = false;
+	var body 	= $a("body"),
+		site	= $a("#site"),
+		content = $a("ul.content"),
+		photo	= $a(".photo"),
+		timer	= "",
+		pgAtual = "", 
+		pgNext 	= $a('.np:first').val(),
+		hasImage= true, 
+		second 	= false;
 	
-	$a("body").height($a("body").height()-55); 
-	//$a(site).height($a(window).height()-55);
+	$a(body).height($a(body).height()-55);
 	
 	$a(site).css("visibility","hidden");
-	$a("body").append("<div class='loading'></div>");
 	start();
 	
 	function start(){
@@ -33,8 +34,7 @@ $a(document).ready(function(){
 	}
 	function ajustImage(){
 		$a(".photo").each(function(){
-			if(!$a(this).hasClass("date")) $a(this).animate({height : $a(this).find("img").width()},500);
-			//if($a(this).find("img").attr("src") == "/coolspots-web/web/bundles/site/images/photo-placeholder.png") $a(this).remove();
+			$a(this).height($a(this).find("img").width());
 		});
 	}
 	function showImages(){
@@ -80,7 +80,6 @@ $a(document).ready(function(){
 		hasImage = false;
 		start();
 		timer = setTimeout(function(){
-			$a(".loading").hide();
 			$a(site).css("visibility","visible"); 
 		}, 500);
 	}
@@ -110,18 +109,11 @@ $a(document).ready(function(){
 		}
 	}
 	
-	// $a(window).scroll(function() {
-		// if(($a(window).scrollTop() + $a(window).height() + 100) >= $a(document).height()) {
-			// $a(window).unbind('scroll');
-			// fetchNextPage();
-		// }
-	// });
-	
 	$a(window).resize(function(){
 		ajustImage();
 	});
 	
-	$a("body").mCustomScrollbar({
+	$a(body).mCustomScrollbar({
 		scrollInertia: 0,
 		advanced:{
 			updateOnBrowserResize: true,
@@ -145,7 +137,7 @@ $a(document).ready(function(){
 	});
 	
 	function updateScrollbar() {
-		$a("body").mCustomScrollbar("update");
+		$a(body).mCustomScrollbar("update");
 	}
 	
 	$a(content).hover(function(){
@@ -166,7 +158,9 @@ $a(document).ready(function(){
 	$a("#photo-list").delegate(".photo",'mouseenter mouseleave', function(event) {
 		if(!($a(this).find(".favorite").hasClass("this-fav"))) $a(this).find(".favorite").fadeToggle();
 		$a(this).find(".back").fadeToggle();  
-		$a(this).find(".time").fadeToggle();
+		$a(this).find(".clock").slideToggle('fast');
+		$a(this).find(".tmp").slideToggle('fast');
+		$a(this).find(".day-str").fadeToggle();
 		$a(this).find(".more").slideToggle('fast');
 		//$a(this).find(".more").slideToggle( event.type === 'mouseenter' );
 	});	

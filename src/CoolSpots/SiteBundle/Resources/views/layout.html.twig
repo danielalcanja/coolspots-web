@@ -67,12 +67,7 @@
 			<div class="back">
 				<div class="aonde">
 					<div class="ico-onde"></div>
-					
-					<div class="topo-input">
-						<div class="ico-input"></div>
-						<input type="text" class="inp-postar" placeholder="{% trans %}wdygt.field{% endtrans %}">
-					</div>
-					<input class="btn-padrao post" type="button" value="{% trans %}wdygt.submit{% endtrans %}">
+					<a href="{{ path('main') }}" class="logo"></a>
 				</div>
 				
 				<div class="best">
@@ -110,8 +105,8 @@
 		</div>
 		
 		<div class="bottom-bar">
-			<a href="{{ path('main') }}" class="logo"></a>
 			<ul>
+				<li><a href="{{ path('main') }}"><span class="bor bl"></span>{% trans %}bottom.bar.home{% endtrans %}<span class="bor br nor"></span></a></li>
 				<li><a href="{{ path('about') }}"><span class="bor bl"></span>{% trans %}bottom.bar.about{% endtrans %}<span class="bor br nor"></span></a></li>
 				<li><a href="{{ path('explore') }}"><span class="bor bl"></span>{% trans %}bottom.bar.explore{% endtrans %}<span class="bor br nor"></span></a></li>
 			</ul>

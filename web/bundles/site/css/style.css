@@ -20,8 +20,6 @@ html,body {height:100%;}
 body { background:#FFF; overflow:hidden; font-family: 'Museo500-Regular'; font-size:15px; }
 em { font-style:normal; }
 
-.loading { width:100%; height:100%; background:url('../images/loading.gif') no-repeat center; background-color:rgba(255,255,255,0.5); position:fixed; top:0; left:0; z-index:10; }
-
 .index-shadown { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; z-index:5; display:block; }
 .index-shadown .index-box { width:800px; height:500px; border:2px solid #FFF; position:absolute; top:50%; left:50%; margin:-225px auto auto -400px; overflow:hidden; }
 .index-shadown .index-box .box-geral { width:350px; height:500px;  } 
@@ -41,6 +39,7 @@ a.index-get:link, a.index-get:visited { position:absolute; bottom:20px; left:20p
 .top-bar .back { height:50px; margin:10px 20px; background:#31749B; color:#FFF; line-height:50px; }
 
 .aonde { float:left; }
+.aonde .logo { width:150px; height:50px; display:block; float:left; background:url('../images/logo.png') no-repeat center; }
 .aonde .ico-onde { width:50px; height:50px; float:left; background:url('../images/icons.png') 0px 9px no-repeat; }
 .aonde .topo-input { float:left; background:#31749B; padding:0 8px 8px 0; padding-bottom:0; }
 .aonde .topo-input .ico-input { width:6px; height:50px; background:url('../images/icons.png') -64px 20px no-repeat; float:left; }
@@ -157,9 +156,12 @@ span.ros { background:#FF5885; }
 .photo img { width:100%; height:100%; }
 .photo .back { width:100%; height:100%; background:url('../images/alpha.png'); position:absolute; top:0; left:0; z-index:1; display:none; cursor:pointer; }
 .photo a.box { height:100%; display:block; color:#FFF; }
-.photo .time { position:absolute; top:10px; right:15px; z-index:2; display:none; }
-.photo .time .clock { width:14px; height:15px; float:left; background:url('../images/icons.png') 0px -50px no-repeat; }
-.photo .time .tmp { font-size:12px; font-weight:normal; height:15px; float:left; line-height:17px; padding-left:5px; }
+.photo .time { position:absolute; top:5px; right:5px; z-index:2; }
+.photo .time .clock { width:14px; height:15px; float:left; background:url('../images/icons.png') 0px -50px no-repeat; display:none;  }
+.photo .time .tmp { font-size:12px; font-weight:normal; height:15px; float:left; line-height:17px; padding-left:5px; display:none;  }
+.photo .time .date-g {  float:right; }
+.photo  .time .date-g .day { padding:3px 5px; display:block; float:right; background:#31749B; font-weight:normal; color:#FFF; }
+.photo  .time .date-g .day-str { padding:3px 5px; font-family: 'Museo500-Regular'; font-size:12px; display:none; float:right; }
 .photo .info { position:absolute; left:10px; bottom:20px; z-index:2; font-family: 'Museo300-Regular'; font-weight:normal; }
 .photo .info .favorite { width:42px; height:40px; background:url('../images/icons.png') -392px 0px; display:none; }
 .photo .info .this-fav { display:block; }
@@ -251,17 +253,13 @@ select { color:#999; font-family:'Museo500-Regular'; font-size:12px; font-weight
 .location-info .content .divide { clear:both; width:345px; height:1px; margin:15px 0 10px 0; border-bottom:1px solid #CCC; }
 
 .comment-ico, .calendar-ico { width:53px; height:50px; position:fixed; z-index:1; left:20px; line-height:50px; background-color:#31749B; display:block; cursor:pointer; }
-.comment-ico { top:220px; }
-.calendar-ico { top:275px; }
+.comment-ico { top:65px; }
+.calendar-ico { top:120px; }
 .comment-ico span, .calendar-ico span { width:32px; height:50px; display:block; margin:10px 0 0 10px; }
 .comment-ico span {  background:url('../images/icons.png') -80px -195px no-repeat; }
 .calendar-ico span {  background:url('../images/icons.png') -115px -195px no-repeat; }
 .comment-ico:hover, .calendar-ico:hover { background-color:#144059; }
-#datepicker { position:fixed; top:275px; left:73px; z-index:1; background-color:#FFF; }
-
-ul .date { width:240px; height:140px; background:#31749B; border-left:10px solid #FFF; position:absolute; z-index:2; top:0; color:#FFF; }
-ul .date .day { font-family: 'Museo300-Regular'; font-size:80px; font-weight:normal; position:absolute; top:0px; right:10px; }
-ul .date .time { font-family: 'Museo500-Regular'; font-size:12px; position:absolute; bottom:10px; left:10px; }
+#datepicker { position:fixed; top:120px; left:73px; z-index:1; background-color:#FFF; }
 
 ul.pho-menu {  }
 ul.pho-menu li { clear:both; height:25px; margin:0 0 10px 5px; }
@@ -281,7 +279,6 @@ ul.pho-menu li span.com { background-position:-291px -127px; }
 
 
 .bottom-bar { width:100%; height:55px; margin:0; background:#31749B;  position:fixed; bottom:0; left:0; z-index:2; }
-.bottom-bar .logo { width:150px; height:55px; display:block; float:left; background:url('../images/logo.png') no-repeat center #296689; }
 .bottom-bar .bottom-ico { width:65px; height:32px; float:left; margin-top:12px; border-right:3px solid #296689; position:relative; cursor:pointer; }
 .container-search { display:table; float:left; }
 .bottom-bar .search { background:url('../images/icons.png') -250px 0px no-repeat; }

@@ -32,12 +32,21 @@ $b(document).ready(function(){
 		return false;
 	});
 	$b(comIco).click(function() {
-		$b(comment).animate({"right" : 10}, 500);
-		$b(comBack).animate({"right" : $b(comment).width()+12}, 500);
+		$b(comment).toggleClass("closed");
+		if($b(comment).hasClass("closed")){
+			$b(comment).animate({"right" : 10}, 500);
+			$b(comBack).animate({"right" : $b(comment).width()+12}, 500);
+		} else { 
+			$b(comBack).animate({"right" : -53}, 500);
+			$b(comment).animate({"right" : -353}, 500);			
+		}
 		return false;
 	});
-	$b(comIco).hover(function() {
-		locationInfo(false,10);
+	$b(comBack).click(function() {
+		$b(comment).toggleClass("closed");
+		$b(this).animate({"right" : -53}, 500);
+		$b(comment).animate({"right" : -353}, 500);
+		return false;
 	});
 	$b(datIco).click(function() {
 		if($b("#datepicker").hasClass("hasDatepicker")){
@@ -45,11 +54,6 @@ $b(document).ready(function(){
 		} else {
 			$b("#datepicker").datepicker($b.datepicker.regional["pt-BR"]);
 		}
-	});
-	$b(comBack).click(function() {
-		$b(this).animate({"right" : -53}, 500);
-		$b(comment).animate({"right" : -353}, 500);
-		return false;
 	});
 	
 	$b(locDate).css("left",$b(locInfo).width()-10);
@@ -134,10 +138,6 @@ $b(document).ready(function(){
 	});
 });
 </script>
-<div class="location-date">
-	<span class="day">{{ location.dateUpdated|date('d') }}</span>
-	<span class="time">Sábado</span>
-</div>
 <div title="Exibir comentários" class="comment-ico"><span></span></div>
 <div title="Selecionar por data" class="calendar-ico"><span></span></div>
 <div id="datepicker"></div>
@@ -167,9 +167,11 @@ $b(document).ready(function(){
 		<ul class="pho-menu">
 			<li><span class="ind"></span> <a href="">{% trans %}location.info.indicate{% endtrans %}</a></li>
 			<li><span class="add"></span> <a href="">{% trans %}location.info.favorite{% endtrans %}</a></li>
-			<li><span class="fav"></span> <a href="">{% trans %}location.info.favlist{% endtrans %}</a></li>
 			<li><span class="com"></span> <a class="ph-menu-com" href="">Exibir comentários</a></li>
 		</ul>
+		
+		<br />
+		<h3> 30 Spooters - 5 Friends</h3>
 	</div>
 </div>
 <div class="com-back"><span></span></div>
@@ -244,16 +246,7 @@ $b(document).ready(function(){
 <div id="photo-list">
 	{% endif %}	
 	<ul class="content">
-		{% for pic in pics %}
-			{% if last_date != pic.createdTime|date('Ymd') and last_date != '' %}
-			</ul>
-			<ul class="content">
-			<div class="date photo">
-				<span class="day">{{ pic.createdTime|date('d') }}</span>
-				<span class="time">{{ pic.createdTime|date('l') }}</span>
-			</div>
-			{% endif %}
-			
+		{% for pic in pics %}		
 			<li id="{{ pic.id }}" class="photo eve-pic li-{{ ul_count }}" data="{{ pic.standardResolution }}">
 				<a href="#" class="box">
 					<input type="hidden" class="username" value="{{ pic.idUser.username }}">
@@ -264,6 +257,11 @@ $b(document).ready(function(){
 					<div class="time">
 						<div class="clock"></div>
 						<div class="tmp"><span class="timeago" title="{{ pic.createdTime|date() }}">{{ pic.createdTime|date('d/m/Y') }}</span></div>
+						<div class="clr h05"></div>
+						<div class="date-g">
+							<div class="day">{{ pic.createdTime|date('d') }}</div>
+							<div class="day-str">{{ pic.createdTime|date('l') }}</div>
+						</div>
 					</div>
 					<div class="image">
 						<img class="lazy" src="{{ asset('bundles/site/images/photo-placeholder.png') }}" data-original="{{ pic.standardResolution }}" />
