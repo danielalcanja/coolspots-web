@@ -39,3 +39,21 @@ json_addlocation:
     defaults: { _controller: ApiBundle:JSON:addLocation }
     requirements:
         _method: POST
+        
+json_favorites:
+    pattern: /json/favorites
+    defaults: { _controller: ApiBundle:JSON:favorites }
+    requirements:
+        _method: POST
+        
+json_addfavorites:
+    pattern: /json/addfavorites
+    defaults: { _controller: ApiBundle:JSON:addFavorites }
+    requirements:
+        _method: POST
+        
+json_removefavorites:
+    pattern: /json/removefavorites
+    defaults: { _controller: ApiBundle:JSON:removeFavorites }
+    requirements:
+        _method: POST

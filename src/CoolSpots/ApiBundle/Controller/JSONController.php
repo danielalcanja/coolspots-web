@@ -14,13 +14,15 @@ use CoolSpots\SiteBundle\Entity\CsGeoState;
 use CoolSpots\SiteBundle\Entity\CsGeoCity;
 use CoolSpots\SiteBundle\Entity\CsCategory;
 use CoolSpots\SiteBundle\Entity\CsLocation;
+use CoolSpots\SiteBundle\Entity\CsSubscriptions;
 use CoolSpots\SiteBundle\Entity\CsUsers;
 use CoolSpots\SiteBundle\Entity\CsPics;
 use CoolSpots\SiteBundle\Entity\CsTags;
+use CoolSpots\SiteBundle\Entity\CsLocationFavorites;
 
-class JSONController extends Controller
-{
+class JSONController extends Controller {
 	private $last_max_timestamp = 0;
+	private $jsonData = array();
 
 	
 	private function jsonResponse($arrResponse) {
@@ -30,8 +32,7 @@ class JSONController extends Controller
 		return $response;
 	}
 	
-    public function locationAction()
-    {
+    public function locationAction() {
 		$request = $this->getRequest();
 		$content = $request->getContent();
 		
@@ -117,15 +118,10 @@ class JSONController extends Controller
 				'stateName' => $item->getStateName()
 			);
 		}
-		$arrJson = array('meta' => array('status' => 'OK', 'message' => 'Success!'), 'data' => $arrLocations);
-		$json = json_encode($arrJson);
-		$response = new Response($json);
-		$response->headers->set('content-type', 'application/json');
-		return $response;
+		return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success!'), 'data' => $arrLocations));
     }
 	
-    public function locationInfoAction()
-    {
+    public function locationInfoAction() {
 		$request = $this->getRequest();
 		$content = $request->getContent();
 		
@@ -149,15 +145,10 @@ class JSONController extends Controller
 		$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
 		$json = $serializer->serialize($rs, 'json');
 		
-		$arrJson = array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json));
-		$response = new Response(json_encode($arrJson));
-		$response->headers->set('content-type', 'application/json');
-		
-		return $response;
+		return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
 	}
 	
-	public function photosAction()
-	{
+	public function photosAction() {
 		$request = $this->getRequest();
 		$content = $request->getContent();
 		
@@ -184,105 +175,7 @@ class JSONController extends Controller
 		$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
 		$json = $serializer->serialize($rs, 'json');
 		
-		$arrJson = array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json));
-		$response = new Response(json_encode($arrJson));
-		
-		$response->headers->set('content-type', 'application/json');
-		
-		return $response;
-	}
-	
-	private function getGeo($countryName, $countryCode, $stateName, $stateAbbr, $cityName) {
-		$em = $this->getDoctrine()->getManager();
-		
-		// check if the country is already in the database
-		try {
-			$Country = $this->getDoctrine()->getRepository('SiteBundle:CsGeoCountry')->createQueryBuilder('c')
-					->where('LOWER(c.countryName) = :countryName')
-					->andWhere('LOWER(c.countryCode) = :countryCode')
-					->andWhere('c.enabled = :enabled')
-					->andWhere('c.deleted = :deleted')
-					->setParameter('countryName', mb_strtolower($countryName, 'UTF-8'))
-					->setParameter('countryCode', mb_strtolower($countryCode, 'UTF-8'))
-					->setParameter('enabled', 'Y')
-					->setParameter('deleted', 'N')
-					->getQuery()
-					->getSingleResult();
-		} catch(NoResultException $e) {
-			try {
-				$Country = new CsGeoCountry();
-				$Country->setCountryName($countryName);
-				$Country->setCountryCode($countryCode);
-				$Country->setEnabled('Y');
-				$Country->setDeleted('N');
-				$em->persist($Country);
-				$em->flush();
-			} catch(Exception $e) {
-				return(false);
-			}
-		}
-		
-		// check if the state is already in the database
-		try {
-			$State = $this->getDoctrine()->getRepository('SiteBundle:CsGeoState')->createQueryBuilder('c')
-					->where('LOWER(c.stateName) = :stateName')
-					->andWhere('LOWER(c.stateAbbr) = :stateAbbr')
-					->andWhere('c.idCountry = :idCountry')
-					->andWhere('c.enabled = :enabled')
-					->andWhere('c.deleted = :deleted')
-					->setParameter('stateName', mb_strtolower($stateName, 'UTF-8'))
-					->setParameter('stateAbbr', mb_strtolower($stateAbbr, 'UTF-8'))
-					->setParameter('idCountry', $Country->getId())
-					->setParameter('enabled', 'Y')
-					->setParameter('deleted', 'N')
-					->getQuery()
-					->getSingleResult();
-		} catch(NoResultException $e) {
-			try {
-				$State = new CsGeoState();
-				$State->setIdCountry($Country);
-				$State->setStateName($stateName);
-				$State->setStateAbbr($stateAbbr);
-				$State->setEnabled('Y');
-				$State->setDeleted('N');
-				$em->persist($State);
-				$em->flush();
-			} catch(Exception $e) {
-				return(false);
-			}
-		}
-		
-		// check if the city is already in the database
-		try {
-			$City = $this->getDoctrine()->getRepository('SiteBundle:CsGeoCity')->createQueryBuilder('c')
-					->where('LOWER(c.cityName) = :cityName')
-					->andWhere('c.idCountry = :idCountry')
-					->andWhere('c.idState = :idState')
-					->andWhere('c.enabled = :enabled')
-					->andWhere('c.deleted = :deleted')
-					->setParameter('cityName', mb_strtolower($cityName, 'UTF-8'))
-					->setParameter('idCountry', $Country->getId())
-					->setParameter('idState', $State->getId())
-					->setParameter('enabled', 'Y')
-					->setParameter('deleted', 'N')
-					->getQuery()
-					->getSingleResult();
-		} catch(NoResultException $e) {
-			try {
-				$City = new CsGeoCity();
-				$City->setIdCountry($Country);
-				$City->setIdState($State);
-				$City->setCityName($cityName);
-				$City->setEnabled('Y');
-				$City->setDeleted('N');
-				$em->persist($City);
-				$em->flush();
-			} catch(Exception $e) {
-				return(false);
-			}
-		}
-		
-		return(array('id_country' => $Country->getId(), 'id_state' => $State->getId(), 'id_city' => $City->getId()));
+		return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
 	}
 	
 	public function addLocationAction() {
@@ -290,224 +183,481 @@ class JSONController extends Controller
 		$content = $request->getContent();
 		
 		// get entity manager
-		$em = $this->getDoctrine()->getManager();
+		$em = $this->getDoctrine()->getEntityManager();
+		
+		$em->getConnection()->beginTransaction();
+		try {
+			$params = json_decode(utf8_decode($content));
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null);
+				throw new \Exception();
+			}
+
+			if(!isset($params->id_instagram) || !isset($params->id_foursquare) || 
+					!isset($params->geo) || 
+					!isset($params->geo->countryName) ||
+					!isset($params->geo->countryCode) || !isset($params->geo->stateName) || !isset($params->geo->stateAbbr) ||
+					!isset($params->geo->cityName) || 
+					!isset($params->category) || 
+					!isset($params->category->id) || !isset($params->category->exid) ||
+					!isset($params->category->name) 
+					|| !isset($params->name)) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null);
+				throw new \Exception();
+			}
+
+			// first, check if instagram id isn't already registered
+			$rsLocation = $em->getRepository('SiteBundle:CsLocation')->findOneBy(array(
+				'idInstagram' => $params->id_instagram,
+				'idFoursquare' => $params->id_foursquare,
+				'enabled' => 'Y',
+				'deleted' => 'N'
+			));
+
+			if($rsLocation) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Location already exists!'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			// check if the country is already in the database
+			try {
+				$Country = $this->getDoctrine()->getRepository('SiteBundle:CsGeoCountry')->createQueryBuilder('c')
+						->where('LOWER(c.countryName) = :countryName')
+						->andWhere('LOWER(c.countryCode) = :countryCode')
+						->andWhere('c.enabled = :enabled')
+						->andWhere('c.deleted = :deleted')
+						->setParameter('countryName', mb_strtolower($params->geo->countryName, 'UTF-8'))
+						->setParameter('countryCode', mb_strtolower($params->geo->countryCode, 'UTF-8'))
+						->setParameter('enabled', 'Y')
+						->setParameter('deleted', 'N')
+						->getQuery()
+						->getSingleResult();
+			} catch(NoResultException $e) {
+				try {
+					$Country = new CsGeoCountry();
+					$Country->setCountryName($params->geo->countryName);
+					$Country->setCountryCode($params->geo->countryCode);
+					$Country->setEnabled('Y');
+					$Country->setDeleted('N');
+					$em->persist($Country);
+					$em->flush();
+				} catch(\Exception $e) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to insert country data: ' . $e->getMessage()), 'data' => null);
+					throw $e;
+				}
+			} catch(\Exception $e) {
+				throw $e;
+			}
+
+			// check if the state is already in the database
+			try {
+				$State = $this->getDoctrine()->getRepository('SiteBundle:CsGeoState')->createQueryBuilder('c')
+						->where('LOWER(c.stateName) = :stateName')
+						->andWhere('LOWER(c.stateAbbr) = :stateAbbr')
+						->andWhere('c.idCountry = :idCountry')
+						->andWhere('c.enabled = :enabled')
+						->andWhere('c.deleted = :deleted')
+						->setParameter('stateName', mb_strtolower($params->geo->stateName, 'UTF-8'))
+						->setParameter('stateAbbr', mb_strtolower($params->geo->stateAbbr, 'UTF-8'))
+						->setParameter('idCountry', $Country->getId())
+						->setParameter('enabled', 'Y')
+						->setParameter('deleted', 'N')
+						->getQuery()
+						->getSingleResult();
+			} catch(NoResultException $e) {
+				try {
+					$State = new CsGeoState();
+					$State->setIdCountry($Country);
+					$State->setStateName($params->geo->stateName);
+					$State->setStateAbbr($params->geo->stateAbbr);
+					$State->setEnabled('Y');
+					$State->setDeleted('N');
+					$em->persist($State);
+					$em->flush();
+				} catch(\Exception $e) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to insert state data: ' . $e->getMessage()), 'data' => null);
+					throw $e;
+				}
+			} catch(\Exception $e) {
+				throw $e;
+			}
+
+			// check if the city is already in the database
+			try {
+				$City = $this->getDoctrine()->getRepository('SiteBundle:CsGeoCity')->createQueryBuilder('c')
+						->where('LOWER(c.cityName) = :cityName')
+						->andWhere('c.idCountry = :idCountry')
+						->andWhere('c.idState = :idState')
+						->andWhere('c.enabled = :enabled')
+						->andWhere('c.deleted = :deleted')
+						->setParameter('cityName', mb_strtolower($params->geo->cityName, 'UTF-8'))
+						->setParameter('idCountry', $Country->getId())
+						->setParameter('idState', $State->getId())
+						->setParameter('enabled', 'Y')
+						->setParameter('deleted', 'N')
+						->getQuery()
+						->getSingleResult();
+			} catch(NoResultException $e) {
+				try {
+					$City = new CsGeoCity();
+					$City->setIdCountry($Country);
+					$City->setIdState($State);
+					$City->setCityName($params->geo->cityName);
+					$City->setEnabled('Y');
+					$City->setDeleted('N');
+					$em->persist($City);
+					$em->flush();
+				} catch(Exception $e) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to insert city data: ' . $e->getMessage()), 'data' => null);
+					throw $e;
+				}
+			} catch(\Exception $e) {
+				throw $e;
+			}
+			
+			
+			$Category = null;
+
+			// check if category exists
+			if($params->category->id == 0) {
+				try {
+					$Category = new CsCategory();
+					$Category->setExid($params->category->exid);
+					$Category->setName($params->category->name);
+					$em->persist($Category);
+					$em->flush();
+				} catch(\Exception $e) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to insert category data: ' . $e->getMessage()), 'data' => null);
+					throw $e;
+				}
+			} else {
+				$Category = $em->getRepository('SiteBundle:CsCategory')->find($params->category->id);
+				if(!$Category) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to find the category id'), 'data' => null);
+					throw new \Exception();
+				}
+			}
+
+			try {
+				// insert the new location
+				$Location = new CsLocation();
+				if(isset($params->address)) $Location->setAddress($params->address);
+				$Location->setCheckinsCount(0);
+				$Location->setCoverPic(null);
+				$Location->setDateAdded(new \DateTime());
+				$Location->setDateUpdated(null);
+				$Location->setDeleted('N');
+				$Location->setEnabled('Y');
+				$Location->setIdCategory($Category);
+				$Location->setIdCity($City);
+				$Location->setIdCountry($Country);
+				$Location->setIdFoursquare($params->id_foursquare);
+				$Location->setIdInstagram($params->id_instagram);
+				$Location->setIdState($State);
+				$Location->setLastMinId(null);
+				$Location->setLikesCount(0);
+				$Location->setMinTimestamp(null);
+				$Location->setName($params->name);
+				$Location->setNextMaxId(null);
+				if(isset($params->phone)) $Location->setPhone(isset($params->phone));
+				if(isset($params->postal_code)) $Location->setPostalCode($params->postal_code);
+				$Location->setSlug(CSUtil::slugify($params->name));
+				$em->persist($Location);
+				$em->flush();
+			} catch(\Exception $e) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Error inserting location: ' . $e->getMessage()), 'data' => null);
+				throw $e;
+			}
+			
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($Location, 'json');
+			
+
+			$rsSubscription = $em->getRepository('SiteBundle:CsSubscriptions')->findOneBy(array('object' => 'location', 'objectId' => $Location->getIdInstagram()));
+			if($rsSubscription) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'The location you are trying to create already has a instagram subscription'), 'data' => null);
+				throw new \Exception();
+			}
+
+			$max_subscriptions = $this->container->getParameter('instagram_max_subscriptions');
+			try {
+				$rsInstagram = $em->createQuery('
+							SELECT i FROM SiteBundle:VwInstagramApi i
+							WHERE i.totalSubscriptions < :max
+							ORDER BY i.id')
+						->setParameter('max', $max_subscriptions)
+						->setMaxResults(1)
+						->getSingleResult();
+			} catch(NoResultException $e) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'No more instagram client id for subscriptions'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			$client_id = $rsInstagram->getClientId();
+			$client_secret = $rsInstagram->getClientSecret();
+			$Instagram = $em->getRepository('SiteBundle:CsInstagramApi')->find($rsInstagram->getId());
+
+			$attachment =  array(
+				'client_id' => $client_id,
+				'client_secret' => $client_secret,
+				'object' => 'location',
+				'object_id' => $Location->getIdInstagram(),
+				'aspect' => $this->container->getParameter('instagram_aspect'),
+				'verify_token' => $this->container->getParameter('instagram_verify_token'),
+				'callback_url'=> $this->container->getParameter('instagram_callback_url')
+			);
+			
+			
+			// url for instagram api
+			$subscription_url = $this->container->getParameter('instagram_subscription_api');
+
+			$subscription_ch = curl_init();
+
+			// post data
+			curl_setopt($subscription_ch, CURLOPT_URL,$subscription_url);
+			curl_setopt($subscription_ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+			curl_setopt($subscription_ch, CURLOPT_SSL_VERIFYHOST, 2);
+			curl_setopt($subscription_ch, CURLOPT_POST, true);
+			curl_setopt($subscription_ch, CURLOPT_POSTFIELDS, $attachment);
+			curl_setopt($subscription_ch, CURLOPT_RETURNTRANSFER, true);  //to suppress the curl output 
+			$subscription_result = curl_exec($subscription_ch);
+			curl_close($subscription_ch);
+			$subscription_response = json_decode($subscription_result, true);
+			
+			if($subscription_response['meta']['code'] == 200) {
+				try {
+					$Subscription = new CsSubscriptions();
+					$Subscription->setObject('location');
+					$Subscription->setObjectId($Location->getIdInstagram());
+					$Subscription->setChangedAspect(null);
+					$Subscription->setTime(null);
+					$Subscription->setUpdated('P');
+					$Subscription->setCycleCount(0);
+					$Subscription->setIdInstagramApi($Instagram);
+					$Subscription->setSubscriptionId($subscription_response['data']['id']);
+					$em->persist($Subscription);
+					$em->flush();
+				} catch(\Exception $e) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to insert subscription data: ' . $e->getMessage()), 'data' => null);
+					throw $e;
+				}
+			} else  {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Fail executing instagram API call (subscription): ' . $subscription_response['meta']['error_message']), 'data' => null);
+				throw new \Exception();
+			}
+
+			// now, we must add the subscription calling the subscription URL
+			$url = str_replace(array('@OBJECT_ID@', '@CLIENT_ID@'), array($Subscription->getObjectId(), $client_id), $this->container->getParameter('instagram_photo_update_url'));
+			// check if there is a min_timestamp
+			if($Location->getMinTimestamp())
+			{
+				if($Location->getMinTimestamp() > 0) $url .= str_replace(array('@MIN_TIMESTAMP@'), array($Location->getMinTimestamp()), $this->container->getParameter('instagram_photo_update_extra_params'));
+			}
+			
+			// download location's photos
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL,$url);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+			curl_setopt($ch, CURLOPT_POST, false);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			$result = curl_exec($ch);
+			curl_close ($ch);
+			$response = json_decode($result, true);
+			if(!isset($response['data'])) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Fail executing instagram API call (download recents): ' . $response['meta']['error_message']), 'data' => null);
+				throw new \Exception();
+			}
+
+			try {
+				foreach($response['data'] as $data) {
+					// check if user is already registered
+					$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $data['user']['username']));
+					if(!$User) {
+						try {
+							$User = new CsUsers();
+							$User->setAccessToken(null);
+							$User->setBio(substr($data['user']['bio'],0,150));
+							$User->setEmail(null);
+							$User->setFullName(substr(str_replace(array("'", '"'), '', $data['user']['full_name']),0,150));
+							$User->setProfilePicture($data['user']['profile_picture']);
+							$User->setTokenDate(null);
+							$User->setUsername($data['user']['username']);
+							$em->persist($User);
+							$em->flush();
+						} catch(\Exception $e) {
+							$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to insert user data: ' . $e->getMessage()), 'data' => null);
+							throw $e;
+						}
+					}
+
+					// add the photo to database
+					try {
+						$Pic = new CsPics();
+						$Pic->setCaption(substr(str_replace(array("'", '"'), '', $data['caption']['text']),0,150));
+						$photoCreatedTime = new \DateTime();
+						$photoCreatedTime->setTimestamp($data['caption']['created_time']);
+						$Pic->setCreatedTime($photoCreatedTime);
+						$Pic->setDateAdded(new \DateTime());
+						$Pic->setIdLocation($Location);
+						$Pic->setIdUser($User);
+						$Pic->setLikesCount($data['likes']['count']);
+						$Pic->setLowResolution($data['images']['low_resolution']['url']);
+						$Pic->setStandardResolution($data['images']['standard_resolution']['url']);
+						$Pic->setThumbnail($data['images']['thumbnail']['url']);
+						$Pic->setType(1);
+						$em->persist($Pic);
+						$em->flush();
+					} catch(\Exception $e) {
+						$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to insert photo data: ' . $e->getMessage()), 'data' => null);
+						throw $e;
+					}
+
+					// add the photo's tags
+					foreach($data['tags'] as $tag) {
+						try {
+						$Tag = new CsTags();
+							$Tag->setIdLocation($Location);
+							$Tag->setIdPic($Pic);
+							$Tag->setTag($tag);
+							$em->persist($Tag);
+							$em->flush();
+						} catch(\Exception $e) {
+							$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to insert photo\'s tag data: ' . $e->getMessage()), 'data' => null);
+							throw $e;
+						}
+					}
+
+					$this->last_max_timestamp = ($data['caption']['created_time'] > $this->last_max_timestamp) ? $data['caption']['created_time'] : $this->last_max_timestamp;
+				} 
+			} catch(\Exception $e) {
+				throw $e;
+			}
+
+			// update the location info
+			if($this->last_max_timestamp > 0)
+			{
+				$Location->setDateUpdated(new \DateTime());
+				$Location->setMinTimestamp($this->last_max_timestamp + 1);
+				$em->persist($Location);
+				$em->flush();
+			}
+
+			// update subscription status
+			$Subscription->setUpdated('Y');
+			$em->persist($Subscription);
+			$em->flush();
+			
+			// commit all changes to database
+			$em->getConnection()->commit();
+			// return success
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
+		} catch(\Exception $e) {
+			$em->getConnection()->rollback();
+			$em->close();
+			return $this->jsonResponse($this->jsonData);
+		}
+	}
+	
+	public function favoritesAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
 		
 		$params = json_decode(utf8_decode($content));
 		if($params === null) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null));
+		if(!$params->id_user) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null));
 		
-		if(!isset($params->id_instagram) || !isset($params->id_foursquare) || 
-				!isset($params->geo) || 
-				!isset($params->geo->countryName) ||
-				!isset($params->geo->countryCode) || !isset($params->geo->stateName) || !isset($params->geo->stateAbbr) ||
-				!isset($params->geo->cityName) || 
-				!isset($params->category) || 
-				!isset($params->category->id) || !isset($params->category->exid) ||
-				!isset($params->category->name) 
-				|| !isset($params->name)) {
-			return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null));
-		}
+		$em = $this->getDoctrine()->getEntityManager();
+		$Favorites = $em->getRepository('SiteBundle:CsLocationFavorites')->findBy(array('idUser' => $params->id_user));
+		if(!$Favorites) return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success!'), 'data' => null));
 		
-		// first we need the geo information
-		$geo = $this->getGeo($params->geo->countryName, $params->geo->countryCode, $params->geo->stateName, $params->geo->stateAbbr, $params->geo->cityName);
-		if(!$geo) {
-			return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Unexpected error on inserting geo information'), 'data' => null));
-		}
-				
-		// first, check if instagram id isn't already registered
-		$rsLocation = $em->getRepository('SiteBundle:CsLocation')->findOneBy(array(
-			'idInstagram' => $params->id_instagram,
-			'idFoursquare' => $params->id_foursquare,
-			'enabled' => 'Y',
+		$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+		$json = $serializer->serialize($Favorites, 'json');
+		return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
+	}
+	
+	public function addFavoritesAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		
+		$params = json_decode(utf8_decode($content));
+		if($params === null) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null));
+		if(!$params->id_user || !$params->id_location) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null));
+		
+		$em = $this->getDoctrine()->getEntityManager();
+		
+		// check if the location already exists in user's favorites
+		$Favorite = $em->getRepository('SiteBundle:CsLocationFavorites')->findOneBy(array(
+			'idUser' => $params->id_user,
+			'idLocation' => $params->id_location,
 			'deleted' => 'N'
 		));
 		
-		if($rsLocation) {
-			return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Location already exists!'), 'data' => null));
-		}
-		
-//		$rsLocation = $this->getDoctrine()->getRepository('SiteBundle:CsLocation')->createQueryBuilder('c')
-//					->where('c.idInstagram = :idInstagram')
-//					->andWhere('c.idFoursquare = :idFoursquare')
-//					->andWhere('c.enabled = :enabled')
-//					->andWhere('c.deleted = :deleted')
-//					->setParameter('idInstagram', $params->id_instagram)
-//					->setParameter('idFoursquare', $params->id_foursquare)
-//					->setParameter('enabled', 'Y')
-//					->setParameter('deleted', 'N')
-//					->getQuery()
-//					->getResult();
-//		if(count($rsLocation) > 0) {
-//			return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Location already exists!'), 'data' => null));
-//		}
-		
-		
-		// get country, state and city objects
-		$Country = $em->getRepository('SiteBundle:CsGeoCountry')->find($geo['id_country']);
-		$State = $em->getRepository('SiteBundle:CsGeoState')->find($geo['id_state']);
-		$City = $em->getRepository('SiteBundle:CsGeoCity')->find($geo['id_city']);
-		$Category = null;
-		
-		// check if category exists
-		if($params->category->id == 0) {
-			$Category = new CsCategory();
-			$Category->setExid($params->category->exid);
-			$Category->setName($params->category->name);
-			$em->persist($Category);
-			$em->flush();
+		if($Favorite) {
+			return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Location already exists in user\'s favorites'), 'data' => null));
 		} else {
-			$Category = $em->getRepository('SiteBundle:CsCategory')->find($params->category->id);
+			
+			$Location = $em->getRepository('SiteBundle:CsLocation')->find($params->id_location);
+			if(!$Location) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Location does not exists!'), 'data' => null));
+			
+			$User = $em->getRepository('SiteBundle:CsUsers')->find($params->id_user);
+			if(!$User) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'User does not exists!'), 'data' => null));
+			
+			$em->getConnection()->beginTransaction();
+			try {
+				$Favorite = new CsLocationFavorites();
+				$Favorite->setDeleted('N');
+				$Favorite->setIdLocation($Location);
+				$Favorite->setIdUser($User);
+				$Favorite->setDateAdded(new \DateTime());
+				$em->persist($Favorite);
+				$em->flush();
+				$em->getConnection()->commit();
+			} catch(\Exceptioin $e) {
+				$em->getConnection()->rollBack();
+				$em->close();
+				return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Unable to insert into favorites table: ' . $e->getMessage()), 'data' => null));
+			}
+			
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($Favorite, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
 		}
-		
-		try {
-			// insert the new location
-			$Location = new CsLocation();
-			if(isset($params->address)) $Location->setAddress($params->address);
-			$Location->setCheckinsCount(0);
-			$Location->setCoverPic(null);
-			$Location->setDateAdded(new \DateTime());
-			$Location->setDateUpdated(null);
-			$Location->setDeleted('N');
-			$Location->setEnabled('Y');
-			$Location->setIdCategory($Category);
-			$Location->setIdCity($City);
-			$Location->setIdCountry($Country);
-			$Location->setIdFoursquare($params->id_foursquare);
-			$Location->setIdInstagram($params->id_instagram);
-			$Location->setIdState($State);
-			$Location->setLastMinId(null);
-			$Location->setLikesCount(0);
-			$Location->setMinTimestamp(null);
-			$Location->setName($params->name);
-			$Location->setNextMaxId(null);
-			if(isset($params->phone)) $Location->setPhone(isset($params->phone));
-			if(isset($params->postal_code)) $Location->setPostalCode($params->postal_code);
-			$Location->setSlug(CSUtil::slugify($params->name));
-			$em->persist($Location);
-			$em->flush();
-		} catch(Exception $e) {
-			return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Error inserting location: ' . $e->getMessage()), 'data' => null));
-		}
-		
-		$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-		$json = $serializer->serialize($Location, 'json');
-		
-		
-		// now, we must add the subscription calling the subscription URL
-		$subscription_url = sprintf("http://api.coolspots.com.br/instagram/subscription/location/%d?jsonapi=%d", $Location->getIdInstagram(), md5(time()));
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL,$subscription_url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  //to suppress the curl output 
-		$subscription_result = curl_exec($ch);
-		curl_close($ch);
-		$jsonSubscription = json_decode($subscription_result);
-		
-		// if something goes wrong ...
-		if($jsonSubscription->meta->status == 'ERROR') {
-			return $this->jsonResponse(array('meta' => array('status' => 'OK_WITH_WARNING', 'message' => 'Location created sucessful, but got error on subscription call: ' . $jsonSubscription->meta->message), 'data' => json_decode($json)));
-		}
-				
-		// everthing is OK. Now let's try to fetch the initial photos from the new location.
-		$Subscription = $em->getRepository('SiteBundle:CsSubscriptions')->find($jsonSubscription->data->id);
-		if(!$Subscription) {
-			return $this->jsonResponse(array('meta' => array('status' => 'OK_WITH_WARNING', 'message' => 'Location created sucessful, but got error on subscription operation: unable to find subscription id'), 'data' => json_decode($json)));
-		}
-		
-		$APIKeys = $em->getRepository('SiteBundle:CsInstagramApi')->findBy(array('enabled' => 'Y', 'deleted' => 'N'));
-		$arrKeys = array();
-		foreach($APIKeys as $apikey) array_push($arrKeys, $apikey->getClientId());
-		
-		$client_id = $arrKeys[rand(0, count($arrKeys) - 1)];
-		$url = str_replace(array('@OBJECT_ID@', '@CLIENT_ID@'), array($Subscription->getObjectId(), $client_id), $this->container->getParameter('instagram_photo_update_url'));
-		// check if there is a min_timestamp
-		if($Location->getMinTimestamp())
-		{
-			if($Location->getMinTimestamp() > 0) $url .= str_replace(array('@MIN_TIMESTAMP@'), array($Location->getMinTimestamp()), $this->container->getParameter('instagram_photo_update_extra_params'));
-		}
-
-		$this->getLocationPhotos($Location, $url);
-		
-		// update the location info
-		if($this->last_max_timestamp > 0)
-		{
-			$Location->setDateUpdated(new \DateTime());
-			$Location->setMinTimestamp($this->last_max_timestamp + 1);
-			$em->persist($Location);
-			$em->flush();
-		}
-		
-		// update subscription status
-		$Subscription->setUpdated('Y');
-		$em->persist($Subscription);
-		$em->flush();
-		
-		$arrJson = array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json));
-		$response = new Response(json_encode($arrJson));
-		$response->headers->set('content-type', 'application/json');
-		return($response);
 	}
 	
-	private function getLocationPhotos($Location, $url) {
-		if(!$url) return false;
+	public function removeFavoritesAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
 		
-		$em = $this->getDoctrine()->getManager();
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL,$url);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		curl_setopt($ch, CURLOPT_POST, false);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$result = curl_exec($ch);
-		curl_close ($ch);
-		$response = json_decode($result, true);
-		if(!isset($response['data'])) return false;
+		$params = json_decode(utf8_decode($content));
+		if($params === null) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null));
+		if(!$params->id_user || !$params->id_location) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null));
 		
-		foreach($response['data'] as $data) {
-			// check if user is already registered
-			$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $data['user']['username']));
-			if(!$User) {
-				$User = new CsUsers();
-				$User->setAccessToken(null);
-				$User->setBio(substr($data['user']['bio'],0,150));
-				$User->setEmail(null);
-				$User->setFullName(substr(str_replace(array("'", '"'), '', $data['user']['full_name']),0,150));
-				$User->setProfilePicture($data['user']['profile_picture']);
-				$User->setTokenDate(null);
-				$User->setUsername($data['user']['username']);
-				$em->persist($User);
+		$em = $this->getDoctrine()->getEntityManager();
+		
+		// check if the location already exists in user's favorites
+		$Favorite = $em->getRepository('SiteBundle:CsLocationFavorites')->findOneBy(array(
+			'idUser' => $params->id_user,
+			'idLocation' => $params->id_location,
+			'deleted' => 'N'
+		));
+		
+		if(!$Favorite) {
+			return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Location does not exists in user\'s favorites'), 'data' => null));
+		} else {
+			$em->getConnection()->beginTransaction();
+			try {
+				$Favorite->setDeleted('Y');
+				$em->persist($Favorite);
 				$em->flush();
+				$em->getConnection()->commit();
+			} catch(\Exception $e) {
+				$em->getConnection()->rollBack();
+				$em->close();
+				return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Unable to update favorite data: ' . $e->getMessage()), 'data' => null));
 			}
 			
-			// add the photo to database
-			$Pic = new CsPics();
-			$Pic->setCaption(substr(str_replace(array("'", '"'), '', $data['caption']['text']),0,150));
-			$photoCreatedTime = new \DateTime();
-			$photoCreatedTime->setTimestamp($data['caption']['created_time']);
-			$Pic->setCreatedTime($photoCreatedTime);
-			$Pic->setDateAdded(new \DateTime());
-			$Pic->setIdLocation($Location);
-			$Pic->setIdUser($User);
-			$Pic->setLikesCount($data['likes']['count']);
-			$Pic->setLowResolution($data['images']['low_resolution']['url']);
-			$Pic->setStandardResolution($data['images']['standard_resolution']['url']);
-			$Pic->setThumbnail($data['images']['thumbnail']['url']);
-			$Pic->setType(1);
-			$em->persist($Pic);
-			$em->flush();
-			
-			// add the photo's tags
-			foreach($data['tags'] as $tag) {
-				$Tag = new CsTags();
-				$Tag->setIdLocation($Location);
-				$Tag->setIdPic($Pic);
-				$Tag->setTag($tag);
-				$em->persist($Tag);
-				$em->flush();
-			}
-			
-			$this->last_max_timestamp = ($data['caption']['created_time'] > $this->last_max_timestamp) ? $data['caption']['created_time'] : $this->last_max_timestamp;
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => null));
 		}
-		
-		// finish
-		return(true);
 	}
 }

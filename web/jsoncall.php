@@ -24,33 +24,42 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" src="/bundles/site/js/util.js"></script>
 <script type="text/javascript">
-// client_id: 028ea9a1bd024485bae1780ecb871f6d
-// client_secret: 38443f441eae4a4fa17efb8363fb106b
-
 // client_id: 98c17dd506c647df9d0042d51a91be6a
 // client_secret: 08021a8889ac45bba963ef63396315ca
-// subscription: 4036423
-
+// apigee call: https://api.instagram.com/v1/subscriptions?client_id=98c17dd506c647df9d0042d51a91be6a&client_secret=08021a8889ac45bba963ef63396315ca
+/*
+delete from cs_tags where id_location = (select id from cs_location where id_instagram = '665104');
+delete from cs_pics where id_location = (select id from cs_location where id_instagram = '665104');
+delete from cs_subscriptions where object_id = '665104'; 
+delete from cs_location where id_instagram = '665104';
+*/
 // api keys para remover subscricoes: 1, 4
 function getData() {
-	var url = "/app_dev.php/json/addlocation";
+//	var url = "/app_dev.php/json/addlocation";
+//	var parameters = {
+//		id_instagram: 665104,
+//		id_foursquare: '4b997e23f964a520d17e35e3',
+//		geo: {
+//			countryName: 'Brazil',
+//			countryCode: 'BR',
+//			stateName: 'Mato Grosso',
+//			stateAbbr: 'MT',
+//			cityName: 'Cuiabá'
+//		},
+//		category: {
+//			id: 3,
+//			exid: '4bf58dd8d48988d116941735',
+//			name: 'Bar'
+//		},
+//		name: 'Ditado Popular'
+//	};
+
+	var url = "/app_dev.php/json/removefavorites";
 	var parameters = {
-		id_instagram: 665104,
-		id_foursquare: '4b997e23f964a520d17e35e3',
-		geo: {
-			countryName: 'Brazil',
-			countryCode: 'BR',
-			stateName: 'Mato Grosso',
-			stateAbbr: 'MT',
-			cityName: 'Cuiabá'
-		},
-		category: {
-			id: 3,
-			exid: '4bf58dd8d48988d116941735',
-			name: 'Bar'
-		},
-		name: 'Ditado Popular'
+		id_user: 800111111,
+		id_location: 100
 	};
+	
 	obj = jsonCall(url, parameters);
 	if(obj.error) {
 		console.log("Deu erro: " + obj.error_message);
