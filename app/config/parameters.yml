@@ -40,3 +40,6 @@ parameters:
     
     # pagination
     max_items_per_page: 18
+    
+    #session storage
+    session_dir: "%kernel.root_dir%/sessions"

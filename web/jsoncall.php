@@ -56,7 +56,6 @@ function getData() {
 
 	var url = "/app_dev.php/json/removefavorites";
 	var parameters = {
-		id_user: 800,
 		id_location: 100
 	};
 	

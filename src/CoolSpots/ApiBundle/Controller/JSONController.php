@@ -19,6 +19,7 @@ use CoolSpots\SiteBundle\Entity\CsUsers;
 use CoolSpots\SiteBundle\Entity\CsPics;
 use CoolSpots\SiteBundle\Entity\CsTags;
 use CoolSpots\SiteBundle\Entity\CsLocationFavorites;
+use CoolSpots\ApiBundle\Library\SessionData;
 
 class JSONController extends Controller {
 	private $last_max_timestamp = 0;
@@ -565,10 +566,20 @@ class JSONController extends Controller {
 		
 		$params = json_decode(utf8_decode($content));
 		if($params === null) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null));
-		if(!$params->id_user) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null));
 		
 		$em = $this->getDoctrine()->getEntityManager();
-		$Favorites = $em->getRepository('SiteBundle:CsLocationFavorites')->findBy(array('idUser' => $params->id_user));
+		if(isset($params->id_user)) {
+			$Favorites = $em->getRepository('SiteBundle:CsLocationFavorites')->findBy(array('idUser' => $params->id_user));
+		} else {
+			$session_file = sprintf("%s/sess_%s", $this->container->getParameter('session_dir'), $_COOKIE['PHPSESSID']);
+			if(!file_exists($session_file)) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'User\'s session not found'), 'data' => null));
+			$content = file_get_contents($session_file);
+			$SessionData = SessionData::unserialize($content);
+			if(!is_array($SessionData)) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid user\'s session data'), 'data' => null));
+			if(!isset($SessionData['_sf2_attributes']['userid'])) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'User not authenticated'), 'data' => null));
+			$userid = $SessionData['_sf2_attributes']['userid'];
+			$Favorites = $em->getRepository('SiteBundle:CsLocationFavorites')->findBy(array('idUser' => $userid));
+		}
 		if(!$Favorites) return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success!'), 'data' => null));
 		
 		$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
@@ -582,13 +593,26 @@ class JSONController extends Controller {
 		
 		$params = json_decode(utf8_decode($content));
 		if($params === null) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null));
-		if(!$params->id_user || !$params->id_location) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null));
+		if(!$params->id_location) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null));
 		
 		$em = $this->getDoctrine()->getEntityManager();
 		
+		$userid = null;
+		if(isset($params->id_user)) {
+			$userid = $params->id_user;
+		} else {
+			$session_file = sprintf("%s/sess_%s", $this->container->getParameter('session_dir'), $_COOKIE['PHPSESSID']);
+			if(!file_exists($session_file)) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'User\'s session not found'), 'data' => null));
+			$content = file_get_contents($session_file);
+			$SessionData = SessionData::unserialize($content);
+			if(!is_array($SessionData)) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid user\'s session data'), 'data' => null));
+			if(!isset($SessionData['_sf2_attributes']['userid'])) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'User not authenticated'), 'data' => null));
+			$userid = $SessionData['_sf2_attributes']['userid'];
+		}
+		
 		// check if the location already exists in user's favorites
 		$Favorite = $em->getRepository('SiteBundle:CsLocationFavorites')->findOneBy(array(
-			'idUser' => $params->id_user,
+			'idUser' => $userid,
 			'idLocation' => $params->id_location,
 			'deleted' => 'N'
 		));
@@ -600,7 +624,7 @@ class JSONController extends Controller {
 			$Location = $em->getRepository('SiteBundle:CsLocation')->find($params->id_location);
 			if(!$Location) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Location does not exists!'), 'data' => null));
 			
-			$User = $em->getRepository('SiteBundle:CsUsers')->find($params->id_user);
+			$User = $em->getRepository('SiteBundle:CsUsers')->find($userid);
 			if(!$User) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'User does not exists!'), 'data' => null));
 			
 			$em->getConnection()->beginTransaction();
@@ -631,13 +655,26 @@ class JSONController extends Controller {
 		
 		$params = json_decode(utf8_decode($content));
 		if($params === null) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null));
-		if(!$params->id_user || !$params->id_location) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null));
+		if(!$params->id_location) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null));
 		
 		$em = $this->getDoctrine()->getEntityManager();
 		
+		$userid = null;
+		if(isset($params->id_user)) {
+			$userid = $params->id_user;
+		} else {
+			$session_file = sprintf("%s/sess_%s", $this->container->getParameter('session_dir'), $_COOKIE['PHPSESSID']);
+			if(!file_exists($session_file)) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'User\'s session not found'), 'data' => null));
+			$content = file_get_contents($session_file);
+			$SessionData = SessionData::unserialize($content);
+			if(!is_array($SessionData)) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid user\'s session data'), 'data' => null));
+			if(!isset($SessionData['_sf2_attributes']['userid'])) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'User not authenticated'), 'data' => null));
+			$userid = $SessionData['_sf2_attributes']['userid'];
+		}
+		
 		// check if the location already exists in user's favorites
 		$Favorite = $em->getRepository('SiteBundle:CsLocationFavorites')->findOneBy(array(
-			'idUser' => $params->id_user,
+			'idUser' => $userid,
 			'idLocation' => $params->id_location,
 			'deleted' => 'N'
 		));
