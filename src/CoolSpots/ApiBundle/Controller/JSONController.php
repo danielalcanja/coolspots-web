@@ -50,13 +50,16 @@ class JSONController extends Controller {
 		if(isset($params->id)) $rs = $rs->andWhere('c.id = :id')->setParameter('id', $params->id);
 		
 		// check for the city parameter
-		if(isset($params->city)) $rs = $rs->andWhere('c.idCity = :city')->setParameter('city', $params->city);
+//		if(isset($params->city)) $rs = $rs->andWhere('c.idCity = :city')->setParameter('city', $params->city);
+		if(isset($params->city)) $rs = $rs->andWhere('c.cityName = :city')->setParameter('city', $params->city);
 		
 		// check for the state parameter
-		if(isset($params->state)) $rs = $rs->andWhere('c.idState = :state')->setParameter('state', $params->state);
+//		if(isset($params->state)) $rs = $rs->andWhere('c.idState = :state')->setParameter('state', $params->state);
+		if(isset($params->state)) $rs = $rs->andWhere('c.stateName = :state')->setParameter('state', $params->state);
 		
 		// check for the country parameter
-		if(isset($params->country)) $rs = $rs->andWhere('c.idCountry = :country')->setParameter('country', $params->country);
+//		if(isset($params->country)) $rs = $rs->andWhere('c.idCountry = :country')->setParameter('country', $params->country);
+		if(isset($params->country)) $rs = $rs->andWhere('c.countryName = :country')->setParameter('country', $params->country);
 		
 		// check for the category parameter
 		if(isset($params->category)) $rs = $rs->andWhere('c.idCategory = :category')->setParameter('category', $params->category);
@@ -84,6 +87,7 @@ class JSONController extends Controller {
 			$arrPhotos = array();
 			foreach($rsPhotos as $p) {
 				array_push($arrPhotos, array(
+					'caption' =>  $p->getCaption(),
 					'low_resolution' => $p->getLowResolution(),
 					'thumbnail' => $p->getThumbnail(),
 					'standard_resolution' => $p->getStandardResolution()
