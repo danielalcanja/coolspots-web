@@ -45,7 +45,7 @@ class JSONController extends Controller {
 		
 		$repository = $this->getDoctrine()->getRepository('SiteBundle:VwLocation');
 		$rs = $repository->createQueryBuilder('c')
-				->where('c.coverPic is not null');
+				->where('c.lastPic is not null');
 		// check for the id parameter
 		if(isset($params->id)) $rs = $rs->andWhere('c.id = :id')->setParameter('id', $params->id);
 		

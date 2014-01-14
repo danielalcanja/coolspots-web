@@ -54,9 +54,10 @@ function getData() {
 //		name: 'Ditado Popular'
 //	};
 
-	var url = "/app_dev.php/json/removefavorites";
+	var url = "/app_dev.php/json/location";
 	var parameters = {
-		id_location: 100
+		city: "Boston",
+		page: 1
 	};
 	
 	obj = jsonCall(url, parameters);
