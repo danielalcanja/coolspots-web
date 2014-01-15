@@ -21,7 +21,7 @@
 <html>
 <title>My jQuery JSON Web Page</title>
 <head>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/bundles/site/js/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" src="/bundles/site/js/util.js"></script>
 <script type="text/javascript">
 // client_id: 98c17dd506c647df9d0042d51a91be6a
@@ -54,10 +54,15 @@ function getData() {
 //		name: 'Ditado Popular'
 //	};
 
-	var url = "/app_dev.php/json/location";
+	var url = "/app_dev.php/json/adduser";
 	var parameters = {
-		city: "Boston",
-		page: 1
+		"access_token": "fb2e77d.47a0479900504cb3ab4a1f626d174d2d",
+		"user": {
+			"id": "1574083",
+			"username": "snoopdogg",
+			"full_name": "Snoop Dogg",
+			"profile_picture": "http://distillery.s3.amazonaws.com/profiles/profile_1574083_75sq_1295469061.jpg"
+		}
 	};
 	
 	obj = jsonCall(url, parameters);

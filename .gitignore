@@ -2,3 +2,4 @@
 /app/cache/
 /app/cache/dev
 /app/sessions/
+/web/storage/

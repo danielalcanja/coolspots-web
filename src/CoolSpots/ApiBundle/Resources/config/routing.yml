@@ -9,13 +9,6 @@ instagram_callback:
     pattern:    /instagram/callback
     defaults: { _controller: ApiBundle:Default:callback }
 
-#instagram_callback:
-#    pattern:    /instagram/callback/{object}/{object_id}
-#    defaults: { _controller: ApiBundle:Default:callback }
-#    requirements:
-#        _method:  GET
-#        object_id: \d+
-
 json_location:
     pattern: /json/location
     defaults: { _controller: ApiBundle:JSON:location }
@@ -55,5 +48,17 @@ json_addfavorites:
 json_removefavorites:
     pattern: /json/removefavorites
     defaults: { _controller: ApiBundle:JSON:removeFavorites }
+    requirements:
+        _method: POST
+        
+json_addevent:
+    pattern: /json/addevent
+    defaults: { _controller: ApiBundle:JSON:addEvent }
+    requirements:
+        _method: POST
+
+json_adduser: 
+    pattern: /json/adduser
+    defaults: { _controller: ApiBundle:JSON:addUser }
     requirements:
         _method: POST

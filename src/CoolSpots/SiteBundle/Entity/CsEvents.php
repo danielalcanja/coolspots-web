@@ -39,6 +39,13 @@ class CsEvents
      * @ORM\Column(name="cover_pic", type="string", length=150, nullable=true)
      */
     private $coverPic;
+	
+    /**
+     * @var string
+	 * 
+	 * @ORM\Column(name="public", type="string", length=1, nullable=false)
+     */
+    private $public;
 
     /**
      * @var integer
@@ -48,6 +55,16 @@ class CsEvents
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+	
+    /**
+     * @var \CoolSpots\SiteBundle\Entity\CsUsers
+     *
+     * @ORM\ManyToOne(targetEntity="CoolSpots\SiteBundle\Entity\CsUsers")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_user", referencedColumnName="id")
+     * })
+     */
+    private $idUser;
 
     /**
      * @var \CoolSpots\SiteBundle\Entity\CsLocation
@@ -299,5 +316,51 @@ class CsEvents
     public function getDeleted()
     {
         return $this->deleted;
+    }
+
+    /**
+     * Set idUser
+     *
+     * @param \CoolSpots\SiteBundle\Entity\CsUsers $idUser
+     * @return CsEvents
+     */
+    public function setIdUser(\CoolSpots\SiteBundle\Entity\CsUsers $idUser = null)
+    {
+        $this->idUser = $idUser;
+    
+        return $this;
+    }
+
+    /**
+     * Get idUser
+     *
+     * @return \CoolSpots\SiteBundle\Entity\CsUsers 
+     */
+    public function getIdUser()
+    {
+        return $this->idUser;
+    }
+
+    /**
+     * Set public
+     *
+     * @param string $public
+     * @return CsEvents
+     */
+    public function setPublic($public)
+    {
+        $this->public = $public;
+    
+        return $this;
+    }
+
+    /**
+     * Get public
+     *
+     * @return string 
+     */
+    public function getPublic()
+    {
+        return $this->public;
     }
 }

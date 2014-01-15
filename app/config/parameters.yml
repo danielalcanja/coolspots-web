@@ -41,5 +41,7 @@ parameters:
     # pagination
     max_items_per_page: 18
     
-    #session storage
+    #storage dir
     session_dir: "%kernel.root_dir%/sessions"
+    events_pics_dir: "%kernel.root_dir%/../web/storage"
+    events_pics_url: /storage

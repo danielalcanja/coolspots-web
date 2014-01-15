@@ -19,6 +19,7 @@ use CoolSpots\SiteBundle\Entity\CsUsers;
 use CoolSpots\SiteBundle\Entity\CsPics;
 use CoolSpots\SiteBundle\Entity\CsTags;
 use CoolSpots\SiteBundle\Entity\CsLocationFavorites;
+use CoolSpots\SiteBundle\Entity\CsEvents;
 use CoolSpots\ApiBundle\Library\SessionData;
 
 class JSONController extends Controller {
@@ -699,6 +700,143 @@ class JSONController extends Controller {
 			}
 			
 			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => null));
+		}
+	}
+	
+	public function addEventAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		
+		$params = json_decode(utf8_decode($content));
+		
+		$em = $this->getDoctrine()->getEntityManager();
+		$em->getConnection()->beginTransaction();
+		$cover_pic = null;
+		try {
+			if(!isset($params->username) || !isset($params->id_location) || !isset($params->name) || !isset($params->tag) || !isset($params->dateStart) || !isset($params->dateEnd)) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information.'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			// search user by username
+			$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->username));
+			if(!$User) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not found'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			// search location by id
+			$Location = $em->getRepository('SiteBundle:CsLocation')->find($params->id_location);
+			if(!$Location) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Location not found'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			try {
+				$Event = new CsEvents();
+				$Event->setIdUser($User);
+				$Event->setIdLocation($Location);
+				if($params->pic) {
+					$event_dir = realpath($this->container->getParameter('events_pics_dir'));
+					$subdir = date('Y/m/d');
+					$pic_content = base64_decode($params->pic);
+					if(!$pic_content) {
+						$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to decode the base64 string'), 'data' => null);
+						throw new \Exception();
+					}
+					$pic_filename = md5(time() . '_' . rand(0, time())) . '.jpg';
+					if(!is_dir($event_dir . '/' . $subdir)) {
+						mkdir($event_dir . '/' . $subdir, 0777, true);
+					}
+					
+					$fp = fopen($event_dir . '/' . $subdir . '/' . $pic_filename, 'wb');
+					if(!$fp) {
+						$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to create image file'));
+						throw new \Exception();						
+					}
+					fputs($fp, $pic_content);
+					fclose($fp);
+					
+					$cover_pic = $this->container->getParameter('events_pics_url') . '/' . $subdir . '/' . $pic_filename;
+					$Event->setCoverPic($cover_pic);
+				}
+				$Event->getDateAdded(new \DateTime());
+				$dateStart = new \DateTime();
+				$dateStart->setTimestamp($params->dateStart);
+				$Event->setDateStart($dateStart);
+				
+				
+				$dateEnd = new \DateTime();
+				$dateEnd->setTimestamp($params->dateEnd);
+				$Event->setDateEnd($dateEnd);
+				
+				$Event->setDeleted('N');
+				if(isset($params->description)) $Event->setDescription($params->description);
+				$Event->setName($params->name);
+				$Event->setTag($params->tag);
+				$Event->setPublic(isset($params->public) ? $params->public : 'Y');
+				$em->persist($Event);
+				$em->flush();
+			} catch(\Exception $e) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to create event: ' . $e->getMessage()), 'data' => null);
+				throw $e;
+			}
+			$em->getConnection()->commit();
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($Event, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));			
+		} catch(\Exception $e) {
+			$em->getConnection()->rollback();
+			$em->close();
+			return $this->jsonResponse($this->jsonData);
+		}
+	}
+	
+	public function addUserAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		
+		$params = json_decode(utf8_decode($content));
+		
+		$em = $this->getDoctrine()->getEntityManager();
+		$em->getConnection()->beginTransaction();
+		
+		try {
+			if(!isset($params->access_token) || !isset($params->user) || !isset($params->user->id) || !isset($params->user->username) || !isset($params->user->full_name) || !isset($params->user->profile_picture)) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information.'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			// check if user already exists
+			$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->user->username));
+			if($User) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User already exists'), 'data' => null);
+				throw new \Exception();
+			} else {
+				try {
+					$User = new CsUsers();
+					$User->setAccessToken(null);
+					$User->setBio(null);
+					$User->setEmail(null);
+					$User->setFullName($params->user->full_name);
+					$User->setProfilePicture($params->user->profile_picture);
+					$User->setTokenDate(null);
+					$User->setUsername($params->user->username);
+					$em->persist($User);
+					$em->flush();
+				} catch(\Exception $e) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to create user: ' . $e->getMessage()), 'data' => null);
+					throw $e;
+				}
+			}
+			$em->getConnection()->commit();
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($User, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
+		} catch(\Exception $e) {
+			$em->getConnection()->rollback();
+			$em->close();
+			return $this->jsonResponse($this->jsonData);
 		}
 	}
 }
