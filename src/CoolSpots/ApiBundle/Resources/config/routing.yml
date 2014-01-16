@@ -9,27 +9,27 @@ instagram_callback:
     pattern:    /instagram/callback
     defaults: { _controller: ApiBundle:Default:callback }
 
-json_location:
-    pattern: /json/location
-    defaults: { _controller: ApiBundle:JSON:location }
+json_locations:
+    pattern: /json/locations
+    defaults: { _controller: ApiBundle:JSON:locations }
     requirements:
         _method: POST
         
-json_location_info:
-    pattern: /json/locationinfo
-    defaults: { _controller: ApiBundle:JSON:locationInfo }
+json_locations_info:
+    pattern: /json/locations/info
+    defaults: { _controller: ApiBundle:JSON:locationsInfo }
     requirements:
         _method: POST
         
-json_photos:
-    pattern: /json/photos
-    defaults: { _controller: ApiBundle:JSON:photos }
+json_locations_photos:
+    pattern: /json/locations/photos
+    defaults: { _controller: ApiBundle:JSON:locationPhotos }
     requirements:
         _method: POST
         
-json_addlocation:
-    pattern: /json/addlocation
-    defaults: { _controller: ApiBundle:JSON:addLocation }
+json_locations_add:
+    pattern: /json/locations/add
+    defaults: { _controller: ApiBundle:JSON:locationsAdd }
     requirements:
         _method: POST
         
@@ -39,26 +39,74 @@ json_favorites:
     requirements:
         _method: POST
         
-json_addfavorites:
-    pattern: /json/addfavorites
-    defaults: { _controller: ApiBundle:JSON:addFavorites }
+json_favorites_add:
+    pattern: /json/favorites/add
+    defaults: { _controller: ApiBundle:JSON:favoritesAdd }
     requirements:
         _method: POST
         
-json_removefavorites:
-    pattern: /json/removefavorites
-    defaults: { _controller: ApiBundle:JSON:removeFavorites }
+json_favorites_remove:
+    pattern: /json/favorites/remove
+    defaults: { _controller: ApiBundle:JSON:favoritesRemove }
     requirements:
         _method: POST
         
-json_addevent:
-    pattern: /json/addevent
-    defaults: { _controller: ApiBundle:JSON:addEvent }
+json_events:
+    pattern: /json/events
+    defaults: { _controller: ApiBundle:JSON:events }
     requirements:
         _method: POST
 
-json_adduser: 
-    pattern: /json/adduser
-    defaults: { _controller: ApiBundle:JSON:addUser }
+json_events_add:
+    pattern: /json/events/add
+    defaults: { _controller: ApiBundle:JSON:eventsAdd }
+    requirements:
+        _method: POST
+
+json_events_private:
+    pattern: /json/events/private
+    defaults: { _controller: ApiBundle:JSON:eventsPrivate }
+    requirements:
+        _method: POST
+
+json_events_private_search:
+    pattern: /json/events/private/search
+    defaults: { _controller: ApiBundle:JSON:eventsPrivateSearch }
+    requirements:
+        _method: POST
+
+json_events_self:
+    pattern: /json/events/self
+    defaults: { _controller: ApiBundle:JSON:eventsSelf }
+    requirements:
+        _method: POST
+
+json_events_search:
+    pattern: /json/events/search
+    defaults: { _controller: ApiBundle:JSON:eventsSearch }
+    requirements:
+        _method: POST
+
+json_users_add: 
+    pattern: /json/users/add
+    defaults: { _controller: ApiBundle:JSON:usersAdd }
+    requirements:
+        _method: POST
+
+json_friends: 
+    pattern: /json/friends
+    defaults: { _controller: ApiBundle:JSON:friends }
+    requirements:
+        _method: POST
+        
+json_friend_request: 
+    pattern: /json/friends/request
+    defaults: { _controller: ApiBundle:JSON:friendsRequest }
+    requirements:
+        _method: POST
+        
+json_friends_request_status:
+    pattern: /json/friends/request/status
+    defaults: { _controller: ApiBundle:JSON:friendsRequestStatus }
     requirements:
         _method: POST

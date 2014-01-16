@@ -4,13 +4,17 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="idUserFriend" type="integer" column="id_user_friend" nullable="false"/>
     <field name="dateAdded" type="datetime" column="date_added" nullable="false"/>
     <field name="message" type="string" column="message" length="200" nullable="false"/>
     <field name="status" type="string" column="status" length="1" nullable="false"/>
     <many-to-one field="idUser" target-entity="CsUsers">
       <join-columns>
         <join-column name="id_user" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idUserFriend" target-entity="CsUsers">
+      <join-columns>
+        <join-column name="id_user_friend" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

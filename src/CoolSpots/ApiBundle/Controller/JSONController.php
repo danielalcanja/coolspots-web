@@ -20,12 +20,13 @@ use CoolSpots\SiteBundle\Entity\CsPics;
 use CoolSpots\SiteBundle\Entity\CsTags;
 use CoolSpots\SiteBundle\Entity\CsLocationFavorites;
 use CoolSpots\SiteBundle\Entity\CsEvents;
+use CoolSpots\SiteBundle\Entity\CsFriends;
+use CoolSpots\SiteBundle\Entity\CsFriendsRequest;
 use CoolSpots\ApiBundle\Library\SessionData;
 
 class JSONController extends Controller {
 	private $last_max_timestamp = 0;
 	private $jsonData = array();
-
 	
 	private function jsonResponse($arrResponse) {
 		$json = json_encode($arrResponse);
@@ -34,163 +35,223 @@ class JSONController extends Controller {
 		return $response;
 	}
 	
-    public function locationAction() {
+	private function getUserSession() {
+		$session_file = sprintf("%s/sess_%s", $this->container->getParameter('session_dir'), $_COOKIE['PHPSESSID']);
+		if(!file_exists($session_file)) {
+			$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User\'s session not found'), 'data' => null);
+			throw new \Exception();
+		}
+
+		$content = file_get_contents($session_file);
+		$SessionData = SessionData::unserialize($content);
+		if(!is_array($SessionData)) {
+			$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid user\'s session data'), 'data' => null);
+			throw new \Exception();
+		}
+		if(!isset($SessionData['_sf2_attributes']['userid'])) {
+			$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not authenticated'), 'data' => null);
+			throw new \Exception();
+		}
+		return $SessionData['_sf2_attributes']['userid'];
+	}
+	
+    public function locationsAction() {
 		$request = $this->getRequest();
 		$content = $request->getContent();
 		
 		$params = json_decode(utf8_decode($content));
-		if($params === null) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null));
-		
-		$page = isset($params->page) ? $params->page : 1;
-		$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
-		
-		$repository = $this->getDoctrine()->getRepository('SiteBundle:VwLocation');
-		$rs = $repository->createQueryBuilder('c')
-				->where('c.lastPic is not null');
-		// check for the id parameter
-		if(isset($params->id)) $rs = $rs->andWhere('c.id = :id')->setParameter('id', $params->id);
-		
-		// check for the city parameter
-//		if(isset($params->city)) $rs = $rs->andWhere('c.idCity = :city')->setParameter('city', $params->city);
-		if(isset($params->city)) $rs = $rs->andWhere('c.cityName = :city')->setParameter('city', $params->city);
-		
-		// check for the state parameter
-//		if(isset($params->state)) $rs = $rs->andWhere('c.idState = :state')->setParameter('state', $params->state);
-		if(isset($params->state)) $rs = $rs->andWhere('c.stateName = :state')->setParameter('state', $params->state);
-		
-		// check for the country parameter
-//		if(isset($params->country)) $rs = $rs->andWhere('c.idCountry = :country')->setParameter('country', $params->country);
-		if(isset($params->country)) $rs = $rs->andWhere('c.countryName = :country')->setParameter('country', $params->country);
-		
-		// check for the category parameter
-		if(isset($params->category)) $rs = $rs->andWhere('c.idCategory = :category')->setParameter('category', $params->category);
-		
-		$rs = $rs->andWhere('c.enabled = :enabled')
-				->setParameter('enabled', 'Y')
-				->andWhere('c.deleted = :deleted')
-				->setParameter('deleted', 'N')
-				->orderBy('c.dateUpdated', 'desc')
-				->setFirstResult($offset)
-				->setMaxResults($this->container->getParameter('max_items_per_page'))
-				->getQuery()
-				->getResult();
-		
-		$arrLocations = array();
-		foreach($rs as $item) {
-			$rpPhotos = $this->getDoctrine()->getRepository('SiteBundle:CsPics');
-			$rsPhotos = $rpPhotos->createQueryBuilder('c')
-					->where('c.idLocation = :idLocation')
-					->orderBy('c.dateAdded', 'desc')
-					->setParameter('idLocation', $item->getId())
-					->setMaxResults(5)
-					->getQuery()
-					->getResult();
-			$arrPhotos = array();
-			foreach($rsPhotos as $p) {
-				array_push($arrPhotos, array(
-					'caption' =>  $p->getCaption(),
-					'low_resolution' => $p->getLowResolution(),
-					'thumbnail' => $p->getThumbnail(),
-					'standard_resolution' => $p->getStandardResolution()
-				));
+		try {
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
 			}
-			
-			$arrLocations[] = array(
-				'address' => $item->getAddress(),
-				'checkinsCount' => $item->getCheckinsCount(),
-				'categoryName' => $item->getCategoryName(),
-				'cityName' => $item->getCityName(),
-				'countryName' => $item->getCountryName(),
-				'coverPic' => $item->getCoverPic(),
-				'dateAdded' => $item->getDateAdded()->getTimeStamp(),
-				'dateUpdated' => $item->getDateUpdated()->getTimeStamp(),
-				'deleted' => $item->getDeleted(),
-				'enabled' => $item->getEnabled(),
-				'id' =>  $item->getId(),
-				'idCategory' => $item->getIdCategory(),
-				'idCity' => $item->getIdCity(),
-				'idCountry' => $item->getIdCountry(),
-				'idFoursquare' => $item->getIdFoursquare(),
-				'idInstagram' => $item->getIdInstagram(),
-				'idState' => $item->getIdState(),
-				'lastMinId' => $item->getLastMinId(),
-				'lastPhotos' => $arrPhotos,
-				'minTimestamp' => $item->getMinTimestamp(),
-				'name' => $item->getName(),
-				'nextMaxId' => $item->getNextMaxId(),
-				'phone' => $item->getPhone(),
-				'postalCode' => $item->getPostalCode(),
-				'slug' => $item->getSlug(),
-				'stateName' => $item->getStateName()
-			);
+
+			$page = isset($params->page) ? $params->page : 1;
+			$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
+
+			try {
+				$repository = $this->getDoctrine()->getRepository('SiteBundle:VwLocation');
+				$rs = $repository->createQueryBuilder('c')
+						->where('c.lastPic is not null');
+				// check for the id parameter
+				if(isset($params->id)) $rs = $rs->andWhere('c.id = :id')->setParameter('id', $params->id);
+
+				if(isset($params->geo)) {
+					// check for the city parameter
+					if(isset($params->geo->cityName)) $rs = $rs->andWhere('c.cityName = :city')->setParameter('city', $params->geo->cityName);
+
+					// check for the state parameter
+					if(isset($params->geo->stateName)) $rs = $rs->andWhere('c.stateName = :state')->setParameter('state', $params->geo->stateName);
+
+					// check for the country parameter
+					if(isset($params->geo->countryName)) $rs = $rs->andWhere('c.countryName = :country')->setParameter('country', $params->geo->countryName);
+				}
+
+				// check for the category parameter
+				if(isset($params->category)) $rs = $rs->andWhere('c.idCategory = :category')->setParameter('category', $params->category);
+
+				$rs = $rs->andWhere('c.enabled = :enabled')
+						->setParameter('enabled', 'Y')
+						->andWhere('c.deleted = :deleted')
+						->setParameter('deleted', 'N')
+						->orderBy('c.dateUpdated', 'desc')
+						->setFirstResult($offset)
+						->setMaxResults($this->container->getParameter('max_items_per_page'))
+						->getQuery()
+						->getResult();
+
+				$arrLocations = array();
+				foreach($rs as $item) {
+					$rpPhotos = $this->getDoctrine()->getRepository('SiteBundle:CsPics');
+					$rsPhotos = $rpPhotos->createQueryBuilder('c')
+							->where('c.idLocation = :idLocation')
+							->orderBy('c.dateAdded', 'desc')
+							->setParameter('idLocation', $item->getId())
+							->setMaxResults(5)
+							->getQuery()
+							->getResult();
+					$arrPhotos = array();
+					foreach($rsPhotos as $p) {
+						array_push($arrPhotos, array(
+							'caption' =>  $p->getCaption(),
+							'low_resolution' => $p->getLowResolution(),
+							'thumbnail' => $p->getThumbnail(),
+							'standard_resolution' => $p->getStandardResolution()
+						));
+					}
+
+					$arrLocations[] = array(
+						'address' => $item->getAddress(),
+						'checkinsCount' => $item->getCheckinsCount(),
+						'categoryName' => $item->getCategoryName(),
+						'cityName' => $item->getCityName(),
+						'countryName' => $item->getCountryName(),
+						'coverPic' => $item->getCoverPic(),
+						'dateAdded' => $item->getDateAdded()->getTimeStamp(),
+						'dateUpdated' => $item->getDateUpdated()->getTimeStamp(),
+						'deleted' => $item->getDeleted(),
+						'enabled' => $item->getEnabled(),
+						'id' =>  $item->getId(),
+						'idCategory' => $item->getIdCategory(),
+						'idCity' => $item->getIdCity(),
+						'idCountry' => $item->getIdCountry(),
+						'idFoursquare' => $item->getIdFoursquare(),
+						'idInstagram' => $item->getIdInstagram(),
+						'idState' => $item->getIdState(),
+						'lastMinId' => $item->getLastMinId(),
+						'lastPhotos' => $arrPhotos,
+						'minTimestamp' => $item->getMinTimestamp(),
+						'name' => $item->getName(),
+						'nextMaxId' => $item->getNextMaxId(),
+						'phone' => $item->getPhone(),
+						'postalCode' => $item->getPostalCode(),
+						'slug' => $item->getSlug(),
+						'stateName' => $item->getStateName()
+					);
+				}
+			} catch(\Exception $e) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to perform query: ' . $e->getMessage()), 'data' => null);
+				throw $e;
+			}
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success!'), 'data' => $arrLocations));
+		} catch(\Exception $e) {
+			return $this->jsonResponse($this->jsonData);
 		}
-		return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success!'), 'data' => $arrLocations));
     }
 	
-    public function locationInfoAction() {
+    public function locationsInfoAction() {
 		$request = $this->getRequest();
 		$content = $request->getContent();
 		
 		$params = json_decode(utf8_decode($content));
-		if($params === null) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null));
-		
-		// validate data
-		if(!isset($params->id)) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'You must provide a location ID'), 'data' => null));
-		
-		$repository = $this->getDoctrine()->getRepository('SiteBundle:CsLocation');
-		$rs = $repository->createQueryBuilder('c')
-				->where('c.id = :id')
-				->andWhere('c.enabled = :enabled')
-				->andWhere('c.deleted = :deleted')
-				->setParameter('id', $params->id)
-				->setParameter('enabled', 'Y')
-				->setParameter('deleted', 'N')
-				->getQuery()
-				->getSingleResult();
-		
-		$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-		$json = $serializer->serialize($rs, 'json');
-		
-		return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
+		try {
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}
+
+			// validate data
+			if(!isset($params->id)) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'You must provide a location ID'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			try {
+				$repository = $this->getDoctrine()->getRepository('SiteBundle:CsLocation');
+				$rs = $repository->createQueryBuilder('c')
+						->where('c.id = :id')
+						->andWhere('c.enabled = :enabled')
+						->andWhere('c.deleted = :deleted')
+						->setParameter('id', $params->id)
+						->setParameter('enabled', 'Y')
+						->setParameter('deleted', 'N')
+						->getQuery()
+						->getSingleResult();
+			} catch(\Exception $e) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to perform query: ' . $e->getMessage()), 'data' => null);
+				throw $e;
+			}
+			
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($rs, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
+		} catch(\Exception $e) {
+			return $this->jsonResponse($this->jsonData);
+		}
 	}
 	
-	public function photosAction() {
+	public function locationsPhotosAction() {
 		$request = $this->getRequest();
 		$content = $request->getContent();
 		
 		$params = json_decode(utf8_decode($content));
-		if($params === null) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null));
-		
-		// validate data
-		if(!isset($params->id)) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'You must provide a locatoin ID'), 'data' => null));
-		
-		$page = isset($params->page) ? $params->page : 1;
-		$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
-		$rs = $this->getDoctrine()
-				->getManager()
-				->createQuery('SELECT p, u, l FROM SiteBundle:CsPics p
-								JOIN p.idUser u
-								JOIN p.idLocation l
-								WHERE p.idLocation = :id
-								ORDER BY p.dateAdded DESC')
-				->setFirstResult($offset)
-				->setMaxResults($this->container->getParameter('max_items_per_page'))
-				->setParameter('id', $params->id)->getResult();
-		
-		
-		$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-		$json = $serializer->serialize($rs, 'json');
-		
-		return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
+		try {
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}
+
+			// validate data
+			if(!isset($params->id)) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'You must provide a locatoin ID'), 'data' => null);
+				throw new \Exception();
+			}
+
+			$page = isset($params->page) ? $params->page : 1;
+			$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
+			
+			try {
+				$rs = $this->getDoctrine()
+						->getManager()
+						->createQuery('SELECT p, u, l FROM SiteBundle:CsPics p
+										JOIN p.idUser u
+										JOIN p.idLocation l
+										WHERE p.idLocation = :id
+										ORDER BY p.dateAdded DESC')
+						->setFirstResult($offset)
+						->setMaxResults($this->container->getParameter('max_items_per_page'))
+						->setParameter('id', $params->id)
+						->getResult();
+			} catch(\Exception $e) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to perform query: ' . $e->getMessage()), 'data' => null);
+				throw $e;
+			}
+
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($rs, 'json');
+
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
+		} catch(\Exception $e) {
+			return $this->jsonResponse($this->jsonData);
+		}
 	}
 	
-	public function addLocationAction() {
+	public function locationsAddAction() {
 		$request = $this->getRequest();
 		$content = $request->getContent();
 		
 		// get entity manager
-		$em = $this->getDoctrine()->getEntityManager();
-		
+		$em = $this->getDoctrine()->getManager();
 		$em->getConnection()->beginTransaction();
 		try {
 			$params = json_decode(utf8_decode($content));
@@ -202,7 +263,7 @@ class JSONController extends Controller {
 			if(!isset($params->id_instagram) || !isset($params->id_foursquare) || 
 					!isset($params->geo) || 
 					!isset($params->geo->countryName) ||
-					!isset($params->geo->countryCode) || !isset($params->geo->stateName) || !isset($params->geo->stateAbbr) ||
+					!isset($params->geo->countryCode) || !isset($params->geo->stateName) ||
 					!isset($params->geo->cityName) || 
 					!isset($params->category) || 
 					!isset($params->category->id) || !isset($params->category->exid) ||
@@ -264,7 +325,7 @@ class JSONController extends Controller {
 						->andWhere('c.enabled = :enabled')
 						->andWhere('c.deleted = :deleted')
 						->setParameter('stateName', mb_strtolower($params->geo->stateName, 'UTF-8'))
-						->setParameter('stateAbbr', mb_strtolower($params->geo->stateAbbr, 'UTF-8'))
+						->setParameter('stateAbbr', mb_strtolower($params->geo->stateName, 'UTF-8'))
 						->setParameter('idCountry', $Country->getId())
 						->setParameter('enabled', 'Y')
 						->setParameter('deleted', 'N')
@@ -275,7 +336,7 @@ class JSONController extends Controller {
 					$State = new CsGeoState();
 					$State->setIdCountry($Country);
 					$State->setStateName($params->geo->stateName);
-					$State->setStateAbbr($params->geo->stateAbbr);
+					$State->setStateAbbr($params->geo->stateName);
 					$State->setEnabled('Y');
 					$State->setDeleted('N');
 					$em->persist($State);
@@ -478,7 +539,7 @@ class JSONController extends Controller {
 			try {
 				foreach($response['data'] as $data) {
 					// check if user is already registered
-					$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $data['user']['username']));
+					$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $data['user']['username'], 'deleted' => 'N'));
 					if(!$User) {
 						try {
 							$User = new CsUsers();
@@ -570,156 +631,493 @@ class JSONController extends Controller {
 		$content = $request->getContent();
 		
 		$params = json_decode(utf8_decode($content));
-		if($params === null) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null));
-		
-		$em = $this->getDoctrine()->getEntityManager();
-		if(isset($params->id_user)) {
-			$Favorites = $em->getRepository('SiteBundle:CsLocationFavorites')->findBy(array('idUser' => $params->id_user));
-		} else {
-			$session_file = sprintf("%s/sess_%s", $this->container->getParameter('session_dir'), $_COOKIE['PHPSESSID']);
-			if(!file_exists($session_file)) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'User\'s session not found'), 'data' => null));
-			$content = file_get_contents($session_file);
-			$SessionData = SessionData::unserialize($content);
-			if(!is_array($SessionData)) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid user\'s session data'), 'data' => null));
-			if(!isset($SessionData['_sf2_attributes']['userid'])) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'User not authenticated'), 'data' => null));
-			$userid = $SessionData['_sf2_attributes']['userid'];
-			$Favorites = $em->getRepository('SiteBundle:CsLocationFavorites')->findBy(array('idUser' => $userid));
+		$em = $this->getDoctrine()->getManager();
+
+		try {
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}
+
+			if(isset($params->username)) {
+				$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->username));
+				if(!$User) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not found!'), 'data' => null);
+					throw new \Exception();
+				}
+				$Favorites = $em->getRepository('SiteBundle:CsLocationFavorites')->findBy(array('idUser' => $User->getId()));
+			} else {
+				$userid = $this->getUserSession();
+				$page = isset($params->page) ? $params->page : 1;
+				$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
+				$Favorites = $em->getRepository('SiteBundle:CsLocationFavorites')->findBy(array('idUser' => $userid), array(), $this->container->getParameter('max_items_per_page'), $offset);
+			}
+			if(!$Favorites) {
+				$this->jsonData = array('meta' => array('status' => 'OK', 'message' => 'Success!'), 'data' => null);
+				throw new \Exception();
+			}
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($Favorites, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
+		} catch(\Exception $e) {
+			return $this->jsonResponse($this->jsonData);
 		}
-		if(!$Favorites) return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success!'), 'data' => null));
-		
-		$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-		$json = $serializer->serialize($Favorites, 'json');
-		return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
 	}
 	
-	public function addFavoritesAction() {
+	public function favoritesAddAction() {
 		$request = $this->getRequest();
 		$content = $request->getContent();
 		
 		$params = json_decode(utf8_decode($content));
-		if($params === null) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null));
-		if(!$params->id_location) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null));
-		
-		$em = $this->getDoctrine()->getEntityManager();
-		
-		$userid = null;
-		if(isset($params->id_user)) {
-			$userid = $params->id_user;
-		} else {
-			$session_file = sprintf("%s/sess_%s", $this->container->getParameter('session_dir'), $_COOKIE['PHPSESSID']);
-			if(!file_exists($session_file)) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'User\'s session not found'), 'data' => null));
-			$content = file_get_contents($session_file);
-			$SessionData = SessionData::unserialize($content);
-			if(!is_array($SessionData)) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid user\'s session data'), 'data' => null));
-			if(!isset($SessionData['_sf2_attributes']['userid'])) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'User not authenticated'), 'data' => null));
-			$userid = $SessionData['_sf2_attributes']['userid'];
-		}
-		
-		// check if the location already exists in user's favorites
-		$Favorite = $em->getRepository('SiteBundle:CsLocationFavorites')->findOneBy(array(
-			'idUser' => $userid,
-			'idLocation' => $params->id_location,
-			'deleted' => 'N'
-		));
-		
-		if($Favorite) {
-			return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Location already exists in user\'s favorites'), 'data' => null));
-		} else {
-			
-			$Location = $em->getRepository('SiteBundle:CsLocation')->find($params->id_location);
-			if(!$Location) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Location does not exists!'), 'data' => null));
-			
-			$User = $em->getRepository('SiteBundle:CsUsers')->find($userid);
-			if(!$User) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'User does not exists!'), 'data' => null));
-			
-			$em->getConnection()->beginTransaction();
-			try {
-				$Favorite = new CsLocationFavorites();
-				$Favorite->setDeleted('N');
-				$Favorite->setIdLocation($Location);
-				$Favorite->setIdUser($User);
-				$Favorite->setDateAdded(new \DateTime());
-				$em->persist($Favorite);
-				$em->flush();
-				$em->getConnection()->commit();
-			} catch(\Exceptioin $e) {
-				$em->getConnection()->rollBack();
-				$em->close();
-				return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Unable to insert into favorites table: ' . $e->getMessage()), 'data' => null));
+		$em = $this->getDoctrine()->getManager();
+		$em->getConnection()->beginTransaction();
+		try{
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
 			}
 			
+			if(!$params->id_location) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null);
+				throw new \Exception();
+			}
+
+
+			if(isset($params->username)) {
+				$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->username));
+			} else {
+				$userid = $this->getUserSession();
+				$User = $em->getRepository('SiteBundle:CsUsers')->find($userid);
+			}
+
+			if(!$User) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not found!'), 'data' => null);
+				throw new \Exception();
+			}
+
+
+			// check if the location already exists in user's favorites
+			$Favorite = $em->getRepository('SiteBundle:CsLocationFavorites')->findOneBy(array(
+				'idUser' => $User->getId(),
+				'idLocation' => $params->id_location,
+				'deleted' => 'N'
+			));
+
+			if($Favorite) {
+				 $this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Location already exists in user\'s favorites'), 'data' => null);
+				 throw new \Exception();
+			} else {
+				$Location = $em->getRepository('SiteBundle:CsLocation')->find($params->id_location);
+				if(!$Location) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Location does not exists!'), 'data' => null);
+					throw new \Exception();
+				}
+				
+				try {
+					$Favorite = new CsLocationFavorites();
+					$Favorite->setDeleted('N');
+					$Favorite->setIdLocation($Location);
+					$Favorite->setIdUser($User);
+					$Favorite->setDateAdded(new \DateTime());
+					$em->persist($Favorite);
+					$em->flush();
+				} catch(\Exceptioin $e) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to insert into favorites table: ' . $e->getMessage()), 'data' => null);
+					throw $e;
+				}
+			}
+			$em->getConnection()->commit();
 			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
 			$json = $serializer->serialize($Favorite, 'json');
 			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
+		} catch(\Exception $e) {
+			$em->getConnection()->rollback();
+			$em->close();
+			return $this->jsonResponse($this->jsonData);
 		}
 	}
 	
-	public function removeFavoritesAction() {
+	public function favoritesRemoveAction() {
 		$request = $this->getRequest();
 		$content = $request->getContent();
 		
 		$params = json_decode(utf8_decode($content));
-		if($params === null) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null));
-		if(!$params->id_location) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null));
-		
-		$em = $this->getDoctrine()->getEntityManager();
-		
-		$userid = null;
-		if(isset($params->id_user)) {
-			$userid = $params->id_user;
-		} else {
-			$session_file = sprintf("%s/sess_%s", $this->container->getParameter('session_dir'), $_COOKIE['PHPSESSID']);
-			if(!file_exists($session_file)) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'User\'s session not found'), 'data' => null));
-			$content = file_get_contents($session_file);
-			$SessionData = SessionData::unserialize($content);
-			if(!is_array($SessionData)) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Invalid user\'s session data'), 'data' => null));
-			if(!isset($SessionData['_sf2_attributes']['userid'])) return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'User not authenticated'), 'data' => null));
-			$userid = $SessionData['_sf2_attributes']['userid'];
-		}
-		
-		// check if the location already exists in user's favorites
-		$Favorite = $em->getRepository('SiteBundle:CsLocationFavorites')->findOneBy(array(
-			'idUser' => $userid,
-			'idLocation' => $params->id_location,
-			'deleted' => 'N'
-		));
-		
-		if(!$Favorite) {
-			return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Location does not exists in user\'s favorites'), 'data' => null));
-		} else {
-			$em->getConnection()->beginTransaction();
-			try {
-				$Favorite->setDeleted('Y');
-				$em->persist($Favorite);
-				$em->flush();
-				$em->getConnection()->commit();
-			} catch(\Exception $e) {
-				$em->getConnection()->rollBack();
-				$em->close();
-				return $this->jsonResponse(array('meta' => array('status' => 'ERROR', 'message' => 'Unable to update favorite data: ' . $e->getMessage()), 'data' => null));
+		$em = $this->getDoctrine()->getManager();
+		$em->getConnection()->beginTransaction();
+		try {
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
 			}
 			
+			if(!$params->id_location) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null);
+				throw new \Exception();
+			}
+
+
+			if(isset($params->username)) {
+				$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->username));
+			} else {
+				$userid = $this->getUserSession();
+				$User = $em->getRepository('SiteBundle:CsUsers')->find($userid);
+			}
+
+			if(!$User) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not found!'), 'data' => null);
+				throw new \Exception();
+			}
+
+			// check if the location already exists in user's favorites
+			$Favorite = $em->getRepository('SiteBundle:CsLocationFavorites')->findOneBy(array(
+				'idUser' => $User->getId(),
+				'idLocation' => $params->id_location,
+				'deleted' => 'N'
+			));
+
+			if(!$Favorite) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Location does not exists in user\'s favorites'), 'data' => null);
+				throw new \Exception();
+			} else {
+				try {
+					$Favorite->setDeleted('Y');
+					$em->persist($Favorite);
+					$em->flush();
+				} catch(\Exception $e) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to update favorite data: ' . $e->getMessage()), 'data' => null);
+					throw $e;
+				}
+			}
+			$em->getConnection()->commit();
 			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => null));
+		} catch(\Exception $e) {
+			$em->getConnection()->rollback();
+			$em->close();
+			return $this->jsonResponse($this->jsonData);
 		}
 	}
 	
-	public function addEventAction() {
+	public function usersAddAction() {
 		$request = $this->getRequest();
 		$content = $request->getContent();
 		
 		$params = json_decode(utf8_decode($content));
 		
-		$em = $this->getDoctrine()->getEntityManager();
+		$em = $this->getDoctrine()->getManager();
 		$em->getConnection()->beginTransaction();
-		$cover_pic = null;
+		
 		try {
-			if(!isset($params->username) || !isset($params->id_location) || !isset($params->name) || !isset($params->tag) || !isset($params->dateStart) || !isset($params->dateEnd)) {
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}			
+			
+			if(!isset($params->access_token) || !isset($params->user) || !isset($params->user->id) || !isset($params->user->username) || !isset($params->user->full_name) || !isset($params->user->profile_picture)) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information.'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			// check if user already exists
+			$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->user->username, 'deleted' => 'N'));
+			if($User) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User already exists'), 'data' => null);
+				throw new \Exception();
+			} else {
+				try {
+					$User = new CsUsers();
+					$User->setAccessToken(null);
+					$User->setBio(null);
+					$User->setEmail(null);
+					$User->setFullName($params->user->full_name);
+					$User->setProfilePicture($params->user->profile_picture);
+					$User->setTokenDate(null);
+					$User->setUsername($params->user->username);
+					$em->persist($User);
+					$em->flush();
+				} catch(\Exception $e) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to create user: ' . $e->getMessage()), 'data' => null);
+					throw $e;
+				}
+			}
+			$em->getConnection()->commit();
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($User, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
+		} catch(\Exception $e) {
+			$em->getConnection()->rollback();
+			$em->close();
+			return $this->jsonResponse($this->jsonData);
+		}
+	}
+	
+	public function friendsRequestAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		
+		$params = json_decode(utf8_decode($content));
+		
+		$em = $this->getDoctrine()->getManager();
+		$em->getConnection()->beginTransaction();
+		
+		try {
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			if(!isset($params->to) || !isset($params->message)) {
 				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information.'), 'data' => null);
 				throw new \Exception();
 			}
 			
 			// search user by username
-			$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->username));
+			if(isset($params->from)) {
+				$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->from));
+			} else {
+				$userid = $this->getUserSession();
+				$User = $em->getRepository('SiteBundle:CsUsers')->find($userid);
+			}
+			
+			
+			if(!$User) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not found!'), 'data' => null);
+				throw new \Exception();
+			}
+				
+			// search friend by username
+			$Friend = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->to));
+			if(!$Friend) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Friend not found!'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			if($User->getId() == $Friend->getId()) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Self friend request is not allowed'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			// friendship already exists?
+			$Friendship = $em->getRepository('SiteBundle:CsFriends')->findOneBy(array('idUser' => $User->getId(), 'idUserFriend' => $Friend->getId()));
+			if($Friendship) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Users are already friends.'), 'data' => null);
+				throw new \Exception();
+			} 
+			
+			// request for friendship already exists?
+			$FriendshipRequest = $em->getRepository('SiteBundle:CsFriendsRequest')->findOneBy(array('idUser' => $User->getId(), 'idUserFriend' => $Friend->getId(), 'status' => 'P'));
+			$FriendshipRequestRev = $em->getRepository('SiteBundle:CsFriendsRequest')->findOneBy(array('idUser' => $Friend->getId(), 'idUserFriend' => $User->getId(), 'status' => 'P'));
+			if($FriendshipRequest || $FriendshipRequestRev) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'There is already a pending friend request.'), 'data' => null);
+				throw new \Exception();
+			} else {
+				try {
+					$FriendshipRequest = new CsFriendsRequest();
+					$FriendshipRequest->setIdUser($User);
+					$FriendshipRequest->setIdUserFriend($Friend);
+					$FriendshipRequest->setDateAdded(new \DateTime());
+					$FriendshipRequest->setMessage($params->message);
+					$FriendshipRequest->setStatus('P');
+					$em->persist($FriendshipRequest);
+					$em->flush();
+				} catch(\Exception $e) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to create a friendship request: ' . $e->getMessage()), 'data' => null);
+					throw $e;
+				}
+			}
+			$em->getConnection()->commit();
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($FriendshipRequest, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
+		} catch(\Exception $e) {
+			$em->getConnection()->rollback();
+			$em->close();
+			return $this->jsonResponse($this->jsonData);
+		}
+	}
+	
+	public function friendsRequestsStatusAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		
+		$params = json_decode(utf8_decode($content));
+		
+		$em = $this->getDoctrine()->getManager();
+		$em->getConnection()->beginTransaction();
+		
+		try {
+			if(!isset($params->from) || !isset($params->status)) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information.'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			// search user by username
+			if(isset($params->to)) {
+				$Friend = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->to));
+			} else {
+				$userid = $this->getUserSession();
+				$Friend = $em->getRepository('SiteBundle:CsUsers')->find($userid);
+			}
+
+			if(!$Friend) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Friend not found!'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			// search friend by username
+			$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->from));
+			if(!$User) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not found!'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			// friendship exists?
+			$Friendship = $em->getRepository('SiteBundle:CsFriends')->findOneBy(array('idUser' => $User->getId(), 'idUserFriend' => $Friend->getId()));
+			if($Friendship) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Users are already friends.'), 'data' => null);
+				throw new \Exception();
+			} 
+			
+			// request for friendship exists?
+			$FriendshipRequest = $em->getRepository('SiteBundle:CsFriendsRequest')->findOneBy(array('idUser' => $User->getId(), 'idUserFriend' => $Friend->getId(), 'status' => 'P'));
+			if(!$FriendshipRequest) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'There is no pending friend request.'), 'data' => null);
+				throw new \Exception();
+			} else {
+				try {
+					$FriendshipRequest->setStatus($params->status);
+					$em->persist($FriendshipRequest);
+					
+					$Friendship = new CsFriends();
+					$Friendship->setIdUser($User);
+					$Friendship->setIdUserFriend($Friend);
+					$Friendship->setDateAdded(new \DateTime());
+					$em->persist($Friendship);
+					
+					$FriendshipRev = new CsFriends();
+					$FriendshipRev->setIdUser($Friend);
+					$FriendshipRev->setIdUserFriend($User);
+					$FriendshipRev->setDateAdded(new \DateTime());
+					$em->persist($FriendshipRev);
+					
+					$em->flush();
+				} catch(\Exception $e) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to change friend\'s request status: ' . $e->getMessage()), 'data' => null);
+					throw $e;
+				}
+			}
+			$em->getConnection()->commit();
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($FriendshipRev, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
+		} catch(\Exception $e) {
+			$em->getConnection()->rollback();
+			$em->close();
+			return $this->jsonResponse($this->jsonData);
+		}
+	}
+	
+	public function friendsAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		
+		$params = json_decode(utf8_decode($content));
+		$em = $this->getDoctrine()->getManager();
+		$userid = null;
+		try {
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}
+
+			if(isset($params->username)) {
+				$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->username));
+				if(!$User) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not found!'), 'data' => null);
+					throw new \Exception();
+				}
+				$userid = $User->getId();
+			} else {
+				$userid = $this->getUserSession();
+			}
+			
+			$page = isset($params->page) ? $params->page : 1;
+			$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
+			
+			$Friends = $em->getRepository('SiteBundle:CsFriends')->findBy(array('idUser' => $userid), null, $this->container->getParameter('max_items_per_page'), $offset);
+				
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($Friends, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));			
+		} catch(\Exception $e) {
+			return $this->jsonResponse($this->jsonData);
+		}
+	}
+	
+	public function eventsAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		
+		$params = json_decode(utf8_decode($content));
+		
+		$em = $this->getDoctrine()->getManager();
+		try {
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			$page = isset($params->page) ? $params->page : 1;
+			$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
+			
+			$where = array();
+			$where['public'] = 'Y';
+			
+			if(isset($params->geo)) {
+				if(isset($params->geo->countryName)) $where['countryName'] = $params->geo->countryName;
+				if(isset($params->geo->stateName)) $where['stateName'] = $params->geo->stateName;
+				if(isset($params->geo->cityName)) $where['cityName'] = $params->geo->cityName;
+			}
+
+			$Events = $em->getRepository('SiteBundle:VwEvents')->findBy($where, array('dateStart' => 'DESC'), $this->container->getParameter('max_items_per_page'), $offset);
+			
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($Events, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));	
+			
+		} catch(\Exception $e) {
+			die($e->getMessage());
+			return $this->jsonResponse($this->jsonData);
+		}
+	}
+	
+	public function eventsAddAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		
+		$params = json_decode(utf8_decode($content));
+		
+		$em = $this->getDoctrine()->getManager();
+		$em->getConnection()->beginTransaction();
+		$cover_pic = null;
+		try {
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			if(!isset($params->id_location) || !isset($params->name) || !isset($params->tag) || !isset($params->dateStart) || !isset($params->dateEnd)) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information.'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			// search user by username
+			if(isset($params->username)) {
+				$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->username));
+			} else {
+				$userid = $this->getUserSession();
+				$User = $em->getRepository('SiteBundle:CsUsers')->find($userid);
+			}
+			
 			if(!$User) {
 				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not found'), 'data' => null);
 				throw new \Exception();
@@ -736,7 +1134,7 @@ class JSONController extends Controller {
 				$Event = new CsEvents();
 				$Event->setIdUser($User);
 				$Event->setIdLocation($Location);
-				if($params->pic) {
+				if(isset($params->pic)) {
 					$event_dir = realpath($this->container->getParameter('events_pics_dir'));
 					$subdir = date('Y/m/d');
 					$pic_content = base64_decode($params->pic);
@@ -792,50 +1190,177 @@ class JSONController extends Controller {
 		}
 	}
 	
-	public function addUserAction() {
+	public function eventsPrivateAction() {
 		$request = $this->getRequest();
 		$content = $request->getContent();
 		
 		$params = json_decode(utf8_decode($content));
-		
-		$em = $this->getDoctrine()->getEntityManager();
-		$em->getConnection()->beginTransaction();
-		
+		$em = $this->getDoctrine()->getManager();
 		try {
-			if(!isset($params->access_token) || !isset($params->user) || !isset($params->user->id) || !isset($params->user->username) || !isset($params->user->full_name) || !isset($params->user->profile_picture)) {
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			if(isset($params->username)) {
+				$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->username));
+			} else {
+				$userid = $this->getUserSession();
+				$User = $em->getRepository('SiteBundle:CsUsers')->find($userid);
+			}
+			
+			if(!$User) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not found!'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			$page = isset($params->page) ? $params->page : 1;
+			$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
+			
+			$where = array();
+			$where['idUser'] = $User->getId();
+			
+			if(isset($params->geo)) {
+				if(isset($params->geo->countryName)) $where['countryName'] = $params->geo->countryName;
+				if(isset($params->geo->stateName)) $where['stateName'] = $params->geo->stateName;
+				if(isset($params->geo->cityName)) $where['cityName'] = $params->geo->cityName;
+			}
+			
+			$Events = $em->getRepository('SiteBundle:VwEventsPrivate')->findBy($where, array('dateStart' => 'DESC'), $this->container->getParameter('max_items_per_page'), $offset);
+			
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($Events, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));	
+		} catch(\Exception $e) {
+			return $this->jsonResponse($this->jsonData);
+		}
+	}
+	
+	public function eventsPrivateSearchAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		$params = json_decode(utf8_decode($content));
+		$em = $this->getDoctrine()->getManager();
+		try{ 
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			if(!isset($params->keyword)) {
 				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information.'), 'data' => null);
 				throw new \Exception();
 			}
 			
-			// check if user already exists
-			$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->user->username));
-			if($User) {
-				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User already exists'), 'data' => null);
-				throw new \Exception();
+			if(isset($params->username)) {
+				$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->username));
 			} else {
-				try {
-					$User = new CsUsers();
-					$User->setAccessToken(null);
-					$User->setBio(null);
-					$User->setEmail(null);
-					$User->setFullName($params->user->full_name);
-					$User->setProfilePicture($params->user->profile_picture);
-					$User->setTokenDate(null);
-					$User->setUsername($params->user->username);
-					$em->persist($User);
-					$em->flush();
-				} catch(\Exception $e) {
-					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to create user: ' . $e->getMessage()), 'data' => null);
-					throw $e;
-				}
+				$userid = $this->getUserSession();
+				$User = $em->getRepository('SiteBundle:CsUsers')->find($userid);
 			}
-			$em->getConnection()->commit();
+			
+			if(!$User) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not found!'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			$page = isset($params->page) ? $params->page : 1;
+			$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
+			
+			$rs = $em->getRepository('SiteBundle:VwEventsPrivate')->createQueryBuilder('c')
+					->where('c.name like :keyword')->setParameter('keyword', '%' . $params->keyword . '%')
+					->andWhere('c.idUser = :idUser')->setParameter('idUser', $User->getId());
+			
+			if(isset($params->geo)) {
+				if(isset($params->geo->countryName)) $rs = $rs->andWhere('c.countryName = :countryName')->setParameter('countryName', $params->geo->countryName);
+				if(isset($params->geo->countryState)) $rs = $rs->andWhere('c.stateName = :stateName')->setParameter('stateName', $params->geo->stateName);
+				if(isset($params->geo->countryCity)) $rs = $rs->andWhere('c.cityName = :cityName')->setParameter('cityName', $params->geo->cityName);
+			}
+			
+			$rs = $rs->orderBy('c.dateStart', 'desc')
+				->setFirstResult($offset)
+				->setMaxResults($this->container->getParameter('max_items_per_page'))
+				->getQuery()
+				->getResult();
 			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-			$json = $serializer->serialize($User, 'json');
-			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
+			$json = $serializer->serialize($rs, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));	
 		} catch(\Exception $e) {
-			$em->getConnection()->rollback();
-			$em->close();
+			return $this->jsonResponse($this->jsonData);
+		}
+	}
+	
+	public function eventsSelfAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		$params = json_decode(utf8_decode($content));
+		$em = $this->getDoctrine()->getManager();
+		try {
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			if(isset($params->username)) {
+				$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->username));
+			} else {
+				$userid = $this->getUserSession();
+				$User = $em->getRepository('SiteBundle:CsUsers')->find($userid);
+			}
+			
+			if(!$User) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not found!'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			$page = isset($params->page) ? $params->page : 1;
+			$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
+			
+			$Events = $em->getRepository('SiteBundle:CsEvents')->findBy(array('idUser' => $User->getId(), 'deleted' => 'N'), array('dateStart' => 'DESC'), $this->container->getParameter('max_items_per_page'), $offset);
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($Events, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));	
+		} catch(\Exception $e) {
+			return $this->jsonResponse($this->jsonData);
+		}
+	}
+	
+	public function eventsSearchAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		$params = json_decode(utf8_decode($content));
+		$em = $this->getDoctrine()->getManager();
+		try{ 
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			if(!isset($params->keyword)) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information.'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			$page = isset($params->page) ? $params->page : 1;
+			$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
+			
+			$rs = $em->getRepository('SiteBundle:VwEvents')->createQueryBuilder('c')
+					->where('c.name like :keyword')->setParameter('keyword', '%' . $params->keyword . '%');
+			if(isset($params->geo)) {
+				if(isset($params->geo->countryName)) $rs = $rs->andWhere('c.countryName = :countryName')->setParameter('countryName', $params->geo->countryName);
+				if(isset($params->geo->countryState)) $rs = $rs->andWhere('c.stateName = :stateName')->setParameter('stateName', $params->geo->stateName);
+				if(isset($params->geo->countryCity)) $rs = $rs->andWhere('c.cityName = :cityName')->setParameter('cityName', $params->geo->cityName);
+			}
+			
+			$rs = $rs->orderBy('c.dateStart', 'desc')
+				->setFirstResult($offset)
+				->setMaxResults($this->container->getParameter('max_items_per_page'))
+				->getQuery()
+				->getResult();
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($rs, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));	
+		} catch(\Exception $e) {
 			return $this->jsonResponse($this->jsonData);
 		}
 	}

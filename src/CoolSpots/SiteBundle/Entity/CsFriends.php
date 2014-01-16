@@ -13,12 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
 class CsFriends
 {
     /**
-     * @var integer
-	 * @ORM\Column(name="id_user_friend", type="integer", nullable=false)
-     */
-    private $idUserFriend;
-
-    /**
      * @var \DateTime
 	 * @ORM\Column(name="date_added", type="timestamp", nullable=false)
      */
@@ -37,29 +31,12 @@ class CsFriends
      */
     private $idUser;
 
-
     /**
-     * Set idUserFriend
-     *
-     * @param integer $idUserFriend
-     * @return CsFriends
+     * @var \CoolSpots\SiteBundle\Entity\CsUsers
+	 * @ORM\Column(name="id_user_friend", type="integer", nullable=false)
      */
-    public function setIdUserFriend($idUserFriend)
-    {
-        $this->idUserFriend = $idUserFriend;
-    
-        return $this;
-    }
+    private $idUserFriend;
 
-    /**
-     * Get idUserFriend
-     *
-     * @return integer 
-     */
-    public function getIdUserFriend()
-    {
-        return $this->idUserFriend;
-    }
 
     /**
      * Set dateAdded
@@ -115,5 +92,28 @@ class CsFriends
     public function getIdUser()
     {
         return $this->idUser;
+    }
+	
+	/**
+     * Set idUserFriend
+     *
+     * @param \CoolSpots\SiteBundle\Entity\CsUsers $idUserFriend
+     * @return CsFriends
+     */
+    public function setIdUserFriend(\CoolSpots\SiteBundle\Entity\CsUsers $idUserFriend = null)
+    {
+        $this->idUserFriend = $idUserFriend;
+    
+        return $this;
+    }
+
+    /**
+     * Get idUserFriend
+     *
+     * @return \CoolSpots\SiteBundle\Entity\CsUsers 
+     */
+    public function getIdUserFriend()
+    {
+        return $this->idUserFriend;
     }
 }

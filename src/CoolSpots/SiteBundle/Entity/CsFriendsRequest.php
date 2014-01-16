@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class CsFriendsRequest
 {
     /**
-     * @var integer
+     * @var \CoolSpots\SiteBundle\Entity\CsUsers
 	 * @ORM\Column(name="id_user_friend", type="integer", nullable=false)
      */
     private $idUserFriend;
@@ -50,13 +50,13 @@ class CsFriendsRequest
     private $idUser;
 
 
-    /**
+	/**
      * Set idUserFriend
      *
-     * @param integer $idUserFriend
-     * @return CsFriendsRequest
+     * @param \CoolSpots\SiteBundle\Entity\CsUsers $idUserFriend
+     * @return CsFriends
      */
-    public function setIdUserFriend($idUserFriend)
+    public function setIdUserFriend(\CoolSpots\SiteBundle\Entity\CsUsers $idUserFriend = null)
     {
         $this->idUserFriend = $idUserFriend;
     
@@ -66,7 +66,7 @@ class CsFriendsRequest
     /**
      * Get idUserFriend
      *
-     * @return integer 
+     * @return \CoolSpots\SiteBundle\Entity\CsUsers 
      */
     public function getIdUserFriend()
     {
