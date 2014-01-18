@@ -23,7 +23,11 @@ class LoginController extends Controller
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
 	public function connectAction() {
-		$signin_url = str_replace(array('@CLIENT_ID@', '@REDIRECT_URI@'), array($this->container->getParameter('instagram_auth_client_id'), urldecode($this->container->getParameter('instagram_auth_redirect_url'))), $this->container->getParameter('instagram_auth_api'));
+		if($_SERVER['SERVER_NAME'] == 'api.coolspots.com.br' || $_SERVER['SERVER_NAME'] == 'beta.coolspots.com.br') {
+			$signin_url = str_replace(array('@CLIENT_ID@', '@REDIRECT_URI@'), array($this->container->getParameter('instagram_auth_client_id'), urldecode($this->container->getParameter('instagram_auth_redirect_url'))), $this->container->getParameter('instagram_auth_api'));
+		} else {
+			$signin_url = '/login/auth?dev=true';
+		}
 		$session = $this->getRequest()->getSession();
 		$total_favorites = 0;
 		$total_messages = 0;
@@ -41,6 +45,31 @@ class LoginController extends Controller
 	public function authAction(){
 		$request = $this->getRequest();
 		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		
+		// trick to simulate instagram's login action.
+		if($request->get('dev')) {
+			
+			$User = $em->getRepository('SiteBundle:CsUsers')->find(793); // user: willbelem
+			
+			// get user's favorites
+			$userFavorites = array();
+			$Favorites = $em->getRepository('SiteBundle:CsLocationFavorites')->findBy(array('idUser' => $User->getId()));
+			foreach($Favorites as $fav) {
+				array_push($userFavorites, $fav->getIdLocation()->getId());
+			}
+			
+			// write cookies
+			$session->set('username', $User->getUsername());
+			$session->set('full_name', $User->getFullName());
+			$session->set('profile_picture', $User->getProfilePicture());
+			$session->set('access_token', $User->getAccessToken());
+			$session->set('userid', $User->getId());
+			$session->set('favorites', $userFavorites);
+			
+			return $this->redirect($this->generateUrl('main'));
+		}
+		
 		if($request->get('error')) {
 			return new Response('<h2>Error</h2><p>' . $request->get('error_description') . '</p>');
 		}
@@ -65,7 +94,6 @@ class LoginController extends Controller
 		
 		if(isset($ret['access_token'])) {
 			// check if the user is already on database
-			$em = $this->getDoctrine()->getManager();
 			$user = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $ret['user']['username']));
 			if(!$user) {
 				$user = new CsUsers();
@@ -90,7 +118,7 @@ class LoginController extends Controller
 			$session->set('full_name', $ret['user']['full_name']);
 			$session->set('profile_picture', $ret['user']['profile_picture']);
 			$session->set('access_token', $ret['access_token']);
-			$session->set('userid', $user->getId());
+			$session->set('userid', $user->getIdLocation()->getId());
 			$session->set('favorites', $userFavorites);
 			
 			return $this->redirect($this->generateUrl('main'));

@@ -1,7 +1,7 @@
 {% if app.session.get('username') == '' %}
 <ul class="login">
 	<li>
-		<a href="{{ signin_url }}" /><span class="bor bl"></span>{{ app.session.get('isAuth') }}{% trans %}login.signinbutton{% endtrans %}<span class="bor br nor"></span></a>
+		<a href="{{ signin_url }}" /><span class="bor bl"></span>{% trans %}login.signinbutton{% endtrans %}<span class="bor br nor"></span></a>
 		<br />
 		
 	</li>

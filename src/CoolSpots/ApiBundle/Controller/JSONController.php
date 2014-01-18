@@ -213,7 +213,7 @@ class JSONController extends Controller {
 
 			// validate data
 			if(!isset($params->id)) {
-				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'You must provide a locatoin ID'), 'data' => null);
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null);
 				throw new \Exception();
 			}
 
@@ -256,7 +256,7 @@ class JSONController extends Controller {
 		try {
 			$params = json_decode(utf8_decode($content));
 			if($params === null) {
-				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information. '), 'data' => null);
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
 				throw new \Exception();
 			}
 
@@ -626,6 +626,116 @@ class JSONController extends Controller {
 		}
 	}
 	
+	public function locationsSearchAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		
+		$params = json_decode(utf8_decode($content));
+		try {
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			if(!isset($params->keyword)) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information.'), 'data' => null);
+				throw new \Exception();
+			}
+
+			$page = isset($params->page) ? $params->page : 1;
+			$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
+
+			try {
+				$repository = $this->getDoctrine()->getRepository('SiteBundle:VwLocation');
+				$rs = $repository->createQueryBuilder('c')
+						->where('c.lastPic is not null')
+						->where('c.name like :keyword')->setParameter('keyword', '%' . $params->keyword . '%');
+				// check for the id parameter
+				if(isset($params->id)) $rs = $rs->andWhere('c.id = :id')->setParameter('id', $params->id);
+
+				if(isset($params->geo)) {
+					// check for the city parameter
+					if(isset($params->geo->cityName)) $rs = $rs->andWhere('c.cityName = :city')->setParameter('city', $params->geo->cityName);
+
+					// check for the state parameter
+					if(isset($params->geo->stateName)) $rs = $rs->andWhere('c.stateName = :state')->setParameter('state', $params->geo->stateName);
+
+					// check for the country parameter
+					if(isset($params->geo->countryName)) $rs = $rs->andWhere('c.countryName = :country')->setParameter('country', $params->geo->countryName);
+				}
+
+				// check for the category parameter
+				if(isset($params->category)) $rs = $rs->andWhere('c.idCategory = :category')->setParameter('category', $params->category);
+
+				$rs = $rs->andWhere('c.enabled = :enabled')
+						->setParameter('enabled', 'Y')
+						->andWhere('c.deleted = :deleted')
+						->setParameter('deleted', 'N')
+						->orderBy('c.dateUpdated', 'desc')
+						->setFirstResult($offset)
+						->setMaxResults($this->container->getParameter('max_items_per_page'))
+						->getQuery()
+						->getResult();
+
+				$arrLocations = array();
+				foreach($rs as $item) {
+					$rpPhotos = $this->getDoctrine()->getRepository('SiteBundle:CsPics');
+					$rsPhotos = $rpPhotos->createQueryBuilder('c')
+							->where('c.idLocation = :idLocation')
+							->orderBy('c.dateAdded', 'desc')
+							->setParameter('idLocation', $item->getId())
+							->setMaxResults(5)
+							->getQuery()
+							->getResult();
+					$arrPhotos = array();
+					foreach($rsPhotos as $p) {
+						array_push($arrPhotos, array(
+							'caption' =>  $p->getCaption(),
+							'low_resolution' => $p->getLowResolution(),
+							'thumbnail' => $p->getThumbnail(),
+							'standard_resolution' => $p->getStandardResolution()
+						));
+					}
+
+					$arrLocations[] = array(
+						'address' => $item->getAddress(),
+						'checkinsCount' => $item->getCheckinsCount(),
+						'categoryName' => $item->getCategoryName(),
+						'cityName' => $item->getCityName(),
+						'countryName' => $item->getCountryName(),
+						'coverPic' => $item->getCoverPic(),
+						'dateAdded' => $item->getDateAdded()->getTimeStamp(),
+						'dateUpdated' => $item->getDateUpdated()->getTimeStamp(),
+						'deleted' => $item->getDeleted(),
+						'enabled' => $item->getEnabled(),
+						'id' =>  $item->getId(),
+						'idCategory' => $item->getIdCategory(),
+						'idCity' => $item->getIdCity(),
+						'idCountry' => $item->getIdCountry(),
+						'idFoursquare' => $item->getIdFoursquare(),
+						'idInstagram' => $item->getIdInstagram(),
+						'idState' => $item->getIdState(),
+						'lastMinId' => $item->getLastMinId(),
+						'lastPhotos' => $arrPhotos,
+						'minTimestamp' => $item->getMinTimestamp(),
+						'name' => $item->getName(),
+						'nextMaxId' => $item->getNextMaxId(),
+						'phone' => $item->getPhone(),
+						'postalCode' => $item->getPostalCode(),
+						'slug' => $item->getSlug(),
+						'stateName' => $item->getStateName()
+					);
+				}
+			} catch(\Exception $e) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to perform query: ' . $e->getMessage()), 'data' => null);
+				throw $e;
+			}
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success!'), 'data' => $arrLocations));
+		} catch(\Exception $e) {
+			return $this->jsonResponse($this->jsonData);
+		}
+    }
+	
 	public function favoritesAction() {
 		$request = $this->getRequest();
 		$content = $request->getContent();
@@ -650,7 +760,7 @@ class JSONController extends Controller {
 				$userid = $this->getUserSession();
 				$page = isset($params->page) ? $params->page : 1;
 				$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
-				$Favorites = $em->getRepository('SiteBundle:CsLocationFavorites')->findBy(array('idUser' => $userid), array(), $this->container->getParameter('max_items_per_page'), $offset);
+				$Favorites = $em->getRepository('SiteBundle:VwLocationFavorites')->findBy(array('idUser' => $userid), array(), $this->container->getParameter('max_items_per_page'), $offset);
 			}
 			if(!$Favorites) {
 				$this->jsonData = array('meta' => array('status' => 'OK', 'message' => 'Success!'), 'data' => null);
@@ -790,59 +900,6 @@ class JSONController extends Controller {
 			}
 			$em->getConnection()->commit();
 			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => null));
-		} catch(\Exception $e) {
-			$em->getConnection()->rollback();
-			$em->close();
-			return $this->jsonResponse($this->jsonData);
-		}
-	}
-	
-	public function usersAddAction() {
-		$request = $this->getRequest();
-		$content = $request->getContent();
-		
-		$params = json_decode(utf8_decode($content));
-		
-		$em = $this->getDoctrine()->getManager();
-		$em->getConnection()->beginTransaction();
-		
-		try {
-			if($params === null) {
-				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
-				throw new \Exception();
-			}			
-			
-			if(!isset($params->access_token) || !isset($params->user) || !isset($params->user->id) || !isset($params->user->username) || !isset($params->user->full_name) || !isset($params->user->profile_picture)) {
-				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information.'), 'data' => null);
-				throw new \Exception();
-			}
-			
-			// check if user already exists
-			$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->user->username, 'deleted' => 'N'));
-			if($User) {
-				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User already exists'), 'data' => null);
-				throw new \Exception();
-			} else {
-				try {
-					$User = new CsUsers();
-					$User->setAccessToken(null);
-					$User->setBio(null);
-					$User->setEmail(null);
-					$User->setFullName($params->user->full_name);
-					$User->setProfilePicture($params->user->profile_picture);
-					$User->setTokenDate(null);
-					$User->setUsername($params->user->username);
-					$em->persist($User);
-					$em->flush();
-				} catch(\Exception $e) {
-					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to create user: ' . $e->getMessage()), 'data' => null);
-					throw $e;
-				}
-			}
-			$em->getConnection()->commit();
-			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
-			$json = $serializer->serialize($User, 'json');
-			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
 		} catch(\Exception $e) {
 			$em->getConnection()->rollback();
 			$em->close();
@@ -1043,7 +1100,7 @@ class JSONController extends Controller {
 			$page = isset($params->page) ? $params->page : 1;
 			$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
 			
-			$Friends = $em->getRepository('SiteBundle:CsFriends')->findBy(array('idUser' => $userid), null, $this->container->getParameter('max_items_per_page'), $offset);
+			$Friends = $em->getRepository('SiteBundle:VwFriends')->findBy(array('idUser' => $userid), array('fullName' => 'ASC'), $this->container->getParameter('max_items_per_page'), $offset);
 				
 			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
 			$json = $serializer->serialize($Friends, 'json');
@@ -1325,6 +1382,59 @@ class JSONController extends Controller {
 		}
 	}
 	
+	public function eventsRemoveAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		$params = json_decode(utf8_decode($content));
+		$em = $this->getDoctrine()->getManager();
+		$em->getConnection()->beginTransaction();
+		try{ 
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			if(!isset($params->id)) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information.'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			// search user by username
+			if(isset($params->username)) {
+				$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->username));
+			} else {
+				$userid = $this->getUserSession();
+				$User = $em->getRepository('SiteBundle:CsUsers')->find($userid);
+			}
+			
+			if(!$User) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not found'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			try {
+				$Event = $em->getRepository('SiteBundle:CsEvents')->findOneBy(array('id' => $params->id, 'idUser' => $User->getId(), 'deleted' => 'N'));
+				if(!$Event) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Event not found'), 'data' => null);
+					throw new \Exception('Event not found!');
+				}
+				
+				$Event->setDeleted('Y');
+				$em->persist($Event);
+				$em->flush();
+			} catch(\Exception $e) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to delete event: ' . $e->getMessage()), 'data' => null);
+				throw $e;
+			}
+			$em->getConnection()->commit();
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => null));	
+		} catch(\Exception $e) {
+			$em->getConnection()->rollback();
+			$em->close();
+			return $this->jsonResponse($this->jsonData);
+		}
+	}
+	
 	public function eventsSearchAction() {
 		$request = $this->getRequest();
 		$content = $request->getContent();
@@ -1360,6 +1470,203 @@ class JSONController extends Controller {
 			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
 			$json = $serializer->serialize($rs, 'json');
 			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));	
+		} catch(\Exception $e) {
+			return $this->jsonResponse($this->jsonData);
+		}
+	}
+	
+	public function eventsStatusAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		$params = json_decode(utf8_decode($content));
+		$em = $this->getDoctrine()->getManager();
+		$em->getConnection()->beginTransaction();
+		try{ 
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			if(!isset($params->id) || !isset($params->status)) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information.'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			// search user by username
+			if(isset($params->username)) {
+				$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->username));
+			} else {
+				$userid = $this->getUserSession();
+				$User = $em->getRepository('SiteBundle:CsUsers')->find($userid);
+			}
+			
+			if(!$User) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not found'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			try {
+				$Event = $em->getRepository('SiteBundle:CsEvents')->findOneBy(array('id' => $params->id, 'idUser' => $User->getId(), 'deleted' => 'N'));
+				if(!$Event) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Event not found'), 'data' => null);
+					throw new \Exception('Event not found!');
+				}
+				$Event->setPublic(($params->status == 'P' ? 'Y' : 'N'));
+				$em->persist($Event);
+				$em->flush();
+			} catch(\Exception $e) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to change event status: ' . $e->getMessage()), 'data' => null);
+				throw $e;
+			}
+			$em->getConnection()->commit();
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => null));	
+		} catch(\Exception $e) {
+			$em->getConnection()->rollback();
+			$em->close();
+			return $this->jsonResponse($this->jsonData);
+		}
+	}
+	
+	public function usersAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		
+		$params = json_decode(utf8_decode($content));
+		
+		$em = $this->getDoctrine()->getManager();
+		
+		try {
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}			
+			
+			// search user by username
+			if(isset($params->username)) {
+				$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->username));
+			} else {
+				$userid = $this->getUserSession();
+				$User = $em->getRepository('SiteBundle:CsUsers')->find($userid);
+			}
+			
+			if(!$User) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not found'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			$page = isset($params->page) ? $params->page : 1;
+			$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
+			
+			$Users = $em->getRepository('SiteBundle:CsUsers')->findBy(array(), array('fullName' => 'ASC'), $this->container->getParameter('max_items_per_page'), $offset);
+			
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($Users, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
+		} catch(\Exception $e) {
+			die($e->getMessage());
+			return $this->jsonResponse($this->jsonData);
+		}
+	}
+	
+	public function usersAddAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		
+		$params = json_decode(utf8_decode($content));
+		
+		$em = $this->getDoctrine()->getManager();
+		$em->getConnection()->beginTransaction();
+		
+		try {
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}			
+			
+			if(!isset($params->access_token) || !isset($params->user) || !isset($params->user->id) || !isset($params->user->username) || !isset($params->user->full_name) || !isset($params->user->profile_picture)) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information.'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			// check if user already exists
+			$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->user->username, 'deleted' => 'N'));
+			if($User) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User already exists'), 'data' => null);
+				throw new \Exception();
+			} else {
+				try {
+					$User = new CsUsers();
+					$User->setAccessToken(null);
+					$User->setBio(null);
+					$User->setEmail(null);
+					$User->setFullName($params->user->full_name);
+					$User->setProfilePicture($params->user->profile_picture);
+					$User->setTokenDate(null);
+					$User->setUsername($params->user->username);
+					$em->persist($User);
+					$em->flush();
+				} catch(\Exception $e) {
+					$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Unable to create user: ' . $e->getMessage()), 'data' => null);
+					throw $e;
+				}
+			}
+			$em->getConnection()->commit();
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($User, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
+		} catch(\Exception $e) {
+			$em->getConnection()->rollback();
+			$em->close();
+			return $this->jsonResponse($this->jsonData);
+		}
+	}
+	
+	public function usersSearchAction() {
+		$request = $this->getRequest();
+		$content = $request->getContent();
+		
+		$params = json_decode(utf8_decode($content));
+		
+		$em = $this->getDoctrine()->getManager();
+		
+		try {
+			if($params === null) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			if(!isset($params->keyword)) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information.'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			// search user by username
+			if(isset($params->username)) {
+				$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->username));
+			} else {
+				$userid = $this->getUserSession();
+				$User = $em->getRepository('SiteBundle:CsUsers')->find($userid);
+			}
+			
+			if(!$User) {
+				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not found'), 'data' => null);
+				throw new \Exception();
+			}
+			
+			$page = isset($params->page) ? $params->page : 1;
+			$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
+			
+			//$Users = $em->getRepository('SiteBundle:CsUsers')->findBy(array(), array('fullName' => 'ASC'), $this->container->getParameter('max_items_per_page'), $offset);
+			$Users = $em->getRepository('SiteBundle:CsUsers')->createQueryBuilder('c')
+					->where('c.fullName like :keyword')->setParameter('keyword', '%' . $params->keyword . '%')
+					->orderBy('c.fullName', 'ASC')
+					->setFirstResult($offset)
+					->setMaxResults($this->container->getParameter('max_items_per_page'))
+					->getQuery()
+					->getResult();
+			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
+			$json = $serializer->serialize($Users, 'json');
+			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
 		} catch(\Exception $e) {
 			return $this->jsonResponse($this->jsonData);
 		}

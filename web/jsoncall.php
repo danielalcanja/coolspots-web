@@ -51,8 +51,10 @@
 				<option value="/json/events/add">/json/events/add</option>
 				<option value="/json/events/private">/json/events/private</option>
 				<option value="/json/events/private/search">/json/events/private/search</option>
+				<option value="/json/events/remove">/json/events/remove</option>
 				<option value="/json/events/search">/json/events/search</option>
 				<option value="/json/events/self">/json/events/self</option>
+				<option value="/json/events/status">/json/events/status</option>
 				<option value="/json/favorites">/json/favorites</option>
 				<option value="/json/favorites/add">/json/favorites/add</option>
 				<option value="/json/favorites/remove">/json/favorites/remove</option>
@@ -63,7 +65,10 @@
 				<option value="/json/locations/add">/json/locations/add</option>
 				<option value="/json/locations/info">/json/locations/info</option>
 				<option value="/json/locations/photos">/json/locations/photos</option>
+				<option value="/json/locations/search">/json/locations/search</option>
+				<option value="/json/users">/json/users</option>
 				<option value="/json/users/add">/json/users/add</option>
+				<option value="/json/users/search">/json/users/search</option>
 			</select>
 		</td>
 	</tr>

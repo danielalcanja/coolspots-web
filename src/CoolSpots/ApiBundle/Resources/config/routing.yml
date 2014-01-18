@@ -23,7 +23,7 @@ json_locations_info:
         
 json_locations_photos:
     pattern: /json/locations/photos
-    defaults: { _controller: ApiBundle:JSON:locationPhotos }
+    defaults: { _controller: ApiBundle:JSON:locationsPhotos }
     requirements:
         _method: POST
         
@@ -33,6 +33,12 @@ json_locations_add:
     requirements:
         _method: POST
         
+json_locations_search:
+    pattern: /json/locations/search
+    defaults: { _controller: ApiBundle:JSON:locationsSearch }
+    requirements:
+        _method: POST
+
 json_favorites:
     pattern: /json/favorites
     defaults: { _controller: ApiBundle:JSON:favorites }
@@ -75,6 +81,12 @@ json_events_private_search:
     requirements:
         _method: POST
 
+json_events_remoe:
+    pattern: /json/events/remove
+    defaults: { _controller: ApiBundle:JSON:eventsRemove }
+    requirements:
+        _method: POST
+
 json_events_self:
     pattern: /json/events/self
     defaults: { _controller: ApiBundle:JSON:eventsSelf }
@@ -86,10 +98,10 @@ json_events_search:
     defaults: { _controller: ApiBundle:JSON:eventsSearch }
     requirements:
         _method: POST
-
-json_users_add: 
-    pattern: /json/users/add
-    defaults: { _controller: ApiBundle:JSON:usersAdd }
+        
+json_events_status:
+    pattern: /json/events/status
+    defaults: { _controller: ApiBundle:JSON:eventsStatus }
     requirements:
         _method: POST
 
@@ -108,5 +120,23 @@ json_friend_request:
 json_friends_request_status:
     pattern: /json/friends/request/status
     defaults: { _controller: ApiBundle:JSON:friendsRequestStatus }
+    requirements:
+        _method: POST
+
+json_users: 
+    pattern: /json/users
+    defaults: { _controller: ApiBundle:JSON:users }
+    requirements:
+        _method: POST
+        
+json_users_add: 
+    pattern: /json/users/add
+    defaults: { _controller: ApiBundle:JSON:usersAdd }
+    requirements:
+        _method: POST
+
+json_users_search: 
+    pattern: /json/users/search
+    defaults: { _controller: ApiBundle:JSON:usersSearch }
     requirements:
         _method: POST
