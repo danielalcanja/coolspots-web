@@ -47,3 +47,7 @@ login_auth:
 logout:
   pattern: /logout
   defaults: { _controller: SiteBundle:Login:disconnect }
+  
+users:
+    pattern: /users
+    defaults: { _controller: SiteBundle:Users:index }

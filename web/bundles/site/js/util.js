@@ -1,22 +1,20 @@
-function jsonCall(url, parameters) {
-	var jsonResponse = false;
+function jsonCall(url, parameters, fn_callback) {
+	if(typeof fn_callback !== 'function') return(false);
 	jQuery.ajax({
 		type: 'POST',
 		url: url,
 		processData: false,
 		crossDomain: true,
 		dataType: 'json',
-		async: false,
 		contentType: 'application/json',
 		data: JSON.stringify(parameters),
 		success: function(response) {
-			jsonResponse = response;
+			fn_callback(response);
 		},
 		error: function() {
-			jsonResponse = false;
+			fn_callback(false);
 		}
 	});
-	return(jsonResponse);
 }
 
 var Base64 = {

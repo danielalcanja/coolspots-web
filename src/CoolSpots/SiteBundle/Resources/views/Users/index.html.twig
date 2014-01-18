@@ -1,0 +1,102 @@
+{% extends 'SiteBundle::layout.html.twig' %}
+
+{% block title %}Users{% endblock %}
+
+{% block body %}
+<style type="text/css">
+#pure-template-container {
+	display: none;
+}
+		
+#div-users {
+	overflow: hidden;
+}
+.div-user {
+	width: 250px;
+	height: 60px;
+	float: left;
+	overflow: hidden;
+	padding: 10px;
+	margin: 10px;
+}
+
+.div-user .foto {
+	width: 50px;
+	height: 50px;
+	padding: 3px;
+	margin: 3px;
+	float: left;
+}
+
+.div-user .foto img {
+	border: 1px solid #cecece;
+	width: 100%;
+	height: 100%;
+}
+</style>
+<script>
+var pagina = 1;
+
+function callbackUsuarios(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	jQuery("#div-users").append(template(obj));
+	pagina++;
+}
+
+
+function carregaUsuarios() {
+	var url =  '/json/users';
+	var params =  {
+		page: pagina
+	};
+	jsonCall(url, params, callbackUsuarios);	
+}
+
+jQuery(document).ready(function() {
+	config = {
+		'.div-user': {
+			'user<-data': {
+				'h3': 'user.username',
+				'span': 'user.fullName',
+				'.foto img@src': 'user.profilePicture'
+			}
+		}
+	};
+	
+	template = $p('#div-users-template').compile(config);
+	carregaUsuarios();
+	jQuery('#btn-carrega').click(function(){
+		carregaUsuarios();
+	});
+});
+
+</script>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<h1>Teste</h1>
+<div id="pure-template-container">
+	<div id="div-users-template">
+		<div class="div-user">
+			<div class="foto"><img src="" /></div>
+			<h3></h3>
+			<span></span>
+		</div>	
+	</div>
+</div>
+<div id="div-users"></div>
+<br />
+<button id="btn-carrega">Próxima Página</button>
+{% endblock %}

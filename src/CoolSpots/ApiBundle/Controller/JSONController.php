@@ -1553,7 +1553,6 @@ class JSONController extends Controller {
 				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'User not found'), 'data' => null);
 				throw new \Exception();
 			}
-			
 			$page = isset($params->page) ? $params->page : 1;
 			$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
 			
@@ -1563,7 +1562,6 @@ class JSONController extends Controller {
 			$json = $serializer->serialize($Users, 'json');
 			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
 		} catch(\Exception $e) {
-			die($e->getMessage());
 			return $this->jsonResponse($this->jsonData);
 		}
 	}

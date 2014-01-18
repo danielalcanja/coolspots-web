@@ -29,8 +29,14 @@
 			return false;
 		}
 		var params = JSON.parse($('#parameters').val());
-		
-		obj = jsonCall(url, params);
+		jsonCall(url, params, processa);
+	}
+	
+	function processa(obj) {
+		if(!obj) {
+			alert('Erro na execução da API');
+			return false;
+		}
 		result = JSON.stringify(obj, null, 2);
 		$("#resultDivContainer").html(result);
 		$("#resultado").show();
