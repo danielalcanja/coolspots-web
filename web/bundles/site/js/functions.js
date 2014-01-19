@@ -1,28 +1,90 @@
+var pagina = 1;
+var part1 = {data:[]}, part2 = {data:[]};
+var one = false, two = false;
+
+function loadLocations() {
+	var url =  '/json/locations';
+	var params =  {
+		page: pagina
+	};
+	jsonCall(url, params, callbackLocations);	
+}
+
+function callbackLocations(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	divide(obj);
+	
+	if(one) jQuery("#photo-list").append(compila(part1));
+	if(two) jQuery("#photo-list").append(compila(part2));
+	pagina++;
+}
+function divide(obj){
+	part1 = {data:[]}, part2 = {data:[]};
+	var totalObj = obj.data.length;
+	var posObj = 0;
+	
+	if(totalObj >0){
+		one = true;
+		for(item = 0; item < totalObj; item++){
+			if(totalObj >9) {
+				two = true;
+				if(item < 9) { 
+					part1.data[item] = obj.data[item]
+				} else { 
+					part2.data[posObj] = obj.data[item]; 
+					posObj++; 
+				}
+			}else{
+				part1.data[item] = obj.data[item];
+			}
+		}
+	}
+}
+
 var $a = jQuery.noConflict();
 $a(document).ready(function(){
 	var body 	= $a("body"),
 		site	= $a("#site"),
-		content = $a("ul.content"),
+		content = $a("#photo-list ul"),
 		photo	= $a(".photo"),
 		timer	= "",
-		pgAtual = "", 
-		pgNext 	= $a('.np:first').val(),
+		chama	= "",
+		pgAtual = 0,
 		hasImage= true, 
 		second 	= false;
-	
 	$a(body).height($a(body).height()-55);
 	
 	$a(site).css("visibility","hidden");
-	start();
 	
-	function start(){
-		if(!hasImage){
+	chama = setInterval(function(){
+		if($a(".photo").size() > 0 && $a("#photo-list ul").size() > 0) {
+			clearInterval(chama);
+			start();
+			console.log("Chamou start();");
+		}
+	},100);
+	
+	function start(classTemplate){
+		console.log("Start");
+		if(!hasImage)
+		{
+			console.log("Start -> hasImage");
 			$a(".photo").show();
-			var totUl = $a("ul.content").size();
+			
+			var totUl = $a("#photo-list ul").size();
 			var ul = "";
 			
 			for(i = 0; i < totUl; i++){
-				ul = $a("ul.content").eq(i);
+				ul = $a("#photo-list ul").eq(i);
 				if(!($a(ul).hasClass("ul-9"))){
 					li = $a(ul).children("li").size();
 					$a(ul).removeClass().addClass("content ul-"+li);
@@ -30,21 +92,24 @@ $a(document).ready(function(){
 				}
 			}
 		}
-		showImages();
-	}
-	function ajustImage(){
-		$a(".photo").each(function(){
-			$a(this).height($a(this).find("img").width());
-		});
+		if(!classTemplate) showImages();
+		if(classTemplate) {
+			var sl = 0;
+			if($a("#photo-list").find(".template")){
+				sl = setTimeout(function(){ start(); }, 500);
+			}else{
+				sl = setTimeout(function(){ start(true); }, 500);
+			}
+		}
 	}
 	function showImages(){
 		timer = setTimeout(function(){
 			if(!hasImage){
 				ajustImage();
 				
-				var totUl = $a("ul.content").size();
+				var totUl = $a("#photo-list ul").size();
 				for(i = 0; i < totUl; i++){
-					ul = $a("ul.content").eq(i);
+					ul = $a("#photo-list ul").eq(i);
 				
 					if($a(ul).hasClass("ul-9")){
 						if(!($a(ul).children("div").hasClass("ph-box-9-1")))
@@ -75,7 +140,11 @@ $a(document).ready(function(){
 			if(($a('.np:first').val()) != undefined) slideGallery();
 		},500);
 	}
-	
+	function ajustImage(){
+		$a(".photo").each(function(){
+			$a(this).height($a(this).find("img").width());
+		});
+	}
 	function foundImage(){
 		hasImage = false;
 		start();
@@ -95,18 +164,10 @@ $a(document).ready(function(){
 	}
 	
 	function fetchNextPage() {
+		loadLocations();
 		var sleep = 0;
-		if($a('.np:first').val() !== "") {
-			console.log('Fetching next page: ' + $a('.np:first').val());
-			$a.ajax({
-				url: $a('.np:first').val(),
-				dataType: 'html',
-				success: function(data) {
-					$a("#photo-list").append(data);
-					sleep = setTimeout(function(){ start(); }, 100);
-				}
-			});
-		}
+		console.log('Fetching next page: '+pagina);
+		sleep = setTimeout(function(){ start(true); }, 200);
 	}
 	
 	$a(window).resize(function(){
@@ -124,15 +185,12 @@ $a(document).ready(function(){
 				updateLazyImages();	
 			},
 			onTotalScroll: function(){
-				if(pgAtual != pgNext){
-					if(($a('.np:first').val()) != undefined){
-						fetchNextPage();
-					}
+				if(pagina != pgAtual){
+					fetchNextPage();
+					pgAtual = pagina;
 				}
-				pgAtual = pgNext;
-				pgNext = $a('.np:first').val();
 			},
-			onTotalScrollOffset: $a(site).height()+200
+			onTotalScrollOffset: $a(site).height()+300
 		}
 	});
 	
@@ -148,12 +206,32 @@ $a(document).ready(function(){
 		$a(this).hide();
 		$a(".top-bar .back").fadeIn('fast');
 	});
-	
+
 	$a("#photo-list").delegate(".favorite",'click', function(event) {
-		if($a(this).hasClass("this-fav")) alert("Remove da lista Favoritos!")
-		else alert("Adiciona na lista Favoritos!");
-		return false;
+		event.preventDefault();
+		var item = $a(this).closest(".photo");
+		var parameters = {
+				id_location: item.attr("data")
+			};
+		$a(this).html("<div class='loading'><div class='load'></div></div>");
+
+		if($a(this).hasClass("this-fav")){
+			var url = '/json/favorites/remove';
+		} else {
+			var url = '/json/favorites/add';
+		}
+		
+		var jsonObject = jsonCall(url, parameters);
+		if(jsonObject.meta.status == 'ERROR') {
+			// console.log(jsonObject.meta.message);
+			$a(this).find(".loading").children().removeAttr("class").addClass("error");
+		} else { 
+			if($a(this).hasClass("this-fav")) $a(this).removeClass("this-fav")
+			else $a(this).addClass("this-fav");
+		}
+		$a(this).find(".loading").remove();
 	});
+	
 	
 	$a("#photo-list").delegate(".photo",'mouseenter mouseleave', function(event) {
 		if(!($a(this).find(".favorite").hasClass("this-fav"))) $a(this).find(".favorite").fadeToggle();
@@ -162,8 +240,8 @@ $a(document).ready(function(){
 		$a(this).find(".tmp").slideToggle('fast');
 		$a(this).find(".day-str").fadeToggle();
 		$a(this).find(".more").slideToggle('fast');
-		//$a(this).find(".more").slideToggle( event.type === 'mouseenter' );
-	});	
+		// $a(this).find(".more").slideToggle( event.type === 'mouseenter' );
+	});
 	
 	var	shadown = ".shadown",
 		box = ".shadown .box",

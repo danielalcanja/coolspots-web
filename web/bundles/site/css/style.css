@@ -86,6 +86,7 @@ span.ros { background:#FF5885; }
 
 #site ul.content { clear:both; width:100%; overflow:hidden; position:relative; z-index:0; }
 #site ul.content li { border-bottom:2px solid #FFF; }
+#site ul.template { display:none; }
 
 .ul-2 li { width:50%; float:left; }
 .ul-2 .li-1 { margin:0 1px 0 -1px; }
@@ -163,11 +164,17 @@ span.ros { background:#FF5885; }
 .photo  .time .date-g .day { padding:3px 5px; display:block; float:right; background:#31749B; font-weight:normal; color:#FFF; }
 .photo  .time .date-g .day-str { padding:3px 5px; font-family: 'Museo500-Regular'; font-size:12px; display:none; float:right; }
 .photo .info { position:absolute; left:10px; bottom:20px; z-index:2; font-family: 'Museo300-Regular'; font-weight:normal; }
-.photo .info .favorite { width:42px; height:40px; background:url('../images/icons.png') -392px 0px; display:none; }
+.photo .info .favorite { width:42px; height:40px; overflow:hidden; background:url('../images/icons.png') -392px 0px; display:none; }
 .photo .info .this-fav { display:block; }
 .photo .info .this-fav:hover { background:url('../images/icons.png') -392px -40px; }
 .photo .info h2 { font-size:35px; font-weight:normal; }
 .info .more { margin-top:10px; padding-top:5px; font-family: 'Museo500-Regular'; font-size:15px; border-top:1px solid #FFF; display:none; }
+
+.photo .loading { width:42px; height:40px; background:url('../images/alpha.png'); }
+.photo .loading > div { width:100%; height:100%; background:no-repeat center; }
+.photo .loading .load { background-image:url('../images/loading.gif'); }
+.photo .loading .ok { background-image:url('../images/ico-ok.png'); }
+.photo .loading .error { background-image:url('../images/ico-error.png'); }
 
 /*COMENTARIO*/
 .comment { width:300px; height:100%; padding-right:2px; background:#FFF; position:fixed; z-index:10; top:0; right:-353px; }

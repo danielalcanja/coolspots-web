@@ -1,51 +1,57 @@
 {% extends page == 1 ? 'SiteBundle::layout.html.twig' : 'SiteBundle::blank.html.twig' %}
 
 {% block body %}
-	{% if page == 1 %}
-<input type="hidden" name="np" class="np" value="" />
-<input type="hidden" name="next_page" id="next_page" value="{{ next_page }}" />
+
+<script>
+jQuery(document).ready(function(){
+	var i=1;
+	directive = {
+		'li.photo': {
+			'obj<-data': {
+				'@data':'obj.id',
+				'@class+':function(arg){
+					if(i == 10) {
+						posObj = ' li-1'; i=1;
+					} else { 
+						posObj = ' li-'+i 
+					};
+					i++;
+					return posObj;
+				},
+				'a.box@href': '/#{obj.id}/#{obj.idInstagram}',
+				'.image img@data-original':'obj.coverPic',
+				'h2.title': 'obj.name',
+				'div.back@data': '/#{obj.id}/#{obj.idInstagram}',
+			}
+		}
+	}
+	
+	compila = $p('ul.content').compile(directive);
+	loadLocations();
+});
+</script>
+<ul class="content template">
+	<li class="photo" data="">
+		<a href="" class="box">
+			<div class="time">
+				<div class="clock"></div>
+				<div class="tmp"><span class="timeago" title=""></span></div>
+			</div>
+			<div class="image">
+				<img class="lazy" src="/bundles/site/images/photo-placeholder.png" data-original="" />
+			</div>
+			<div class="info">
+
+				<div class="favorite" title=""></div>
+
+				<h2 class="title"></h2>
+				<div class="more">25 Spooters - 2 Friends</div>
+			</div>
+		</a>
+		<div class="back" data=""></div>
+	</li>
+</ul>
 <div id="photo-list">
-	{% endif %}
-	<ul class="content">
-		{% for item in rs %}
-			<li class="photo li-{{ ul_count }}">
-				<a href="{{ path('photo_show', {'idLocation' : item.id, 'slug' : item.slug}) }}" class="box">
-					<div class="time">
-						<div class="clock"></div>
-						<div class="tmp"><span class="timeago" title="{{ item.dateUpdated|date() }}">{{ item.dateUpdated|date('d/m/Y') }}</span></div>
-					</div>
-					<div class="image">
-						<img class="lazy" src="{{ asset('bundles/site/images/photo-placeholder.png') }}" data-original="{{ item.lastPic }}" />
-					</div>
-					<div class="info">
-						{% if app.session.get('userid') %}
-						<div class="favorite {% if item.id|isFavorite(app.session.get('favorites')) %} this-fav {% endif %}" title="{% if item.id|isFavorite(app.session.get('favorites')) %} Remover dos meus Favoritos {% else %} Adicionar aos meus Favoritos {% endif %}"></div>
-						{% endif %}
-						
-						<h2 class="title">{{ item.name }}</h2>
-						<div class="more">25 Spooters - 2 Friends</div>
-					</div>
-				</a>
-				<div class="back" data="{{ path('photo_show', {'idLocation' : item.id, 'slug' : item.slug}) }}"></div>
-			</li>
-			
-			{% set ul_count = ul_count + 1 %}
-		
-			{% if ul_count == 10 %}
-			</ul>
-			<ul class="content">
-				{% set ul_count = 1 %}
-			{% endif %}
-		{% endfor %}
-	</ul>
-	<script>
-	{% if next_page != false %}
-		$a('.np:first').val("{{ path('main') }}?page={{ next_page}}");
-	{% else %}
-		$a('.np:first').val("");
-	{% endif %}
-	</script>
-	{% if page == 1 %}
 </div>
-	{% endif %}
+
 {% endblock %}
