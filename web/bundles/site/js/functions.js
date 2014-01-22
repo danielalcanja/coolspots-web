@@ -271,7 +271,8 @@ $a(document).ready(function(){
 	});
 	
 	var	shadown = ".shadown",
-		box = ".shadown .box",
+		shadownPics = ".shadownPics",
+		box = ".shadownPics .box",
 		atual = 0,
 		pic = [];
 	//TOP - BAR
@@ -428,6 +429,13 @@ $a(document).ready(function(){
 		var link = $a(this).attr("data");
 		location.href = link;
 	});
+	$a(".config").click(function(e){
+		e.preventDefault();
+		$a(this).toggleClass("config-normal config-click");
+		$a(this).find("span").toggleClass("click");
+		$a("ul.config-menu").slideToggle('fast');
+	});
+	
 	//GALLERY
 	function slideGallery(){
 		$a(".eve-pic").each(function(index){
@@ -440,7 +448,7 @@ $a(document).ready(function(){
 			var caption	= $a(this).find(".caption").val();
 			
 			$a(pic[index]).click(function(){
-				$a(shadown).fadeIn('slow');
+				$a(shadownPics).fadeIn('slow');
 				$a(".box .img img").attr("src",imagem);
 				$a(".author img").attr("src",userpic);
 				$a("strong.user").html(user);
@@ -473,6 +481,9 @@ $a(document).ready(function(){
 		alert("COMPARTIHAR IMAGEM: " + $a(pic[atual]).attr("data"));
 	});
 	$a(document).delegate(shadown, "click", function(){
+		$a(this).fadeOut('slow');
+	});
+	$a(document).delegate(shadownPics, "click", function(){
 		$a(this).fadeOut('slow');
 	});
 	$a(document).delegate(box, "click", function(){
@@ -546,5 +557,6 @@ $a(document).ready(function(){
 	
 	function shadownClose(){
 		$a(shadown).fadeOut('slow');
+		$a(shadownPics).fadeOut('slow');
 	}
 });
