@@ -1,6 +1,34 @@
 var pagina = 1;
 var part1 = {data:[]}, part2 = {data:[]};
 var one = false, two = false;
+var objFav = {data:[]};
+var pg = 'Default';
+
+function loadFavorites() {
+	var url = '/json/favorites';
+	var params =  { };
+	jsonCall(url, params, callbackFavorites);	
+}
+function callbackFavorites(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	objFav.data = obj.data;
+	console.log(objFav);
+}
+function isFavorite(id){
+	var total = objFav.data.length;
+	for(var item in objFav.data){
+		if(id == objFav.data[item].idLocation.idInstagram) { return 'this-fav'; break; }
+		else if(total==item-1) { return ''; }
+	}
+}	
 
 function loadLocations() {
 	var url =  '/json/locations';
@@ -9,7 +37,6 @@ function loadLocations() {
 	};
 	jsonCall(url, params, callbackLocations);	
 }
-
 function callbackLocations(obj) {
 	if(!obj) {
 		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
@@ -22,7 +49,6 @@ function callbackLocations(obj) {
 	}
 	
 	divide(obj);
-	
 	if(one) jQuery("#photo-list").append(compila(part1));
 	if(two) jQuery("#photo-list").append(compila(part2));
 	pagina++;
@@ -137,7 +163,7 @@ $a(document).ready(function(){
 			}
 			updateScrollbar();
 			updateLazyImages();
-			if(($a('.np:first').val()) != undefined) slideGallery();
+			if(pg=='Photos') slideGallery();
 		},500);
 	}
 	function ajustImage(){
@@ -163,8 +189,9 @@ $a(document).ready(function(){
 		if(hasImage) foundImage();
 	}
 	
-	function fetchNextPage() {
-		loadLocations();
+	function fetchNextPage(pg) {
+		if(pg=='Default') loadLocations();
+		if(pg=='Photos') loadLocationPhotos();
 		var sleep = 0;
 		console.log('Fetching next page: '+pagina);
 		sleep = setTimeout(function(){ start(true); }, 200);
@@ -186,7 +213,7 @@ $a(document).ready(function(){
 			},
 			onTotalScroll: function(){
 				if(pagina != pgAtual){
-					fetchNextPage();
+					fetchNextPage(pg);
 					pgAtual = pagina;
 				}
 			},
@@ -198,7 +225,7 @@ $a(document).ready(function(){
 		$a(body).mCustomScrollbar("update");
 	}
 	
-	$a(content).hover(function(){
+	$a(site).delegate(content, 'mouseenter mouseleave', function(){
 		$a(".top-bar .back").fadeOut('fast');
 		$a(".top-bar-ico").fadeIn('slow');
 	});
@@ -411,7 +438,6 @@ $a(document).ready(function(){
 			var data_add= $a(this).find(".dateadded").val();
 			var name_loc= $a(this).find(".name_location").val();
 			var caption	= $a(this).find(".caption").val();
-			var altCap	= $a(this).find(".caption").height();
 			
 			$a(pic[index]).click(function(){
 				$a(shadown).fadeIn('slow');

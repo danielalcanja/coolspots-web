@@ -4,6 +4,8 @@
 
 <script>
 jQuery(document).ready(function(){
+	loadFavorites();
+	
 	var i=1;
 	directive = {
 		'li.photo': {
@@ -19,7 +21,9 @@ jQuery(document).ready(function(){
 					return posObj;
 				},
 				'a.box@href': '/#{obj.id}/#{obj.idInstagram}',
+				'.timeago': 'obj.dateUpdated',
 				'.image img@data-original':'obj.coverPic',
+				'.favorite@class+': 'this-fav',
 				'h2.title': 'obj.name',
 				'div.back@data': '/#{obj.id}/#{obj.idInstagram}',
 			}
