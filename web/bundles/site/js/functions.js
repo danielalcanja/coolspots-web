@@ -1,7 +1,7 @@
 var pagina = 1;
 var part1 = {data:[]}, part2 = {data:[]};
 var one = false, two = false;
-var objFav = {data:[]};
+var arrFav = [];
 var pg = 'Default';
 
 function loadFavorites() {
@@ -19,17 +19,34 @@ function callbackFavorites(obj) {
 		console.log(obj.meta.message);
 		return(false);
 	}
-	objFav.data = obj.data;
-	console.log(objFav);
-}
-function isFavorite(id){
-	var total = objFav.data.length;
-	for(var item in objFav.data){
-		if(id == objFav.data[item].idLocation.idInstagram) { return 'this-fav'; break; }
-		else if(total==item-1) { return ''; }
+	for(var item in obj.data){
+		arrFav[item] = obj.data[item].idLocation.id;
 	}
 }	
-
+function favorites(local,acao) {
+	action = acao == 'add' ? acao : 'remove';
+	var url = '/json/favorites/'+action;
+	var params =  { id_location: local };
+	jsonCall(url, params, callbackFavorite);
+}
+function callbackFavorite(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+}
+function isFavorite(id){
+	var total = arrFav.length;
+	for(var item in arrFav){
+		if(id == arrFav[item]) { return true; break; }
+		else if(total==item-1) { return false; }
+	}
+}
 function loadLocations() {
 	var url =  '/json/locations';
 	var params =  {
@@ -193,7 +210,7 @@ $a(document).ready(function(){
 		if(pg=='Default') loadLocations();
 		if(pg=='Photos') loadLocationPhotos();
 		var sleep = 0;
-		console.log('Fetching next page: '+pagina);
+		console.log('Próxima pagina: '+pagina);
 		sleep = setTimeout(function(){ start(true); }, 200);
 	}
 	
@@ -234,27 +251,17 @@ $a(document).ready(function(){
 		$a(".top-bar .back").fadeIn('fast');
 	});
 
-	$a("#photo-list").delegate(".favorite",'click', function(event) {
-		event.preventDefault();
-		var item = $a(this).closest(".photo");
-		var parameters = {
-				id_location: item.attr("data")
-			};
+	$a("#photo-list").delegate(".favorite",'click', function(e) {
+		e.preventDefault();
+		var id = $a(this).closest(".photo").attr("data");
 		$a(this).html("<div class='loading'><div class='load'></div></div>");
 
 		if($a(this).hasClass("this-fav")){
-			var url = '/json/favorites/remove';
+			favorites(id, 'remove');
+			$a(this).removeClass("this-fav");
 		} else {
-			var url = '/json/favorites/add';
-		}
-		
-		var jsonObject = jsonCall(url, parameters);
-		if(jsonObject.meta.status == 'ERROR') {
-			// console.log(jsonObject.meta.message);
-			$a(this).find(".loading").children().removeAttr("class").addClass("error");
-		} else { 
-			if($a(this).hasClass("this-fav")) $a(this).removeClass("this-fav")
-			else $a(this).addClass("this-fav");
+			favorites(id, 'add');
+			$a(this).addClass("this-fav");
 		}
 		$a(this).find(".loading").remove();
 	});
