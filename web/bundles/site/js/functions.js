@@ -1,7 +1,7 @@
 var pagina = 1;
 var part1 = {data:[]}, part2 = {data:[]};
 var one = false, two = false;
-var arrFav = [];
+var arrFav = [], arrLast = [], lastTimer = 0;
 var pg = 'Default';
 
 function loadFavorites() {
@@ -64,11 +64,19 @@ function callbackLocations(obj) {
 		console.log(obj.meta.message);
 		return(false);
 	}
-	
+
 	divide(obj);
 	if(one) jQuery("#photo-list").append(compila(part1));
 	if(two) jQuery("#photo-list").append(compila(part2));
+		
 	pagina++;
+	
+	for(var i in obj.data){
+		arrLast[obj.data[i].idFoursquare] = [];
+		for(var j in obj.data[i].lastPhotos){
+			arrLast[obj.data[i].idFoursquare][j] = obj.data[i].lastPhotos[j].low_resolution;
+		}
+	}
 }
 function divide(obj){
 	part1 = {data:[]}, part2 = {data:[]};
@@ -267,15 +275,35 @@ $a(document).ready(function(){
 	});
 	
 	
-	$a("#photo-list").delegate(".photo",'mouseenter mouseleave', function(event) {
+	$a("#photo-list").delegate(".photo",'mouseenter mouseleave', function(e) {
+		var original = $a(this).find("img").attr("data-original");
 		if(!($a(this).find(".favorite").hasClass("this-fav"))) $a(this).find(".favorite").fadeToggle();
 		$a(this).find(".back").fadeToggle();  
 		$a(this).find(".clock").slideToggle('fast');
 		$a(this).find(".tmp").slideToggle('fast');
 		$a(this).find(".day-str").fadeToggle();
 		$a(this).find(".more").slideToggle('fast');
-		// $a(this).find(".more").slideToggle( event.type === 'mouseenter' );
+		
+		if(e.type==='mouseenter'){
+			lastPhotos($a(this).attr("data"));
+		}
+		
+		if(e.type==='mouseleave'){
+			clearInterval(lastTimer);
+			$a(this).find("img").attr("src",original);
+		}
+		
+		// $a(this).find(".more").slideToggle( e.type === 'mouseenter' );
 	});
+	
+	function lastPhotos(id){
+		var i = 0;
+		lastTimer = setInterval(function(){
+			$a("."+id).find("img").attr("src",arrLast[id][i]);
+			console.log(arrLast[id][i]);
+			i++; if(i==4) i = 0;
+		},1000);
+	}
 	
 	var	shadown = ".shadown",
 		shadownPics = ".shadownPics",

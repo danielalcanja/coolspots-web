@@ -10,7 +10,7 @@ jQuery(document).ready(function(){
 	directive = {
 		'li.photo': {
 			'obj<-data': {
-				'@data':'obj.id',
+				'@data':'obj.idFoursquare',
 				'@class+':function(arg){
 					if(i == 10) {
 						posObj = ' li-1'; i=1;
@@ -18,14 +18,12 @@ jQuery(document).ready(function(){
 						posObj = ' li-'+i 
 					};
 					i++;
-					return posObj;
+					return " " + this.idFoursquare + posObj;
 				},
 				'a.box@href': '/#{obj.id}/#{obj.idInstagram}',
 				'.timeago': 'obj.dateUpdated',
 				'.image img@data-original':'obj.coverPic',
-				'.favorite@class+': function(){
-					if(isFavorite(this.id)) return ' this-fav';
-				},
+				'.favorite@class+': function(){ if(isFavorite(this.id)) return ' this-fav'; },
 				'h2.title': 'obj.name',
 				'div.back@data': '/#{obj.id}/#{obj.idInstagram}',
 			}
