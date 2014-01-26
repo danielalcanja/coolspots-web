@@ -86,6 +86,7 @@ span.ros { background:#FF5885; }
 
 #site ul.content { clear:both; width:100%; overflow:hidden; position:relative; z-index:0; }
 #site ul.content li { border-bottom:2px solid #FFF; }
+#site ul.template { display:none; }
 
 .ul-2 li { width:50%; float:left; }
 .ul-2 .li-1 { margin:0 1px 0 -1px; }
@@ -163,11 +164,17 @@ span.ros { background:#FF5885; }
 .photo  .time .date-g .day { padding:3px 5px; display:block; float:right; background:#31749B; font-weight:normal; color:#FFF; }
 .photo  .time .date-g .day-str { padding:3px 5px; font-family: 'Museo500-Regular'; font-size:12px; display:none; float:right; }
 .photo .info { position:absolute; left:10px; bottom:20px; z-index:2; font-family: 'Museo300-Regular'; font-weight:normal; }
-.photo .info .favorite { width:42px; height:40px; background:url('../images/icons.png') -392px 0px; display:none; }
+.photo .info .favorite { width:42px; height:40px; overflow:hidden; background:url('../images/icons.png') -392px 0px; display:none; }
 .photo .info .this-fav { display:block; }
 .photo .info .this-fav:hover { background:url('../images/icons.png') -392px -40px; }
 .photo .info h2 { font-size:35px; font-weight:normal; }
 .info .more { margin-top:10px; padding-top:5px; font-family: 'Museo500-Regular'; font-size:15px; border-top:1px solid #FFF; display:none; }
+
+.photo .loading { width:42px; height:40px; background:url('../images/alpha.png'); }
+.photo .loading > div { width:100%; height:100%; background:no-repeat center; }
+.photo .loading .load { background-image:url('../images/loading.gif'); }
+.photo .loading .ok { background-image:url('../images/ico-ok.png'); }
+.photo .loading .error { background-image:url('../images/ico-error.png'); }
 
 /*COMENTARIO*/
 .comment { width:300px; height:100%; padding-right:2px; background:#FFF; position:fixed; z-index:10; top:0; right:-353px; }
@@ -185,37 +192,37 @@ span.ros { background:#FF5885; }
 .comment .espace .com a:hover { color:#31749B; }
 
 /*GALERIA*/
-.shadown { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; z-index:5; display:none; }
-.shadown .gallery-box { width:100%; height:100%; overflow:auto; position:fixed; top:0; left:0; }
-.shadown .gallery-box .box { width:600px; margin:-310px auto auto -310px; padding:10px; background-color:#FFF; position:fixed; top:50%; left:50%; }
-.shadown .gallery-box .box .content { width:100%; display:table; position:relative;  }
-.shadown .gallery-box .box .content img { width:100%; display:block; }
-.shadown .gallery-box .box .content .img .sh { width:30px; height:16px; display:block; cursor:pointer; position:absolute; z-index:10; bottom:0px; right:0; background:url('../images/icons.png') -230px -50px;; }
-.shadown .gallery-box .box .content .img .shb { background-position:-230px -66px; }
-.shadown .gallery-box .box .content .img .description { width:100%; padding:5px 0; background:url('../images/alpha.png'); position:absolute; bottom:0px; color:#FFF; }
-.shadown .gallery-box .box .content .img .description .caption { display:block; margin:0 5px 5px 5px; font-family: 'Museo300-Regular'; font-weight:normal; }
-.shadown .gallery-box .box .content .img .description .author { width:100%; margin:5px; }
-.shadown .gallery-box .box .content .img .description .author img { width:40px; height:40px; float:left; border:1px solid #FFF; margin-right:5px; }
-.shadown .gallery-box .box .content .img .description .author h3 { font-family: 'Museo300-Regular'; font-size:12px; font-weight:normal; }
-.shadown .gallery-box .box .content .img .description .author h3 strong { color:#296689; }
-.shadown .gallery-box .box .slide-eve-next, .shadown .gallery-box .box .slide-eve-prev { width:25px; height:125px; background-image:url('../images/icons.png'); position:absolute; top:50%; margin-top:-65px; z-index:10; cursor:pointer; }
-.shadown .gallery-box .box .slide-eve-prev { background-position:-380px -100px; left:-30px; }
-.shadown .gallery-box .box .slide-eve-prev:hover { background-position:-380px -225px; }
-.shadown .gallery-box .box .slide-eve-next { background-position:-405px -100px; right:-30px; }
-.shadown .gallery-box .box .slide-eve-next:hover { background-position:-405px -225px; }
-.shadown .gallery-box .box .slide-close { width:24px; height:23px; background:url('../images/icons.png') 0px -150px no-repeat; position:absolute; display:block; top:0; right:-30px; cursor:pointer; }
-.shadown .gallery-box .box .slide-close:hover { background-position:-24px -150px; }
-.shadown .gallery-box .box .slide-icos { position:absolute; top:40px; left:625px; cursor:pointer; }
-.shadown .gallery-box .box .slide-icos .line { clear:both; width:250px; height:29px; line-height:29px; margin-bottom:3px; display:block; }
-.shadown .gallery-box .box .slide-icos .icos { width:29px; height:29px; display:block; float:left; background:url('../images/icons.png') no-repeat; }
-.shadown .gallery-box .box .slide-icos .fav { background-position:-0px -185px; }
-.shadown .gallery-box .box .slide-icos .lug { background-position:-0px -215px; }
-.shadown .gallery-box .box .slide-icos .com { background-position:-0px -245px; }
-.shadown .gallery-box .box .slide-icos .cur { background-position:-0px -275px; }
-.shadown .gallery-box .box .slide-icos .men { background-position:-0px -304px; }
-.shadown .gallery-box .box .slide-icos .line span { padding:0 5px; color:#000; font-size:11px; display:none; float:left; height:29px; line-height:29px; background:url('../images/slide-icos-back.png') center repeat-x; }
-.shadown .gallery-box .box .slide-icos .line span.p1 { width:7px; padding:0; background:url('../images/slide-icos-esqdir.png') center left no-repeat; }
-.shadown .gallery-box .box .slide-icos .line span.p2 { width:7px; padding:0; background:url('../images/slide-icos-esqdir.png') center right no-repeat; }
+.shadownPics, .shadown { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; z-index:5; display:none; }
+.shadownPics .gallery-box { width:100%; height:100%; overflow:auto; position:fixed; top:0; left:0; }
+.shadownPics .gallery-box .box { width:600px; margin:-310px auto auto -310px; padding:10px; background-color:#FFF; position:fixed; top:50%; left:50%; }
+.shadownPics .gallery-box .box .content { width:100%; display:table; position:relative;  }
+.shadownPics .gallery-box .box .content img { width:100%; display:block; }
+.shadownPics .gallery-box .box .content .img .sh { width:30px; height:16px; display:block; cursor:pointer; position:absolute; z-index:10; bottom:0px; right:0; background:url('../images/icons.png') -230px -50px;; }
+.shadownPics .gallery-box .box .content .img .shb { background-position:-230px -66px; }
+.shadownPics .gallery-box .box .content .img .description { width:100%; padding:5px 0; background:url('../images/alpha.png'); position:absolute; bottom:0px; color:#FFF; }
+.shadownPics .gallery-box .box .content .img .description .caption { display:block; margin:0 5px 5px 5px; font-family: 'Museo300-Regular'; font-weight:normal; }
+.shadownPics .gallery-box .box .content .img .description .author { width:100%; margin:5px; }
+.shadownPics .gallery-box .box .content .img .description .author img { width:40px; height:40px; float:left; border:1px solid #FFF; margin-right:5px; }
+.shadownPics .gallery-box .box .content .img .description .author h3 { font-family: 'Museo300-Regular'; font-size:12px; font-weight:normal; }
+.shadownPics .gallery-box .box .content .img .description .author h3 strong { color:#296689; }
+.shadownPics .gallery-box .box .slide-eve-next, .shadownPics .gallery-box .box .slide-eve-prev { width:25px; height:125px; background-image:url('../images/icons.png'); position:absolute; top:50%; margin-top:-65px; z-index:10; cursor:pointer; }
+.shadownPics .gallery-box .box .slide-eve-prev { background-position:-380px -100px; left:-30px; }
+.shadownPics .gallery-box .box .slide-eve-prev:hover { background-position:-380px -225px; }
+.shadownPics .gallery-box .box .slide-eve-next { background-position:-405px -100px; right:-30px; }
+.shadownPics .gallery-box .box .slide-eve-next:hover { background-position:-405px -225px; }
+.shadownPics .gallery-box .box .slide-close { width:24px; height:23px; background:url('../images/icons.png') 0px -150px no-repeat; position:absolute; display:block; top:0; right:-30px; cursor:pointer; }
+.shadownPics .gallery-box .box .slide-close:hover { background-position:-24px -150px; }
+.shadownPics .gallery-box .box .slide-icos { position:absolute; top:40px; left:625px; cursor:pointer; }
+.shadownPics .gallery-box .box .slide-icos .line { clear:both; width:250px; height:29px; line-height:29px; margin-bottom:3px; display:block; }
+.shadownPics .gallery-box .box .slide-icos .icos { width:29px; height:29px; display:block; float:left; background:url('../images/icons.png') no-repeat; }
+.shadownPics .gallery-box .box .slide-icos .fav { background-position:-0px -185px; }
+.shadownPics .gallery-box .box .slide-icos .lug { background-position:-0px -215px; }
+.shadownPics .gallery-box .box .slide-icos .com { background-position:-0px -245px; }
+.shadownPics .gallery-box .box .slide-icos .cur { background-position:-0px -275px; }
+.shadownPics .gallery-box .box .slide-icos .men { background-position:-0px -304px; }
+.shadownPics .gallery-box .box .slide-icos .line span { padding:0 5px; color:#000; font-size:11px; display:none; float:left; height:29px; line-height:29px; background:url('../images/slide-icos-back.png') center repeat-x; }
+.shadownPics .gallery-box .box .slide-icos .line span.p1 { width:7px; padding:0; background:url('../images/slide-icos-esqdir.png') center left no-repeat; }
+.shadownPics .gallery-box .box .slide-icos .line span.p2 { width:7px; padding:0; background:url('../images/slide-icos-esqdir.png') center right no-repeat; }
 
 .shadown .box-criar-evento { width:310px; height:320px; background:#FFF; position:absolute; top:50%; left:50%; margin:-160px auto auto -155px; }
 .shadown .box-criar-evento .space { margin:10px; }
@@ -414,24 +421,17 @@ a.toggle em { float:right; margin-right:25px; color:#666; font-weight:normal; }
 	.shadown .gallery-box .box .slide-icos .line span.p2 { background:url('../images/slide-icos-diresq.png') center left; }
 }
 
-.user_picture {
-	float: left;
-	width: 40px;
-	height: 40px;
-	padding: 5px;
-}
+.user_picture { float: left; width: 40px; height: 40px; padding:8px 5px 0 5px; }
+.user_picture img { width: 100%; height: 100%; }
 
-.user_picture img {
-	width: 100%;
-	height: 100%;
-}
+.config-normal, .config-click { width:30px; height:55px; display: block; border-right:2px solid #215270; background:#215270; float:right; }
+.config-click { background:#FFF; border-color:#296689 }
+.config-normal:hover { background:#1E4964; }
+.config-normal span, .config-click span { width:15px; height:15px; margin: 20px auto; display:block; }
+.config-normal span.normal { background:url('../images/icons.png') -260px -50px }
+.config-click span.click { background:url('../images/icons.png') -260px -65px }
 
-.logout {
-	display: block;
-	font-size: 10px;
-	font-weight: normal;
-}
-
-.logout a {
-	color: #ffff00;
-}
+ul.config-menu { display:none; position:fixed; bottom:55px; right:0; background-color:#FFF; border-left:2px solid #296689; border-top:2px solid #296689; border-right:2px solid #296689; }
+ul.config-menu li { clear:both; width:150px; }
+ul.config-menu li a {  margin:1px; padding:0 10px; height:30px; line-height:30px; display:block; background:#F0F0F0; color:#296689; }
+ul.config-menu li a:hover { background:#ccc; }

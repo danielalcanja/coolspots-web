@@ -7,6 +7,11 @@
 	</li>
 </ul>
 {% else %}
+<a class="config config-normal" href="#"><span class="normal"></span></a>
+<ul class="config-menu">
+	<li><a href="">Informar erro</a></li>
+	<li><a href="{{ path('logout') }}">Sair</a></li>
+</ul>
 <div class="info">
 	<span class="name">
 	{% if app.session.get('full_name') %}
@@ -16,7 +21,6 @@
 	{% endif %}
 	</span>
 	<span class="fav-fri">{{ total_favorites }} {% trans %}bottom.bar.favorites{% endtrans %} | {{ total_friends }} {% trans %}bottom.bar.friends{% endtrans %}</span>
-	<span class="logout"><a href="{{ path('logout') }}">Logout</a></span>
 </div>
 <ul class="dir">
 	{% if total_favorites > 0 %}
