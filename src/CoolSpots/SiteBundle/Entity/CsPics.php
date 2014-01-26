@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * CsPics
  *
  * @ORM\Table(name="cs_pics")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CoolSpots\SiteBundle\Entity\CsPicsRepository")
  */
 class CsPics
 {

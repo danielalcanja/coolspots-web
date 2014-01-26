@@ -75,12 +75,12 @@
 				<option value="/json/locations/info">/json/locations/info</option>
 				<option value="/json/locations/likes">/json/locations/likes</option>
 				<option value="/json/locations/likes/add">/json/locations/likes/add</option>
+				<option value="/json/locations/likes/remove">/json/locations/likes/remove</option>
 				<option value="/json/locations/photos">/json/locations/photos</option>
 				<option value="/json/locations/search">/json/locations/search</option>
-				<!--
 				<option value="/json/photos/likes">/json/photos/likes</option>
 				<option value="/json/photos/likes/add">/json/photos/likes/add</option>
-				-->
+				<option value="/json/photos/likes/remove">/json/photos/likes/remove</option>
 				<option value="/json/users">/json/users</option>
 				<option value="/json/users/add">/json/users/add</option>
 				<option value="/json/users/search">/json/users/search</option>

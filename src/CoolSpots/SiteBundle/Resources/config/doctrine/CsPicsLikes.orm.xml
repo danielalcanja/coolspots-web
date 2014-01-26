@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="CoolSpots\SiteBundle\Entity\CsFriendsRequest" table="cs_friends_request">
+  <entity name="CoolSpots\SiteBundle\Entity\CsPicsLikes" table="cs_pics_likes">
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
     <field name="dateAdded" type="datetime" column="date_added" nullable="false"/>
-    <field name="message" type="string" column="message" length="200" nullable="false"/>
-    <field name="status" type="string" column="status" length="1" nullable="false"/>
-    <many-to-one field="idUserFriend" target-entity="CsUsers">
-      <join-columns>
-        <join-column name="id_user_friend" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
+    <field name="deleted" type="string" column="deleted" length="1" nullable="false"/>
     <many-to-one field="idUser" target-entity="CsUsers">
       <join-columns>
         <join-column name="id_user" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idPic" target-entity="CsPics">
+      <join-columns>
+        <join-column name="id_pic" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

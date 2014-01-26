@@ -62,6 +62,12 @@ json_locations_likes_add:
     defaults: { _controller: ApiBundle:JSONLocations:likesAdd }
     requirements:
         _method: POST
+        
+json_locations_likes_remove:
+    pattern: /json/locations/likes/remove
+    defaults: { _controller: ApiBundle:JSONLocations:likesRemove }
+    requirements:
+        _method: POST
 
 json_favorites:
     pattern: /json/favorites
@@ -180,5 +186,11 @@ json_photos_likes:
 json_photos_likes_add:
     pattern: /json/photos/likes/add
     defaults: { _controller: ApiBundle:JSONPhotos:likesAdd }
+    requirements:
+        _method: POST
+
+json_photos_likes_remove:
+    pattern: /json/photos/likes/remove
+    defaults: { _controller: ApiBundle:JSONPhotos:likesRemove }
     requirements:
         _method: POST
