@@ -58,6 +58,7 @@ class JSONLocationsController extends Controller {
 		$content = $request->getContent();
 		
 		$params = json_decode($content); //$params = json_decode(utf8_decode($content));
+		$em = $this->getDoctrine();
 		try {
 			if($params === null) {
 				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Invalid post content'), 'data' => null);
@@ -68,8 +69,29 @@ class JSONLocationsController extends Controller {
 			$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
 
 			try {
-				$repository = $this->getDoctrine()->getRepository('SiteBundle:VwLocation');
-				$rs = $repository->createQueryBuilder('c')
+				// search user by username
+				if(isset($params->username)) {
+					$User = $em->getRepository('SiteBundle:CsUsers')->findOneBy(array('username' => $params->username));
+				} else {
+					$userid = $this->getUserSession();
+					$User = $em->getRepository('SiteBundle:CsUsers')->find($userid);
+				}
+				
+				$arrFavorites = array();
+				$arrLikes = array();
+				if($User) {
+					$Favorites = $em->getRepository('SiteBundle:CsLocationFavorites')->findBy(array('idUser' => $User, 'deleted' => 'N'));
+					foreach($Favorites as $fav) {
+						array_push($arrFavorites, $fav->getIdLocation()->getId());
+					}
+					
+					$Likes = $em->getRepository('SiteBundle:CsLocationLikes')->findBy(array('idUser' => $User, 'deleted' => 'N'));
+					foreach($Likes as $like) {
+						array_push($arrLikes, $like->getIdLocation()->getId());
+					}
+				}
+				
+				$rs = $em->getRepository('SiteBundle:VwLocation')->createQueryBuilder('c')
 						->where('c.lastPic is not null');
 				// check for the id parameter
 				if(isset($params->id)) $rs = $rs->andWhere('c.id = :id')->setParameter('id', $params->id);
@@ -117,7 +139,7 @@ class JSONLocationsController extends Controller {
 							'standard_resolution' => $p->getStandardResolution()
 						));
 					}
-
+					
 					$arrLocations[] = array(
 						'address' => $item->getAddress(),
 						'checkinsCount' => $item->getCheckinsCount(),
@@ -129,6 +151,7 @@ class JSONLocationsController extends Controller {
 						'dateUpdated' => $item->getDateUpdated()->getTimeStamp(),
 						'deleted' => $item->getDeleted(),
 						'enabled' => $item->getEnabled(),
+						'favorite' => (in_array($item->getId(), $arrFavorites)),
 						'id' =>  $item->getId(),
 						'idCategory' => $item->getIdCategory(),
 						'idCity' => $item->getIdCity(),
@@ -136,6 +159,7 @@ class JSONLocationsController extends Controller {
 						'idFoursquare' => $item->getIdFoursquare(),
 						'idInstagram' => $item->getIdInstagram(),
 						'idState' => $item->getIdState(),
+						'like' => (in_array($item->getId(), $arrLikes)),
 						'lastMinId' => $item->getLastMinId(),
 						'lastPhotos' => $arrPhotos,
 						'minTimestamp' => $item->getMinTimestamp(),
@@ -657,7 +681,7 @@ class JSONLocationsController extends Controller {
 			$page = isset($params->page) ? $params->page : 1;
 			$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
 			
-			$Comments = $em->getRepository('SiteBundle:CsLocationComments')->findBy(array('idLocation' => $params->id), array('dateAdded' => 'DESC'), $this->container->getParameter('max_items_per_page'), $offset);
+			$Comments = $em->getRepository('SiteBundle:CsLocationComments')->findBy(array('idLocation' => $params->id, 'deleted' => 'N'), array('dateAdded' => 'DESC'), $this->container->getParameter('max_items_per_page'), $offset);
 			if(!$Comments) {
 				$this->jsonData = array('meta' => array('status' => 'OK', 'message' => 'Success!'), 'data' => null);
 				throw new \Exception();
@@ -714,7 +738,7 @@ class JSONLocationsController extends Controller {
 				$Comment->setIdLocation($Location);
 				$Comment->setDateAdded(new \DateTime());
 				$Comment->setComment($params->comment);
-				$Comment->setDeleted('S');
+				$Comment->setDeleted('N');
 				$em->persist($Comment);
 				$em->flush();
 			} catch(\Exception $e) {
