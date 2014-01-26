@@ -11,132 +11,174 @@ instagram_callback:
 
 json_locations:
     pattern: /json/locations
-    defaults: { _controller: ApiBundle:JSON:locations }
+    defaults: { _controller: ApiBundle:JSONLocations:index }
     requirements:
         _method: POST
         
 json_locations_info:
     pattern: /json/locations/info
-    defaults: { _controller: ApiBundle:JSON:locationsInfo }
+    defaults: { _controller: ApiBundle:JSONLocations:info }
     requirements:
         _method: POST
         
 json_locations_photos:
     pattern: /json/locations/photos
-    defaults: { _controller: ApiBundle:JSON:locationsPhotos }
+    defaults: { _controller: ApiBundle:JSONLocations:photos }
     requirements:
         _method: POST
         
 json_locations_add:
     pattern: /json/locations/add
-    defaults: { _controller: ApiBundle:JSON:locationsAdd }
+    defaults: { _controller: ApiBundle:JSONLocations:add }
     requirements:
         _method: POST
         
 json_locations_search:
     pattern: /json/locations/search
-    defaults: { _controller: ApiBundle:JSON:locationsSearch }
+    defaults: { _controller: ApiBundle:JSONLocations:search }
+    requirements:
+        _method: POST
+        
+json_locations_comments:
+    pattern: /json/locations/comments
+    defaults: { _controller: ApiBundle:JSONLocations:comments }
+    requirements:
+        _method: POST
+        
+json_locations_comments_add:
+    pattern: /json/locations/comments/add
+    defaults: { _controller: ApiBundle:JSONLocations:commentsAdd }
+    requirements:
+        _method: POST
+
+json_locations_likes:
+    pattern: /json/locations/likes
+    defaults: { _controller: ApiBundle:JSONLocations:likes }
+    requirements:
+        _method: POST
+
+json_locations_likes_add:
+    pattern: /json/locations/likes/add
+    defaults: { _controller: ApiBundle:JSONLocations:likesAdd }
     requirements:
         _method: POST
 
 json_favorites:
     pattern: /json/favorites
-    defaults: { _controller: ApiBundle:JSON:favorites }
+    defaults: { _controller: ApiBundle:JSONFavorites:index }
     requirements:
         _method: POST
         
 json_favorites_add:
     pattern: /json/favorites/add
-    defaults: { _controller: ApiBundle:JSON:favoritesAdd }
+    defaults: { _controller: ApiBundle:JSONFavorites:add }
     requirements:
         _method: POST
         
 json_favorites_remove:
     pattern: /json/favorites/remove
-    defaults: { _controller: ApiBundle:JSON:favoritesRemove }
+    defaults: { _controller: ApiBundle:JSONFavorites:remove }
     requirements:
         _method: POST
         
 json_events:
     pattern: /json/events
-    defaults: { _controller: ApiBundle:JSON:events }
+    defaults: { _controller: ApiBundle:JSONEvents:index }
     requirements:
         _method: POST
 
 json_events_add:
     pattern: /json/events/add
-    defaults: { _controller: ApiBundle:JSON:eventsAdd }
+    defaults: { _controller: ApiBundle:JSONEvents:add }
+    requirements:
+        _method: POST
+        
+json_events_photos:
+    pattern: /json/events/photos
+    defaults: { _controller: ApiBundle:JSONEvents:photos }
     requirements:
         _method: POST
 
 json_events_private:
     pattern: /json/events/private
-    defaults: { _controller: ApiBundle:JSON:eventsPrivate }
+    defaults: { _controller: ApiBundle:JSONEvents:private }
     requirements:
         _method: POST
 
 json_events_private_search:
     pattern: /json/events/private/search
-    defaults: { _controller: ApiBundle:JSON:eventsPrivateSearch }
+    defaults: { _controller: ApiBundle:JSONEvents:privateSearch }
     requirements:
         _method: POST
 
-json_events_remoe:
+json_events_remove:
     pattern: /json/events/remove
-    defaults: { _controller: ApiBundle:JSON:eventsRemove }
+    defaults: { _controller: ApiBundle:JSONEvents:remove }
     requirements:
         _method: POST
 
 json_events_self:
     pattern: /json/events/self
-    defaults: { _controller: ApiBundle:JSON:eventsSelf }
+    defaults: { _controller: ApiBundle:JSONEvents:self }
     requirements:
         _method: POST
 
 json_events_search:
     pattern: /json/events/search
-    defaults: { _controller: ApiBundle:JSON:eventsSearch }
+    defaults: { _controller: ApiBundle:JSONEvents:search }
     requirements:
         _method: POST
         
 json_events_status:
     pattern: /json/events/status
-    defaults: { _controller: ApiBundle:JSON:eventsStatus }
+    defaults: { _controller: ApiBundle:JSONEvents:status }
     requirements:
         _method: POST
 
 json_friends: 
     pattern: /json/friends
-    defaults: { _controller: ApiBundle:JSON:friends }
+    defaults: { _controller: ApiBundle:JSONFriends:index }
     requirements:
         _method: POST
         
 json_friend_request: 
     pattern: /json/friends/request
-    defaults: { _controller: ApiBundle:JSON:friendsRequest }
+    defaults: { _controller: ApiBundle:JSONFriends:request }
     requirements:
         _method: POST
         
 json_friends_request_status:
     pattern: /json/friends/request/status
-    defaults: { _controller: ApiBundle:JSON:friendsRequestStatus }
+    defaults: { _controller: ApiBundle:JSONFriends:requestStatus }
     requirements:
         _method: POST
 
 json_users: 
     pattern: /json/users
-    defaults: { _controller: ApiBundle:JSON:users }
+    defaults: { _controller: ApiBundle:JSONUsers:index }
     requirements:
         _method: POST
         
 json_users_add: 
     pattern: /json/users/add
-    defaults: { _controller: ApiBundle:JSON:usersAdd }
+    defaults: { _controller: ApiBundle:JSONUsers:add }
     requirements:
         _method: POST
 
 json_users_search: 
     pattern: /json/users/search
-    defaults: { _controller: ApiBundle:JSON:usersSearch }
+    defaults: { _controller: ApiBundle:JSONUsers:search }
+    requirements:
+        _method: POST
+        
+json_photos_likes:
+    pattern: /json/photos/likes
+    defaults: { _controller: ApiBundle:JSONPhotos:likes }
+    requirements:
+        _method: POST
+
+json_photos_likes_add:
+    pattern: /json/photos/likes/add
+    defaults: { _controller: ApiBundle:JSONPhotos:likesAdd }
     requirements:
         _method: POST

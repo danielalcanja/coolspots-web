@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * CsUsers
  *
  * @ORM\Table(name="cs_users")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CoolSpots\SiteBundle\Entity\CsUsersRepository")
  */
 class CsUsers
 {

@@ -5,78 +5,12 @@ namespace CoolSpots\SiteBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CsPics
- *
- * @ORM\Table(name="cs_pics")
- * @ORM\Entity
+ * VwPicsTags
+ * @ORM\Table(name="vw_pics_tags")
+ * @ORM\Entity(repositoryClass="CoolSpots\SiteBundle\Entity\VwPicsTagsRepository")
  */
-class CsPics
+class VwPicsTags
 {
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="type", type="integer", nullable=true)
-     */
-    private $type;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_added", type="datetime", nullable=true)
-     */
-    private $dateAdded;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_time", type="datetime", nullable=true)
-     */
-    private $createdTime;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="low_resolution", type="string", length=150, nullable=true)
-     */
-    private $lowResolution;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="thumbnail", type="string", length=150, nullable=true)
-     */
-    private $thumbnail;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="standard_resolution", type="string", length=150, nullable=true)
-     */
-    private $standardResolution;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="caption", type="string", length=150, nullable=true)
-     */
-    private $caption;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="likes_count", type="integer", nullable=true)
-     */
-    private $likesCount;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
-
     /**
      * @var \CoolSpots\SiteBundle\Entity\CsUsers
      *
@@ -87,201 +21,62 @@ class CsPics
      */
     private $idUser;
 
-
+    /**
+     * @var \CoolSpots\SiteBundle\Entity\CsLocation
+     */
+    private $idLocation;
 
     /**
-     * Set type
-     *
-     * @param integer $type
-     * @return CsPics
+     * @var integer
      */
-    public function setType($type)
-    {
-        $this->type = $type;
-    
-        return $this;
-    }
+    private $type;
 
     /**
-     * Get type
-     *
-     * @return integer 
+     * @var \DateTime
      */
-    public function getType()
-    {
-        return $this->type;
-    }
+    private $dateAdded;
 
     /**
-     * Set dateAdded
-     *
-     * @param \DateTime $dateAdded
-     * @return CsPics
+     * @var \DateTime
      */
-    public function setDateAdded($dateAdded)
-    {
-        $this->dateAdded = $dateAdded;
-    
-        return $this;
-    }
+    private $createdTime;
 
     /**
-     * Get dateAdded
-     *
-     * @return \DateTime 
+     * @var string
      */
-    public function getDateAdded()
-    {
-        return $this->dateAdded;
-    }
+    private $lowResolution;
 
     /**
-     * Set createdTime
-     *
-     * @param \DateTime $createdTime
-     * @return CsPics
+     * @var string
      */
-    public function setCreatedTime($createdTime)
-    {
-        $this->createdTime = $createdTime;
-    
-        return $this;
-    }
+    private $thumbnail;
 
     /**
-     * Get createdTime
-     *
-     * @return \DateTime 
+     * @var string
      */
-    public function getCreatedTime()
-    {
-        return $this->createdTime;
-    }
+    private $standardResolution;
 
     /**
-     * Set lowResolution
-     *
-     * @param string $lowResolution
-     * @return CsPics
+     * @var string
      */
-    public function setLowResolution($lowResolution)
-    {
-        $this->lowResolution = $lowResolution;
-    
-        return $this;
-    }
+    private $caption;
 
     /**
-     * Get lowResolution
-     *
-     * @return string 
+     * @var integer
      */
-    public function getLowResolution()
-    {
-        return $this->lowResolution;
-    }
+    private $likesCount;
 
     /**
-     * Set thumbnail
-     *
-     * @param string $thumbnail
-     * @return CsPics
+     * @var string
      */
-    public function setThumbnail($thumbnail)
-    {
-        $this->thumbnail = $thumbnail;
-    
-        return $this;
-    }
+    private $tag;
 
     /**
-     * Get thumbnail
-     *
-     * @return string 
+     * @var integer
+	 * @ORM\Id
      */
-    public function getThumbnail()
-    {
-        return $this->thumbnail;
-    }
+    private $id;
 
-    /**
-     * Set standardResolution
-     *
-     * @param string $standardResolution
-     * @return CsPics
-     */
-    public function setStandardResolution($standardResolution)
-    {
-        $this->standardResolution = $standardResolution;
-    
-        return $this;
-    }
-
-    /**
-     * Get standardResolution
-     *
-     * @return string 
-     */
-    public function getStandardResolution()
-    {
-        return $this->standardResolution;
-    }
-
-    /**
-     * Set caption
-     *
-     * @param string $caption
-     * @return CsPics
-     */
-    public function setCaption($caption)
-    {
-        $this->caption = $caption;
-    
-        return $this;
-    }
-
-    /**
-     * Get caption
-     *
-     * @return string 
-     */
-    public function getCaption()
-    {
-        return $this->caption;
-    }
-
-    /**
-     * Set likesCount
-     *
-     * @param integer $likesCount
-     * @return CsPics
-     */
-    public function setLikesCount($likesCount)
-    {
-        $this->likesCount = $likesCount;
-    
-        return $this;
-    }
-
-    /**
-     * Get likesCount
-     *
-     * @return integer 
-     */
-    public function getLikesCount()
-    {
-        return $this->likesCount;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Set idUser
@@ -305,12 +100,6 @@ class CsPics
     {
         return $this->idUser;
     }
-	
-    /**
-     * @var \CoolSpots\SiteBundle\Entity\CsLocation
-     */
-    private $idLocation;
-
 
     /**
      * Set idLocation
@@ -333,5 +122,222 @@ class CsPics
     public function getIdLocation()
     {
         return $this->idLocation;
+    }
+
+    /**
+     * Set type
+     *
+     * @param integer $type
+     * @return VwPicsTags
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return integer 
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set dateAdded
+     *
+     * @param \DateTime $dateAdded
+     * @return VwPicsTags
+     */
+    public function setDateAdded($dateAdded)
+    {
+        $this->dateAdded = $dateAdded;
+    
+        return $this;
+    }
+
+    /**
+     * Get dateAdded
+     *
+     * @return \DateTime 
+     */
+    public function getDateAdded()
+    {
+        return $this->dateAdded;
+    }
+
+    /**
+     * Set createdTime
+     *
+     * @param \DateTime $createdTime
+     * @return VwPicsTags
+     */
+    public function setCreatedTime($createdTime)
+    {
+        $this->createdTime = $createdTime;
+    
+        return $this;
+    }
+
+    /**
+     * Get createdTime
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedTime()
+    {
+        return $this->createdTime;
+    }
+
+    /**
+     * Set lowResolution
+     *
+     * @param string $lowResolution
+     * @return VwPicsTags
+     */
+    public function setLowResolution($lowResolution)
+    {
+        $this->lowResolution = $lowResolution;
+    
+        return $this;
+    }
+
+    /**
+     * Get lowResolution
+     *
+     * @return string 
+     */
+    public function getLowResolution()
+    {
+        return $this->lowResolution;
+    }
+
+    /**
+     * Set thumbnail
+     *
+     * @param string $thumbnail
+     * @return VwPicsTags
+     */
+    public function setThumbnail($thumbnail)
+    {
+        $this->thumbnail = $thumbnail;
+    
+        return $this;
+    }
+
+    /**
+     * Get thumbnail
+     *
+     * @return string 
+     */
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
+    }
+
+    /**
+     * Set standardResolution
+     *
+     * @param string $standardResolution
+     * @return VwPicsTags
+     */
+    public function setStandardResolution($standardResolution)
+    {
+        $this->standardResolution = $standardResolution;
+    
+        return $this;
+    }
+
+    /**
+     * Get standardResolution
+     *
+     * @return string 
+     */
+    public function getStandardResolution()
+    {
+        return $this->standardResolution;
+    }
+
+    /**
+     * Set caption
+     *
+     * @param string $caption
+     * @return VwPicsTags
+     */
+    public function setCaption($caption)
+    {
+        $this->caption = $caption;
+    
+        return $this;
+    }
+
+    /**
+     * Get caption
+     *
+     * @return string 
+     */
+    public function getCaption()
+    {
+        return $this->caption;
+    }
+
+    /**
+     * Set likesCount
+     *
+     * @param integer $likesCount
+     * @return VwPicsTags
+     */
+    public function setLikesCount($likesCount)
+    {
+        $this->likesCount = $likesCount;
+    
+        return $this;
+    }
+
+    /**
+     * Get likesCount
+     *
+     * @return integer 
+     */
+    public function getLikesCount()
+    {
+        return $this->likesCount;
+    }
+
+    /**
+     * Set tag
+     *
+     * @param string $tag
+     * @return VwPicsTags
+     */
+    public function setTag($tag)
+    {
+        $this->tag = $tag;
+    
+        return $this;
+    }
+
+    /**
+     * Get tag
+     *
+     * @return string 
+     */
+    public function getTag()
+    {
+        return $this->tag;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }
