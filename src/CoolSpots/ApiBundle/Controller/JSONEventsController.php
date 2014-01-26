@@ -158,7 +158,7 @@ class JSONEventsController extends Controller {
 				$Event->setDeleted('N');
 				if(isset($params->description)) $Event->setDescription($params->description);
 				$Event->setName($params->name);
-				$Event->setTag($params->tag);
+				$Event->setTag(str_replace("#", "", $params->tag));
 				$Event->setPublic(isset($params->public) ? $params->public : 'Y');
 				$em->persist($Event);
 				$em->flush();
