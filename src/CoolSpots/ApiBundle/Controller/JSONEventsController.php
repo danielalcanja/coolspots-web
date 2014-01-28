@@ -72,7 +72,6 @@ class JSONEventsController extends Controller {
 			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));	
 			
 		} catch(\Exception $e) {
-			die($e->getMessage());
 			return $this->jsonResponse($this->jsonData);
 		}
 	}

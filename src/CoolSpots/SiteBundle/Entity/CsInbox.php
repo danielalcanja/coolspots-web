@@ -13,12 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
 class CsInbox
 {
     /**
-     * @var integer
-	 * @ORM\Column(name="id_user_to", type="integer", nullable=false)
-     */
-    private $idUserTo;
-
-    /**
      * @var \DateTime
 	 * @ORM\Column(name="date_added", type="datetime", nullable=false)
      */
@@ -61,29 +55,11 @@ class CsInbox
      */
     private $idUserFrom;
 
-
     /**
-     * Set idUserTo
-     *
-     * @param integer $idUserTo
-     * @return CsInbox
+     * @var \CoolSpots\SiteBundle\Entity\CsUsers
+	 * @ORM\Column(name="id_user_to", type="integer", nullable=false)
      */
-    public function setIdUserTo($idUserTo)
-    {
-        $this->idUserTo = $idUserTo;
-    
-        return $this;
-    }
-
-    /**
-     * Get idUserTo
-     *
-     * @return integer 
-     */
-    public function getIdUserTo()
-    {
-        return $this->idUserTo;
-    }
+    private $idUserTo;
 
     /**
      * Set dateAdded
@@ -231,5 +207,28 @@ class CsInbox
     public function getIdUserFrom()
     {
         return $this->idUserFrom;
+    }
+	
+	/**
+     * Set idUserTo
+     *
+     * @param \CoolSpots\SiteBundle\Entity\CsUsers $idUserTo
+     * @return CsInbox
+     */
+    public function setIdUserTo(\CoolSpots\SiteBundle\Entity\CsUsers $idUserTo = null)
+    {
+        $this->idUserTo = $idUserTo;
+    
+        return $this;
+    }
+
+    /**
+     * Get idUserTo
+     *
+     * @return \CoolSpots\SiteBundle\Entity\CsUsers 
+     */
+    public function getIdUserTo()
+    {
+        return $this->idUserTo;
     }
 }

@@ -159,6 +159,78 @@ json_friends_request_status:
     requirements:
         _method: POST
 
+json_geo_cities:
+    pattern: /json/geo/cities
+    defaults: { _controller: ApiBundle:JSONGeo:cities }
+    requirements:
+        _method: POST
+
+json_geo_cities_search:
+    pattern: /json/geo/cities/search
+    defaults: { _controller: ApiBundle:JSONGeo:citiesSearch }
+    requirements:
+        _method: POST
+
+json_geo_countries:
+    pattern: /json/geo/countries
+    defaults: { _controller: ApiBundle:JSONGeo:countries }
+    requirements:
+        _method: POST
+
+json_geo_countries_search:
+    pattern: /json/geo/countries/search
+    defaults: { _controller: ApiBundle:JSONGeo:countriesSearch }
+    requirements:
+        _method: POST
+
+json_geo_states:
+    pattern: /json/geo/states
+    defaults: { _controller: ApiBundle:JSONGeo:states }
+    requirements:
+        _method: POST
+
+json_geo_states_search:
+    pattern: /json/geo/states/search
+    defaults: { _controller: ApiBundle:JSONGeo:statesSearch }
+    requirements:
+        _method: POST
+
+json_inbox:
+    pattern: /json/inbox
+    defaults: { _controller: ApiBundle:JSONInbox:index }
+    requirements:
+        _method: POST
+        
+json_inbox_add:
+    pattern: /json/inbox/add
+    defaults: { _controller: ApiBundle:JSONInbox:add }
+    requirements:
+        _method: POST
+
+json_inbox_read:
+    pattern: /json/inbox/read
+    defaults: { _controller: ApiBundle:JSONInbox:read }
+    requirements:
+        _method: POST
+
+json_inbox_remove:
+    pattern: /json/inbox/remove
+    defaults: { _controller: ApiBundle:JSONInbox:remove }
+    requirements:
+        _method: POST
+
+json_inbox_sent:
+    pattern: /json/inbox/sent
+    defaults: { _controller: ApiBundle:JSONInbox:sent }
+    requirements:
+        _method: POST
+        
+json_inbox_sent_read:
+    pattern: /json/inbox/sent/read
+    defaults: { _controller: ApiBundle:JSONInbox:sentRead }
+    requirements:
+        _method: POST
+
 json_users: 
     pattern: /json/users
     defaults: { _controller: ApiBundle:JSONUsers:index }
