@@ -134,9 +134,9 @@ class JSONLocationsController extends Controller {
 					foreach($rsPhotos as $p) {
 						array_push($arrPhotos, array(
 							'caption' =>  $p->getCaption(),
-							'low_resolution' => $p->getLowResolution(),
+							'lowResolution' => $p->getLowResolution(),
 							'thumbnail' => $p->getThumbnail(),
-							'standard_resolution' => $p->getStandardResolution()
+							'standardResolution' => $p->getStandardResolution()
 						));
 					}
 					
