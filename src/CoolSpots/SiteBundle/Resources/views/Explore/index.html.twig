@@ -3,6 +3,82 @@
 {% block title %}SiteBundle:Explore:index{% endblock %}
 
 {% block body %}
+
+<script>
+barBox = ".explore";
+
+jQuery(document).ready(function(){
+	jQuery(barBox).css("min-height",jQuery(window).height());
+	
+	jQuery(barBox).mCustomScrollbar({
+		scrollInertia: 0,
+		autoHideScrollbar: true,
+		advanced:{
+			updateOnBrowserResize: true,
+			updateOnContentResize: true
+		}
+	});
+	
+	jQuery("a.order").hover(function(){
+		if(!(jQuery(this).find("span").hasClass("ativo"))){
+			jQuery(this).find("span").addClass("hover");
+		}
+		return false;
+	}, function(){
+		jQuery(this).find("span").removeClass("hover");
+	});
+	jQuery("a.order").click(function(){
+		if(!(jQuery(this).find("span").hasClass("ativo"))){
+			jQuery("a.order").find("span").removeClass("ativo");
+			jQuery(this).find("span").addClass("ativo");
+		} else {
+			jQuery(this).find("span").removeClass("ativo");
+		}
+		return false;
+	});
+	
+	jQuery(barBox).mCustomScrollbar({
+		scrollInertia: 0,
+		autoHideScrollbar: true,
+		advanced:{
+			updateOnBrowserResize: true,
+			updateOnContentResize: true
+		}
+	});
+	
+	barLateral(false,3000);
+	
+	loadFavorites();
+	var i=1, pg = 'Explore';
+	directive = {
+		'li.photo': {
+			'obj<-data': {
+				'@data':'obj.idFoursquare',
+				'@rel':'obj.id',
+				'@class+':function(arg){
+					if(i == 10) {
+						posObj = ' li-1'; i=1;
+					} else { 
+						posObj = ' li-'+i 
+					};
+					i++;
+					return " " + this.idFoursquare + posObj;
+				},
+				'a.box@href': '/#{obj.id}/#{obj.idInstagram}',
+				'.timeago': 'obj.dateUpdated',
+				'.image img@data-original':'obj.coverPic',
+				'.favorite@class+': function(){ if(isFavorite(this.id)) return ' this-fav'; },
+				'h2.title': 'obj.name',
+				'div.back@data': '/#{obj.id}/#{obj.idInstagram}',
+			}
+		}
+	}
+	
+	compila = $p('ul.content').compile(directive);
+	loadLocations();
+});
+</script>
+
 <div class="explore">
 	<div class="explore-esq">
 		<div class="content">
@@ -34,26 +110,28 @@
 	</div>
 </div>
 
-<ul class="content explorer">
-	{% for item in rs %}
-		<li class="photo">
-			<a href="{{ path('photo_show', {'idLocation' : item.id, 'slug' : item.slug}) }}" class="box">
-				<div class="time">
-					<div class="clock"></div>
-					<div class="tmp"><span class="timeago" title="{{ item.dateUpdated|date() }}">{{ item.dateUpdated|date('d/m/Y') }}</span></div>
-				</div>
-				<div style="position:absolute; z-index:1;">
-					<img class="lazy" src="{{ asset('bundles/site/images/photo-placeholder.png') }}" data-original="{{ item.coverPic }}" />
-				</div>
-				<div class="info">
-					<h2 class="title">{{ item.name }}</h2>
-					<div class="more">25 Spooters - 2 Friends</div>
-				</div>
-			</a>
-			<div class="back" onclick="document.location='{{ path('photo_show', {'idLocation' : item.id, 'slug' : item.slug}) }}';"></div>
-		</li>
-		
-	{% endfor %}
+<ul class="content template">
+	<li class="photo" data="" rel="">
+		<a href="" class="box">
+			<div class="time">
+				<div class="clock"></div>
+				<div class="tmp"><span class="timeago" title=""></span></div>
+			</div>
+			<div class="image">
+				<img class="lazy" src="/bundles/site/images/photo-placeholder.png" data-original="giva" />
+			</div>
+			<div class="info">
+
+				<div class="favorite" title=""></div>
+
+				<h2 class="title"></h2>
+				<div class="more">25 Spooters - 2 Friends</div>
+			</div>
+		</a>
+		<div class="back" data=""></div>
+	</li>
 </ul>
+<div id="photo-list">
+</div>
 
 {% endblock %}

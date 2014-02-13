@@ -29,26 +29,21 @@ function callbackLocationInfo(obj) {
 	jQuery(".locAddress").text(obj.data.address == null ? "" : obj.data.address);
 	jQuery(".locCatCitSta").html(obj.data.idCategory.name + "<br />"+ obj.data.idCity.cityName + " - " + obj.data.idState.stateName);
 }
+
+barBox = ".location-info";
 var $b = jQuery.noConflict();
 $b(document).ready(function(){
 	var	timer = "", 
 		time = 0, 
 		wid = 0, 
-		locInfo = $b(".location-info"), 
-		locDate = $b(".location-date"),
+		locInfo = $b(".location-info"),
 		comment = $b(".comment"),
 		comIco = $b(".comment-ico"),
 		comBack= $b(".com-back"),
 		datIco = $b(".calendar-ico"),
 		site = $b("#site"); 
 	
-	locationInfo(false,3000);
-	
-	$b(locInfo).hover(function() {
-		locationInfo(true,10);
-	},function(){
-		locationInfo(false,10);
-	});
+	barLateral(false,3000);
 	
 	$b(".ph-menu-com").click(function() {
 		$b(comment).animate({"right" : 0}, 500);
@@ -74,23 +69,6 @@ $b(document).ready(function(){
 	$b(datIco).click(function() {
 		alert("open");
 	});
-	
-	$b(locDate).css("left",$b(locInfo).width()-10);
-	$b(locDate).hover(function(){
-		locationInfo(true,10);
-	},function(){
-		locationInfo(false,10);
-	});
-	function locationInfo(action,time){
-		wid = !(action) ? -($b(locInfo).width()-10) : 0;
-		opa = !(action) ? 0.5 : 1;
-		dat = !(action) ? 0 : $b(locInfo).width()-10;
-		timer = setTimeout(function(){
-			$b(locInfo).animate({"left" : wid , "opacity" : opa}, 300);
-			$b(locDate).animate({"left" : dat }, 300);
-			clearTimeout(timer);
-		}, time);
-	}
 	
 	var	shadown = '.shadownPics';
 	var html = '';

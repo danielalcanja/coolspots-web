@@ -4,9 +4,11 @@
 
 {% block body %}
 <script>
-var $b = jQuery.noConflict();
-$b(document).ready(function(){
-	$b(".reply").click(function(){
+jQuery(document).ready(function(){
+	jQuery(site).css("visibility","visible");
+	jQuery(".messages-esq").css("min-height",jQuery(window).height());
+	
+	jQuery(".reply").click(function(){
 		var	shadown = '.shadown';
 		var html = '';
 		html += '<div class=\"box-criar-evento boxDiversos\">                                                                    ';
@@ -28,7 +30,7 @@ $b(document).ready(function(){
 		html += '		<input class=\"btn-padrao-m dir marRig05\" type=\"button\" value=\"Enviar\">                             ';
 		html += '	</div>                                                                                                       ';
 		html += '</div>                                                                                                          ';
-		$a(shadown).html(html).fadeIn('slow');
+		jQuery(shadown).html(html).fadeIn('slow');
 	});
 });
 </script>
@@ -118,13 +120,8 @@ $b(document).ready(function(){
 				<h2>Informações de Usuário</h2>
 				<div class="clr h20"></div><div class="clr h20"></div>
 			</div>
-			
-			
-			<div class="clr altRolagem"></div>
-			<div class="clr altRolagem"></div>
 			<div class="clr h10"></div>
 		</div>		
 	</div>
 </div>
-<div class="create" style="height:1px; display:block;"></div>
 {% endblock %}

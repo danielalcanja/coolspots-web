@@ -11,6 +11,7 @@ jQuery(document).ready(function(){
 		'li.photo': {
 			'obj<-data': {
 				'@data':'obj.idFoursquare',
+				'@rel':'obj.id',
 				'@class+':function(arg){
 					if(i == 10) {
 						posObj = ' li-1'; i=1;
@@ -35,14 +36,14 @@ jQuery(document).ready(function(){
 });
 </script>
 <ul class="content template">
-	<li class="photo" data="">
+	<li class="photo" data="" rel="">
 		<a href="" class="box">
 			<div class="time">
 				<div class="clock"></div>
 				<div class="tmp"><span class="timeago" title=""></span></div>
 			</div>
 			<div class="image">
-				<img class="lazy" src="/bundles/site/images/photo-placeholder.png" data-original="" />
+				<img class="lazy" src="/bundles/site/images/photo-placeholder.png" data-original="giva" />
 			</div>
 			<div class="info">
 

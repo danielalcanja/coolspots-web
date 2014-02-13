@@ -4,23 +4,20 @@
 
 {% block body %}
 <script>
-var $b = jQuery.noConflict();
-$b(document).ready(function(){
-	$b("body").css("overflow","hidden");
-	var obj = [];
-	$b(".opt-box").each(function(i){
-		obj[i] = $b(this);
-		$b(obj[i]).click(function(){
-			$b(".opt-box").removeClass("active");
-			$b(this).addClass("active");
-			var a = parseInt(i + 1);
-			var a2 = parseInt(i + 2);
-			$b(".b"+a).animate( {width : 800 },500);
-			$b(".b"+i).animate({ width : 0 },500);
-			$b(".b"+a2).animate({ width : 0 },500);
-			
-			return false;
-		});
+jQuery(document).ready(function(){
+	jQuery(site).css("visibility","visible");
+	jQuery(".sobre-menu").css("min-height",jQuery(window).height());
+	
+	jQuery(".sobre-ul a").click(function(e){
+		e.preventDefault();
+		if(!(jQuery(this).hasClass("ativo"))){
+			jQuery(".sobre-ul a").removeClass("ativo");
+			jQuery(this).addClass("ativo");
+			var pg = jQuery(this).attr("data");
+			jQuery(".sobre-pg").slideUp("slow");
+			jQuery("."+pg).slideDown("slow");
+			jQuery("body").mCustomScrollbar("update");
+		}
 	});
 });
 </script>
@@ -35,58 +32,24 @@ $b(document).ready(function(){
 			</ul>
 		</div>
 	</div>
-	<div class="sobre-info rollBar">
-		<div class="content">
-			<h2>Ladsfljk asdfpou zcvçlj asdfpou adsfçlj zxcvpoiu asdfçlkj zxcopiu asdfçlj asdfpoiuz xcj asdfçlkj asfoiu asdf.</h2>
-			
-			<div class="clr h20"></div>
-			<h3>Ddsfou adfo usadfoi zcxvlja sfou asdfçlj zxpvou asdfçlj adsfpou zxvçlj asdfpou asdfçljkzxc vpousadfo asdfl asdf.</h3>
-			
-			<div class="clr h20"></div>
-			
-			<div class="sobre-pg val">
-				<h3 class="bold">Nossos Valores</h3>
-				
-				<div class="clr h20"></div>
-				<span class="bold">Cool</span>
-				<p>Jadfo usadfoi zcxvlja sfou asdfçlj zxpvou asdfçlj adsfpou zxvçlj asdfpou asdfçljkzxc vpousadfo asdfl</p>
-				
-				<span class="bold">Spots</span>
-				<p>Odkf adfo usadfoi zcxvlja sfou asdfçlj zxpvou asdfçlj adsfpou zxvçlj asdfpou asdfçljkzxc vpousadfo asdfl</p>
-				
-				<span class="bold">Spooters</span>
-				<p>Ajkdf adfo usadfoi zcxvlja sfou asdfçlj zxpvou asdfçlj adsfpou zxvçlj asdfpou asdfçljkzxc vpousadfo asdfl</p>
-			</div>
-			
-			<div class="sobre-pg none que">
-				<h3 class="bold">Questões</h3>
-				<div class="clr h20"></div>
-				
-				<p>Jadfo usadfoi zcxvlja sfou asdfçlj zxpvou asdfçlj adsfpou zxvçlj asdfpou asdfçljkzxc vpousadfo asdfl</p>
-				
-				<p>Odkf adfo usadfoi zcxvlja sfou asdfçlj zxpvou asdfçlj adsfpou zxvçlj asdfpou asdfçljkzxc vpousadfo asdfl</p>
-				
-				<p>Ajkdf adfo usadfoi zcxvlja sfou asdfçlj zxpvou asdfçlj adsfpou zxvçlj asdfpou asdfçljkzxc vpousadfo asdfl</p>
-			</div>
-			
-			<div class="sobre-pg none car">
-				<h3 class="bold">Carreiras</h3>
-				<div class="clr h20"></div>
-				
-				<p>Jadfo usadfoi zcxvlja sfou asdfçlj zxpvou asdfçlj adsfpou zxvçlj asdfpou asdfçljkzxc vpousadfo asdfl</p>
-				
-				<p>Odkf adfo usadfoi zcxvlja sfou asdfçlj zxpvou asdfçlj adsfpou zxvçlj asdfpou asdfçljkzxc vpousadfo asdfl</p>
-				
-				<p>Ajkdf adfo usadfoi zcxvlja sfou asdfçlj zxpvou asdfçlj adsfpou zxvçlj asdfpou asdfçljkzxc vpousadfo teste.</p>
-			</div>
-			
-			<div class="clr altRolagem"></div>
-			<div class="clr altRolagem"></div>
-			<div class="clr h10"></div>
-		</div>		
-	</div>
 </div>
-<!--div class="index-shadown">
+<!--
+var obj = [];
+jQuery(".opt-box").each(function(i){
+	obj[i] = jQuery(this);
+	jQuery(obj[i]).click(function(){
+		jQuery(".opt-box").removeClass("active");
+		jQuery(this).addClass("active");
+		var a = parseInt(i + 1);
+		var a2 = parseInt(i + 2);
+		jQuery(".b"+a).animate( {width : 800 },500);
+		jQuery(".b"+i).animate({ width : 0 },500);
+		jQuery(".b"+a2).animate({ width : 0 },500);
+		
+		return false;
+	});
+});
+<div class="index-shadown">
 	<div class="index-box">
 		<div class="box-geral">
 			<div class="box b1 login" style="background:url('http://3.bp.blogspot.com/-0UMs_Hpa-2E/Ua1E2zp_vpI/AAAAAAAAEdM/hz7drOu6K1g/s1600/balada-marquee-las-vegas.jpg') top;">

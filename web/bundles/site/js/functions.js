@@ -2,7 +2,7 @@ var pagina = 1;
 var part1 = {data:[]}, part2 = {data:[]};
 var one = false, two = false;
 var arrFav = [], arrLast = [], lastTimer = 0;
-var pg = 'Default';
+var pg = 'Default', barBox = '';
 
 function loadFavorites() {
 	var url = '/json/favorites';
@@ -22,9 +22,11 @@ function callbackFavorites(obj) {
 	for(var item in obj.data){
 		arrFav[item] = obj.data[item].idLocation.id;
 	}
+	console.log(obj);
 }	
 function favorites(local,acao) {
 	action = acao == 'add' ? acao : 'remove';
+	console.log(local + " " + acao);
 	var url = '/json/favorites/'+action;
 	var params =  { id_location: local };
 	jsonCall(url, params, callbackFavorite);
@@ -74,7 +76,7 @@ function callbackLocations(obj) {
 	for(var i in obj.data){
 		arrLast[obj.data[i].idFoursquare] = [];
 		for(var j in obj.data[i].lastPhotos){
-			arrLast[obj.data[i].idFoursquare][j] = obj.data[i].lastPhotos[j].low_resolution;
+			arrLast[obj.data[i].idFoursquare][j] = obj.data[i].lastPhotos[j].lowResolution;
 		}
 	}
 }
@@ -86,6 +88,9 @@ function divide(obj){
 	if(totalObj >0){
 		one = true;
 		for(item = 0; item < totalObj; item++){
+			if(pg=='Default') {
+				obj.data[item].coverPic = obj.data[item].coverPic == null ? obj.data[item].lastPhotos[0].lowResolution : obj.data[item].coverPic;
+			}
 			if(totalObj >9) {
 				two = true;
 				if(item < 9) { 
@@ -99,6 +104,14 @@ function divide(obj){
 			}
 		}
 	}
+}
+function lastPhotos(id){
+	var i = 0;
+	lastTimer = setInterval(function(){
+		jQuery("."+id).find("img").attr("src",arrLast[id][i]);
+		console.log(arrLast[id][i]);
+		i++; if(i==4) i = 0;
+	},1000);
 }
 
 var $a = jQuery.noConflict();
@@ -261,12 +274,12 @@ $a(document).ready(function(){
 
 	$a("#photo-list").delegate(".favorite",'click', function(e) {
 		e.preventDefault();
-		var id = $a(this).closest(".photo").attr("data");
+		var id = $a(this).closest(".photo").attr("rel");
 		$a(this).html("<div class='loading'><div class='load'></div></div>");
 
 		if($a(this).hasClass("this-fav")){
 			favorites(id, 'remove');
-			$a(this).removeClass("this-fav");
+			$a(this).removeClass("this-fav").show();
 		} else {
 			favorites(id, 'add');
 			$a(this).addClass("this-fav");
@@ -285,7 +298,9 @@ $a(document).ready(function(){
 		$a(this).find(".more").slideToggle('fast');
 		
 		if(e.type==='mouseenter'){
-			lastPhotos($a(this).attr("data"));
+			if(!$a(this).hasClass('eve-pic')){
+				lastPhotos($a(this).attr("data"));
+			}
 		}
 		
 		if(e.type==='mouseleave'){
@@ -295,15 +310,6 @@ $a(document).ready(function(){
 		
 		// $a(this).find(".more").slideToggle( e.type === 'mouseenter' );
 	});
-	
-	function lastPhotos(id){
-		var i = 0;
-		lastTimer = setInterval(function(){
-			$a("."+id).find("img").attr("src",arrLast[id][i]);
-			console.log(arrLast[id][i]);
-			i++; if(i==4) i = 0;
-		},1000);
-	}
 	
 	var	shadown = ".shadown",
 		shadownPics = ".shadownPics",
@@ -527,38 +533,7 @@ $a(document).ready(function(){
 	$a(document).delegate(".boxDiversos", "click", function(){
 		return false;
 	});
-	
-	//SOBRE
-	$a(document).delegate(".sobre-ul a", "click", function(){
-		if(!($a(this).hasClass("ativo"))){
-			$a(".sobre-ul a").removeClass("ativo");
-			$a(this).addClass("ativo");
-			var pg = $a(this).attr("data");
-			$a(".sobre-pg").slideUp("slow");
-			$a("."+pg).slideDown("slow");
-			$a(".rollBar").mCustomScrollbar("update");
-		}
-		return false;
-	});
-	
-	//EXPLORE
-	$a("a.order").hover(function(){
-		if(!($a(this).find("span").hasClass("ativo"))){
-			$a(this).find("span").addClass("hover");
-		}
-		return false;
-	}, function(){
-		$a(this).find("span").removeClass("hover");
-	});
-	$a("a.order").click(function(){
-		if(!($a(this).find("span").hasClass("ativo"))){
-			$a("a.order").find("span").removeClass("ativo");
-			$a(this).find("span").addClass("ativo");
-		} else {
-			$a(this).find("span").removeClass("ativo");
-		}
-		return false;
-	});
+
 	
 	//FAVORITOS
 	$a("a.menuPink").click(function(){
@@ -594,4 +569,21 @@ $a(document).ready(function(){
 		$a(shadown).fadeOut('slow');
 		$a(shadownPics).fadeOut('slow');
 	}
+	
+	//BAR LATERAL
+	jQuery(barBox).hover(function() {
+		barLateral(true,10);
+	},function(){
+		barLateral(false,10);
+	});
 });
+
+function barLateral(action,time){
+	wid = !(action) ? -(jQuery(barBox).width()-10) : 0;
+	opa = !(action) ? 0.5 : 1;
+	dat = !(action) ? 0 : jQuery(barBox).width()-10;
+	timer = setTimeout(function(){
+		jQuery(barBox).animate({"left" : wid , "opacity" : opa}, 300);
+		clearTimeout(timer);
+	}, time);
+}

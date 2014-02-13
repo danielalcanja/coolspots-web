@@ -88,6 +88,8 @@ span.ros { background:#FF5885; }
 #site ul.content li { border-bottom:2px solid #FFF; }
 #site ul.template { display:none; }
 
+.ul-1 { display:none; }
+
 .ul-2 li { width:50%; float:left; }
 .ul-2 .li-1 { margin:0 1px 0 -1px; }
 .ul-2 .li-2 { margin:0 -1px 0 1px; }
@@ -308,9 +310,10 @@ ul.pho-menu li span.com { background-position:-291px -127px; }
 
 .bottom-bar a.login:link, .bottom-bar a.login:visited { border-left:5px solid #143F58; border-right:5px solid #143F58; line-height:55px; background-color:#143F58; }
 .bottom-bar a.login:hover { background-color:#FF5885; border-color:#FF5885; }
+
 /*SOBRE*/
-.sobre { width:100%; height:100%; background-color:#F4F4F4; color:#999; font-family: 'Museo300-Regular'; }
-.sobre .sobre-menu { width:235px; height:100%; float:left; background-color:#E8E8E8; }
+.sobre { width:100%; background-color:#F4F4F4; color:#999; font-family: 'Museo300-Regular'; }
+.sobre .sobre-menu { width:235px; position:fixed; float:left; background-color:#E8E8E8; }
 .sobre .sobre-menu .content { margin:70px auto auto 50px; }
 .sobre .sobre-menu .content h1 { margin-left:10px; font-size:45px; font-weight:normal; }
 .sobre .sobre-menu .content ul.sobre-ul { width:90px; margin-top:25px; }
@@ -319,7 +322,7 @@ ul.pho-menu li span.com { background-position:-291px -127px; }
 .sobre .sobre-menu .content ul.sobre-ul li a { height:15px; padding-left:5px; line-height:15px; color:#999; border-left:4px solid #E8E8E8; }
 .sobre .sobre-menu .content ul.sobre-ul li a:hover, .sobre .sobre-menu .content ul.sobre-ul li a.ativo  { border-color:#FF5885; font-weight:bold; }
 
-.sobre .sobre-info { width:415px; padding-top:80px; height:100%; float:left; }
+.sobre .sobre-info { width:415px; margin:80px 0 0 235px; float:left; }
 .sobre .sobre-info .content { margin:0 15px auto 50px; }
 .sobre .sobre-info .content h3 { font-weight:normal; }
 .sobre .sobre-info .content h3.bold { font-weight:bold; font-size:14px; }
@@ -327,7 +330,7 @@ ul.pho-menu li span.com { background-position:-291px -127px; }
 .sobre .sobre-info .content p { margin:10px 0; }
 
 /*EXPLORE*/
-.explore { width:400px; height:100%; position:absolute; z-index:1; top:0; left:0; background-color:#F4F4F4; color:#999; font-family: 'Museo300-Regular'; }
+.explore { width:400px; height:100%; position:fixed; z-index:1; top:0; left:0; background-color:#F4F4F4; color:#999; font-family: 'Museo300-Regular'; }
 .explore .explore-esq { width:400px; height:100%; float:left; background-color:#E8E8E8; }
 .explore .explore-esq .content { margin:70px auto auto 50px; }
 .explore .explore-esq .content h1 { margin-left:10px; font-size:45px; font-weight:normal; }
@@ -343,7 +346,7 @@ ul.pho-menu li span.com { background-position:-291px -127px; }
 .explore .explore-esq .content-esq a.order span.ativo { background-position: -50px -173px; }
 
 /*FAVORITOS*/
-.favorites { width:400px; height:100%; position:absolute; z-index:1; top:0; left:0; background-color:#F4F4F4; color:#999; font-family: 'Museo300-Regular'; }
+.favorites { width:400px; height:100%; position:absolute; z-index:1; top:0; left:0; background-color:#E8E8E8; color:#999; font-family: 'Museo300-Regular'; }
 .favorites .fav { display:block; margin:0 0 0 15px; font-size:12px; font-weight:bold; }
 .favorites h2 { width:290px; margin-bottom:20px; padding-left:10px; height:50px; line-height:50px; display:block; font-size:20px; font-weight:normal; text-align:left; color:#666; background:url('../images/borGray.png') repeat-x bottom; }
 .favorites .favorites-esq { width:400px; height:100%; float:left; background-color:#E8E8E8; }
@@ -356,12 +359,12 @@ ul.pho-menu li span.com { background-position:-291px -127px; }
 
 /*MESSAGES*/
 .messages { width:100%; height:100%; background-color:#F4F4F4; color:#999; font-family: 'Museo300-Regular'; }
-.messages .messages-esq { width:400px; height:100%; float:left; background-color:#E8E8E8; }
+.messages .messages-esq { width:400px; position:fixed; float:left; background-color:#E8E8E8; }
 .messages .messages-esq .content { margin:70px auto auto 50px; }
 .messages .messages-esq .content h1 { margin-left:10px; font-size:45px; font-weight:normal; }
 .messages .messages-esq .content-esq { margin:25px auto auto 10px; font-size:12px; }
 
-.messages .messages-info { width:500px; padding-top:80px; height:100%; float:left; }
+.messages .messages-info { width:500px; margin-left:400px; padding-top:80px; height:100%; float:left; }
 .messages .messages-info .content { margin:0 15px auto 50px; }
 .messages .messages-info .content h3 { font-weight:normal; }
 .messages .messages-info .content h3.bold { font-weight:bold; font-size:14px; }

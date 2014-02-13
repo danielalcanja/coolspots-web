@@ -3,11 +3,94 @@
 {% block title %}SiteBundle:Favorites:index{% endblock %}
 
 {% block body %}
+
+<script>
+pg = 'Favorites';
+var totFav = 0;
+function loadLocationsFavorites() {
+	var url =  '/json/favorites';
+	var params =  {
+		page: pagina
+	};
+	jsonCall(url, params, callbackLocationsFavorites);	
+}
+function callbackLocationsFavorites(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	totFav = obj.data.length;
+	totFav = (totFav == '0' ? "Nenhum lugar favorito" : (totFav == '1' ? "1 lugar favorito" : totFav + " lugares favoritos"));
+	jQuery(".favorites-esq .fav").text(totFav);
+	
+	divide(obj);
+	if(one) jQuery("#photo-list").append(compila(part1));
+	if(two) jQuery("#photo-list").append(compila(part2));
+		
+	pagina++;
+	
+	for(var i in obj.data){
+		arrLast[obj.data[i].idLocation.idFoursquare] = [];
+		for(var j in obj.data[i].lastPhotos){
+			arrLast[obj.data[i].idLocation.idFoursquare][j] = obj.data[i].lastPhotos[j].lowResolution;
+		}
+	}
+}
+
+barBox = ".favorites";
+jQuery(document).ready(function(){
+	jQuery("#photo-list").css("min-height",jQuery("body").height());
+	
+	jQuery(barBox).mCustomScrollbar({
+		scrollInertia: 0,
+		autoHideScrollbar: true,
+		advanced:{
+			updateOnBrowserResize: true,
+			updateOnContentResize: true
+		}
+	});
+	
+	barLateral(false,3000);
+	
+	var i=1;
+	directive = {
+		'li.photo': {
+			'obj<-data': {
+				'@data':'obj.idLocation.idFoursquare',
+				'@rel':'obj.idLocation.id',
+				'@class+':function(arg){
+					if(i == 10) {
+						posObj = ' li-1'; i=1;
+					} else { 
+						posObj = ' li-'+i 
+					};
+					i++;
+					return " " + this.idLocation.idFoursquare + posObj;
+				},
+				'a.box@href': '/#{obj.idLocation.id}/#{obj.idLocation.idInstagram}',
+				'.timeago': 'obj.idLocation.dateUpdated.timestamp',
+				'.image img@data-original':'obj.lastPic',
+				'h2.title': 'obj.name',
+				'div.back@data': '/#{obj.idLocation.id}/#{obj.idLocation.idInstagram}',
+			}
+		}
+	}
+	
+	compila = jQuery('ul.content').compile(directive);
+	loadLocationsFavorites();
+});
+</script>
+
 <div class="favorites">
 	<div class="favorites-esq">
 		<div class="content">
 			<h1>Favoritos</h1>
-			<span class="fav">15 Favoritos</span>
+			<span class="fav"></span>
 			
 			<div class="content-esq">				
 				<h3 class="marNo">Lugar mais frequentado</h3>
@@ -31,28 +114,28 @@
 	</div>
 </div>
 
-<ul class="content favorite">
-	{% for item in rs %}
-		<li class="photo">
-			<a href="{{ path('photo_show', {'idLocation' : item.id, 'slug' : item.slug}) }}" class="box">
-				<div class="time">
-					<div class="clock"></div>
-					<div class="tmp"><span class="timeago" title="{{ item.dateUpdated|date() }}">{{ item.dateUpdated|date('d/m/Y') }}</span></div>
-				</div>
-				<div style="position:absolute; z-index:1;">
-					<img class="lazy" src="{{ asset('bundles/site/images/photo-placeholder.png') }}" data-original="{{ item.coverPic }}" />
-				</div>
-				<div class="info">
-					<h2 class="title">{{ item.name }}</h2>
-					<div class="more">25 Spooters - 2 Friends</div>
-				</div>
-			</a>
-			<div class="back" onclick="document.location='{{ path('photo_show', {'idLocation' : item.id, 'slug' : item.slug}) }}';"></div>
-		</li>
-		
-	{% endfor %}
+<ul class="content template">
+	<li class="photo" data="" rel="">
+		<a href="" class="box">
+			<div class="time">
+				<div class="clock"></div>
+				<div class="tmp"><span class="timeago" title=""></span></div>
+			</div>
+			<div class="image">
+				<img class="lazy" src="/bundles/site/images/photo-placeholder.png" data-original="giva" />
+			</div>
+			<div class="info">
+
+				<div class="favorite this-fav" title=""></div>
+
+				<h2 class="title"></h2>
+				<div class="more">25 Spooters - 2 Friends</div>
+			</div>
+		</a>
+		<div class="back" data=""></div>
+	</li>
 </ul>
-<div class="pg-prev"></div>
-<div class="pg-next"></div>
-<div class="create" style="height:1px; display:block;"></div>
+<div id="photo-list">
+</div>
+
 {% endblock %}
