@@ -224,15 +224,19 @@ $a(document).ready(function(){
 			failure_limit : 20,
 			effect : "fadeIn"
 		});
-		if(hasImage) foundImage();
+		if(pg=='Default' || pg=='Photos' || pg=='Favorites' || pg=='Explore') {
+			if(hasImage) foundImage();
+		}
 	}
 	
 	function fetchNextPage(pg) {
 		if(pg=='Default') loadLocations();
 		if(pg=='Photos') loadLocationPhotos();
-		var sleep = 0;
-		console.log('Próxima pagina: '+pagina);
-		sleep = setTimeout(function(){ start(true); }, 200);
+		if(pg=='Default' || pg=='Photos' || pg=='Favorites' || pg=='Explore') {
+			var sleep = 0;
+			console.log('Próxima pagina: '+pagina);
+			sleep = setTimeout(function(){ start(true); }, 200);
+		}
 	}
 	
 	$a(window).resize(function(){

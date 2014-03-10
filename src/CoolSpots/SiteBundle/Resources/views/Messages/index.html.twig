@@ -3,13 +3,130 @@
 {% block title %}SiteBundle:Messages:index{% endblock %}
 
 {% block body %}
+
 <script>
+pg = 'Messages';
+
+function loadInbox() {
+	var url =  '/json/inbox';
+	var params =  {
+		page: pagina
+	};
+	jsonCall(url, params, callbackInbox);	
+}
+function loadInboxAdd() {
+	var msg = jQuery(".message").val();
+	var tit = msg.length > 30 ? msg.substr(0,30) + "..." : msg;
+	var url =  '/json/inbox/add';
+	var params =  {
+		to: jQuery(".user").attr("data"),
+		title: tit,
+		message: msg
+	};
+	jsonCall(url, params, callbackInboxAdd);	
+}
+function loadInboxSent() {
+	var url =  '/json/inbox/sent';
+	var params =  {
+		page: pagina
+	};
+	jsonCall(url, params, callbackInboxSent);	
+}
+
+function callbackInboxSent(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	console.log(obj);
+}
+function callbackInboxAdd(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	console.log(obj);
+}
+function callbackInbox(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	console.log(obj);
+	/*
+	totFav = obj.data.length;
+	totFav = (totFav == '0' ? "Nenhum lugar favorito" : (totFav == '1' ? "1 lugar favorito" : totFav + " lugares favoritos"));
+	jQuery(".favorites-esq .fav").text(totFav);
+	
+	divide(obj);
+	if(one) jQuery("#photo-list").append(compila(part1));
+	if(two) jQuery("#photo-list").append(compila(part2));
+		
+	pagina++;
+	
+	for(var i in obj.data){
+		arrLast[obj.data[i].idLocation.idFoursquare] = [];
+		for(var j in obj.data[i].lastPhotos){
+			arrLast[obj.data[i].idLocation.idFoursquare][j] = obj.data[i].lastPhotos[j].lowResolution;
+		}
+	}*/
+}
+
 jQuery(document).ready(function(){
 	jQuery(site).css("visibility","visible");
 	jQuery(".messages-esq").css("min-height",jQuery(window).height());
 	
+	/*
+	var i=1;
+	directive = {
+		'li.photo': {
+			'obj<-data': {
+				'@data':'obj.idLocation.idFoursquare',
+				'@rel':'obj.idLocation.id',
+				'@class+':function(arg){
+					if(i == 10) {
+						posObj = ' li-1'; i=1;
+					} else { 
+						posObj = ' li-'+i 
+					};
+					i++;
+					return " " + this.idLocation.idFoursquare + posObj;
+				},
+				'a.box@href': '/#{obj.idLocation.id}/#{obj.idLocation.idInstagram}',
+				'.timeago': 'obj.idLocation.dateUpdated.timestamp',
+				'.image img@data-original':'obj.lastPic',
+				'h2.title': 'obj.name',
+				'div.back@data': '/#{obj.idLocation.id}/#{obj.idLocation.idInstagram}',
+			}
+		}
+	}
+	
+	compila = jQuery('ul.content').compile(directive);*/
+	
+	loadInbox();
+	loadInboxSent();
+	loadFriends();
+	
+	var	shadown = '.shadown';
 	jQuery(".reply").click(function(){
-		var	shadown = '.shadown';
 		var html = '';
 		html += '<div class=\"box-criar-evento boxDiversos\">                                                                    ';
 		html += '	<div class=\"space\">                                                                                        ';
@@ -17,20 +134,25 @@ jQuery(document).ready(function(){
 		html += '		<div class=\"row\">                                                                                      ';
 		html += '			<span class=\"colM\">Para</span>                                                                     ';
 		html += '			<div class=\"col2M\" contenteditable=\"true\">                                                       ';
-		html += '				<span class=\"user borRad02\">Givanildo <em contenteditable=\"false\"></em></span>				 ';
+		html += '				<span class=\"user borRad02\" data="paulanardez">Givanildo <em contenteditable=\"false\"></em></span>				 ';
 		html += '			</div>                                                                                               ';
 		html += '		</div>                                                                                                   ';
 		html += '		<div class=\"clr h05\"></div>                                                                            ';
 		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>                                                 ';
 		html += '		<div class=\"row\">                                                                                      ';
-		html += '			<textarea name=\"detalhes\" rows=\"5\" class=\"campos-box bor-less\" placeholder=\"Escreva sua mensagem\"></textarea>';
+		html += '			<textarea name=\"detalhes\" rows=\"5\" class=\"message campos-box bor-less\" placeholder=\"Escreva sua mensagem\"></textarea>';
 		html += '		</div>                                                                                                   ';
 		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>                                                 ';
 		html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">                         ';
-		html += '		<input class=\"btn-padrao-m dir marRig05\" type=\"button\" value=\"Enviar\">                             ';
+		html += '		<input class=\"btn-padrao-m dir marRig05 btn-message-add\" type=\"button\" value=\"Enviar\">                             ';
 		html += '	</div>                                                                                                       ';
 		html += '</div>                                                                                                          ';
 		jQuery(shadown).html(html).fadeIn('slow');
+	});
+	
+	jQuery(document).delegate('.btn-message-add', 'click', function(){
+		loadInboxAdd();
+		jQuery(shadown).html("").fadeOut('slow');
 	});
 });
 </script>
@@ -40,14 +162,14 @@ jQuery(document).ready(function(){
 			<h1>Daniel Alcanja</h1>
 			
 			<div class="content-esq">				
-				<a class="menuMes menuPink menuPinkAtivo" href="#" title="Mensagens" data="box-messages"><span class="pink"></span>Mensagens <span class="total">3</span></a>
-				<a class="menuMes menuPink" href="#" title="Amigos" data="box-amigos"><span class="pink"></span>Amigos <span class="total">45</span></a>
-				<a class="menuMes menuPink" href="#" title="Favoritos" data="box-favoritos"><span class="pink"></span>Favoritos <span class="total">15</span></a>
+				<a class="menuMes menuPink menuPinkAtivo totalMessages" href="#" title="Mensagens" data="box-messages"><span class="pink"></span>Mensagens <span class="total">3</span></a>
+				<a class="menuMes menuPink totalFriends" href="#" title="Amigos" data="box-amigos"><span class="pink"></span>Amigos <span class="total">45</span></a>
+				<a class="menuMes menuPink totalFavorites" href="#" title="Favoritos" data="box-favoritos"><span class="pink"></span>Favoritos <span class="total">15</span></a>
 				<a class="menuMes menuPink" href="#" title="Informações" data="box-info"><span class="pink"></span>Informações de Usuário</a>
 			</div>
 		</div>
 	</div>
-	<div class="messages-info rollBar">
+	<div class="messages-info">
 		<div class="content">
 			<div class="mes-box box-messages">
 				<h2>Novas</h2>
@@ -89,7 +211,7 @@ jQuery(document).ready(function(){
 				
 				
 				<div class="clr h20"></div><div class="clr h20"></div>
-				<h2>Arquivos</h2>
+				<h2>Enviadas</h2>
 				<div class="clr h20"></div><div class="clr h20"></div>
 				
 				<a class="toggle" href="#" title="Givanildo R. de Oliveira">
