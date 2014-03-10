@@ -552,19 +552,6 @@ $a(document).ready(function(){
 		return false;
 	});
 	
-	//MESSAGES
-	$a(".mes-box:first").show();
-	$a("a.toggle").click(function(){
-		if(!($a(this).find("span").hasClass("ativo"))){
-			$a("a.toggle").find("span").removeClass("ativo");
-			$a(this).find("span").addClass("ativo");
-		} else {
-			$a(this).find("span").removeClass("ativo");
-		}
-		$a(this).next().slideToggle('fast');
-		return false;
-	});
-	
 	$a(document).delegate('.btn-cancel', 'click', function(){
 		shadownClose();
 	});

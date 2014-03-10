@@ -32,7 +32,29 @@ function loadInboxSent() {
 	};
 	jsonCall(url, params, callbackInboxSent);	
 }
+function loadFriends() {
+	var url =  '/json/friends';
+	var params =  {
+		page: pagina
+	};
+	jsonCall(url, params, callbackFriends);	
+}
 
+//CALLBACKS
+function callbackFriends(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	jQuery(".totalFriends").children(".total").text(obj.data.length);
+	console.log(obj);
+}
 function callbackInboxSent(obj) {
 	if(!obj) {
 		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
@@ -45,6 +67,12 @@ function callbackInboxSent(obj) {
 	}
 	
 	console.log(obj);
+	
+	jQuery("#messages-sent-list").append(compileMessagesSent(obj));
+	
+	if(jQuery("#messages-sent .messages-sent").attr("data") == "0"){
+		jQuery("#messages-sent :first").hide();
+	}
 }
 function callbackInboxAdd(obj) {
 	if(!obj) {
@@ -71,6 +99,7 @@ function callbackInbox(obj) {
 	}
 	
 	console.log(obj);
+	
 	/*
 	totFav = obj.data.length;
 	totFav = (totFav == '0' ? "Nenhum lugar favorito" : (totFav == '1' ? "1 lugar favorito" : totFav + " lugares favoritos"));
@@ -94,32 +123,20 @@ jQuery(document).ready(function(){
 	jQuery(site).css("visibility","visible");
 	jQuery(".messages-esq").css("min-height",jQuery(window).height());
 	
-	/*
-	var i=1;
-	directive = {
-		'li.photo': {
+
+	directiveSent = {
+		'.messages-sent': {
 			'obj<-data': {
-				'@data':'obj.idLocation.idFoursquare',
-				'@rel':'obj.idLocation.id',
-				'@class+':function(arg){
-					if(i == 10) {
-						posObj = ' li-1'; i=1;
-					} else { 
-						posObj = ' li-'+i 
-					};
-					i++;
-					return " " + this.idLocation.idFoursquare + posObj;
-				},
-				'a.box@href': '/#{obj.idLocation.id}/#{obj.idLocation.idInstagram}',
-				'.timeago': 'obj.idLocation.dateUpdated.timestamp',
-				'.image img@data-original':'obj.lastPic',
-				'h2.title': 'obj.name',
-				'div.back@data': '/#{obj.idLocation.id}/#{obj.idLocation.idInstagram}',
+				'@data':'obj.idUserTo.fullName',
+				'.toggle@title':'obj.idUserTo.fullName',
+				'h4.name':'obj.idUserTo.fullName',
+				'.mes-content':'obj.message',
+				'.toggle em': 'obj.dateAdded.timestamp'
 			}
 		}
 	}
 	
-	compila = jQuery('ul.content').compile(directive);*/
+	compileMessagesSent = jQuery('#messages-sent').compile(directiveSent);
 	
 	loadInbox();
 	loadInboxSent();
@@ -154,6 +171,20 @@ jQuery(document).ready(function(){
 		loadInboxAdd();
 		jQuery(shadown).html("").fadeOut('slow');
 	});
+	
+	//MESSAGES
+	jQuery(".mes-box:first").show();
+	jQuery("#messages .mes-content").hide();
+	jQuery(document).delegate('a.toggle', 'click', function(){
+		if(!(jQuery(this).find("span").hasClass("ativo"))){
+			jQuery("a.toggle").find("span").removeClass("ativo");
+			jQuery(this).find("span").addClass("ativo");
+		} else {
+			jQuery(this).find("span").removeClass("ativo");
+		}
+		jQuery(this).next().slideToggle('fast');
+		return false;
+	});
 });
 </script>
 <div class="page messages">
@@ -162,9 +193,9 @@ jQuery(document).ready(function(){
 			<h1>Daniel Alcanja</h1>
 			
 			<div class="content-esq">				
-				<a class="menuMes menuPink menuPinkAtivo totalMessages" href="#" title="Mensagens" data="box-messages"><span class="pink"></span>Mensagens <span class="total">3</span></a>
-				<a class="menuMes menuPink totalFriends" href="#" title="Amigos" data="box-amigos"><span class="pink"></span>Amigos <span class="total">45</span></a>
-				<a class="menuMes menuPink totalFavorites" href="#" title="Favoritos" data="box-favoritos"><span class="pink"></span>Favoritos <span class="total">15</span></a>
+				<a class="menuMes menuPink menuPinkAtivo totalMessages" href="#" title="Mensagens" data="box-messages"><span class="pink"></span>Mensagens <span class="total">0</span></a>
+				<a class="menuMes menuPink totalFriends" href="#" title="Amigos" data="box-amigos"><span class="pink"></span>Amigos <span class="total">0</span></a>
+				<a class="menuMes menuPink totalFavorites" href="#" title="Favoritos" data="box-favoritos"><span class="pink"></span>Favoritos <span class="total">0</span></a>
 				<a class="menuMes menuPink" href="#" title="Informações" data="box-info"><span class="pink"></span>Informações de Usuário</a>
 			</div>
 		</div>
@@ -175,38 +206,21 @@ jQuery(document).ready(function(){
 				<h2>Novas</h2>
 				<div class="clr h20"></div><div class="clr h20"></div>
 				
-				<a class="toggle" href="#" title="Givanildo R. de Oliveira">
-					Givanildo R. de Oliveira <em>25 minutos atrás</em><span></span>
-				</a>
-				<div class="mes-content">
-					<p>Lorekkj asldfkj asdflkj asdlkjasdflkj asdflkj asdflkj asdflkj asdflkj asdflkj asdflk jasd.</p>
+				<div id="messages-inbox">
+					<div class="messages-inbox">
+						<a class="toggle" href="#" title="Givanildo R. de Oliveira">
+							<h4 class="name">SDfsfsd</h4> 
+							<em>25 minutos atrás</em><span class="span"></span>
+						</a>
+						<div class="mes-content">
+							<p>Lorekkj asldfkj asdflkj asdlkjasdflkj asdflkj asdflkj asdflkj asdflkj asdflkj asdflk jasd.</p>
 					
-					<div class="clr h20"></div>
-					<input class="btn-padrao-m dir" type="button" value="Deletar">
-					<input class="btn-padrao-m dir marRig05 reply" type="button" value="Responder">
-					<div class="clr"></div>
-				</div>
-				<a class="toggle" href="#" title="Walter Cruz">
-					Walter Cruz <em>25 minutos atrás</em><span></span>
-				</a>
-				<div class="mes-content">
-					<p>Lorekkj asldfkj asdflkj asdlkjasdflkj asdflkj asdflkj asdflkj asdflkj asdflkj asdflk jasd.</p>
-					
-					<div class="clr h20"></div>
-					<input class="btn-padrao-m dir" type="button" value="Deletar">
-					<input class="btn-padrao-m dir marRig05 reply" type="button" value="Responder">
-					<div class="clr"></div>
-				</div>
-				<a class="toggle" href="#" title="Daniel Vieira">
-					Daniel Vieira<em>25 minutos atrás</em><span></span>
-				</a>
-				<div class="mes-content">
-					<p>Lorekkj asldfkj asdflkj asdlkjasdflkj asdflkj asdflkj asdflkj asdflkj asdflkj asdflk jasd.</p>
-					
-					<div class="clr h20"></div>
-					<input class="btn-padrao-m dir" type="button" value="Deletar">
-					<input class="btn-padrao-m dir marRig05 reply" type="button" value="Responder">
-					<div class="clr"></div>
+							<div class="clr h20"></div>
+							<input class="btn-padrao-m dir" type="button" value="Deletar">
+							<input class="btn-padrao-m dir marRig05 reply" type="button" value="Responder">
+							<div class="clr"></div>
+						</div>
+					</div>
 				</div>
 				
 				
@@ -214,18 +228,19 @@ jQuery(document).ready(function(){
 				<h2>Enviadas</h2>
 				<div class="clr h20"></div><div class="clr h20"></div>
 				
-				<a class="toggle" href="#" title="Givanildo R. de Oliveira">
-					Givanildo R. de Oliveira <em>25 minutos atrás</em><span></span>
-				</a>
-				<div class="mes-content"><p>Lorekkj asldfkj asdflkj asdlkjasdflkj asdflkj asdflkj asdflkj asdflkj asdflkj asdflk jasd.</p></div>
-				<a class="toggle" href="#" title="Walter Cruz">
-					Walter Cruz <em>25 minutos atrás</em><span></span>
-				</a>
-				<div class="mes-content"><p>Dadfkj asdflkj flkj asdflkj asdflkj asdflkj asdflkj asdflkj asdflk jasd.</p></div>
-				<a class="toggle" href="#" title="Daniel Vieira">
-					Daniel Vieira<em>25 minutos atrás</em><span></span>
-				</a>
-				<div class="mes-content"><p>Oasdflk jasdflkj flkj asdflkj asdflkj asdflkj asdflk jasd.</p></div>
+				<div id="messages-sent">
+					<div class="messages-sent" data="0">
+						<a class="toggle" href="#" title="">
+							<h4 class="name"></h4> 
+							<em></em><span class="span"></span>
+						</a>
+						<div class="mes-content">
+						
+						</div>
+					</div>
+				</div>
+				<div id="messages-sent-list">
+				</div>
 			</div>
 			
 			<div class="mes-box box-amigos">

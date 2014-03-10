@@ -371,8 +371,7 @@ ul.pho-menu li span.com { background-position:-291px -127px; }
 .messages .messages-info .content span, .sobre .sobre-info .content p { font-size:13px; }
 .messages .messages-info .content p { margin:10px 0; }
 
-.messages .messages-info .content .mes-content { width:100%; display:none; border-bottom:1px solid #CCC; padding-bottom:10px; }
-.messages .messages-info .content .mes-content p { padding:5px; font-size:13px; }
+.messages .messages-info .content .mes-content { width:100%; display:none; border-bottom:1px solid #CCC; padding-bottom:10px; padding:5px; font-size:13px;  }
 
 .messages .messages-info .content .mes-box { width:480px; display:none; }
 
@@ -389,8 +388,9 @@ a.order span.hover { background-position: -50px -161px; }
 a.order span.ativo { background-position: -50px -173px; }
 
 a.toggle:link, a.toggle:visited { width:480px; height:40px; line-height:40px; display:block; text-align:left; font-weight:bold; color:#333; border-bottom:1px solid #CCC; position:relative; }
-a.toggle span { width:8px; height:6px; display:block; position:absolute; top:16px; right:0px; background:url('../images/icons.png') -65px -149px no-repeat; }
-a.toggle span.ativo { background-position: -65px -155px; }
+a.toggle h4 { display:inline; }
+a.toggle .span { width:8px; height:6px; display:block; position:absolute; top:16px; right:0px; background:url('../images/icons.png') -65px -149px no-repeat; }
+a.toggle .span.ativo { background-position: -65px -155px; }
 a.toggle em { float:right; margin-right:25px; color:#666; font-weight:normal; }
 
 .clr { clear:both; }
