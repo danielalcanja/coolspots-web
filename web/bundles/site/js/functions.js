@@ -540,7 +540,8 @@ $a(document).ready(function(){
 
 	
 	//FAVORITOS
-	$a("a.menuPink").click(function(){
+	$a("a.menuPink").click(function(e){
+		e.preventDefault();
 		$a("a.menuPink").removeClass("menuPinkAtivo");
 		$a(this).addClass("menuPinkAtivo");
 		
@@ -549,7 +550,6 @@ $a(document).ready(function(){
 			$a(".mes-box").slideUp('fast');
 			$a("div."+pg).slideDown('fast');
 		}
-		return false;
 	});
 	
 	$a(document).delegate('.btn-cancel', 'click', function(){

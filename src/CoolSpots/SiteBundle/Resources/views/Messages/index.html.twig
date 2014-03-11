@@ -7,17 +7,25 @@
 <script>
 pg = 'Messages';
 var idInboxRead = 0;
+var idInboxRemove = [];
+var loginInboxRemove = '';
+var paginaInbox = 1, paginaInboxOld = 1, paginaInboxSent = 1, paginaFriends = 1;
 
-function loadInbox(status) {
-	var url =  '/json/inbox';
-	var params =  {
-		page: pagina
-	};
-	if(status=='Y'){
+function loadInbox(filter) {
+	var url =  '/json/inbox';	
+	if(filter=='read'){
+		var params =  {
+		filter: filter,
+			page: paginaInboxOld
+		};
 		jsonCall(url, params, callbackInboxOld);
 	} else {
+		var params =  {
+		filter: filter,
+			page: paginaInbox
+		};
 		jsonCall(url, params, callbackInbox);
-	}	
+	}
 }
 function loadInboxAdd() {
 	var msg = jQuery(".message").val();
@@ -33,7 +41,7 @@ function loadInboxAdd() {
 function loadInboxSent() {
 	var url =  '/json/inbox/sent';
 	var params =  {
-		page: pagina
+		page: paginaInboxSent
 	};
 	jsonCall(url, params, callbackInboxSent);	
 }
@@ -47,12 +55,32 @@ function loadInboxRead() {
 function loadFriends() {
 	var url =  '/json/friends';
 	var params =  {
-		page: pagina
+		page: paginaFriends
 	};
 	jsonCall(url, params, callbackFriends);	
 }
-
+function loadInboxRemove() {
+	var url =  '/json/inbox/remove';
+	var params =  {
+		username: loginInboxRemove,
+		messages: idInboxRemove
+	};
+	jsonCall(url, params, callbackInboxRemove);	
+}
 //CALLBACKS
+function callbackInboxRemove(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	console.log(obj);
+}
 function callbackFriends(obj) {
 	if(!obj) {
 		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
@@ -64,8 +92,20 @@ function callbackFriends(obj) {
 		return(false);
 	}
 	
-	jQuery(".totalFriends").children(".total").text(obj.data.length);
 	console.log(obj);
+	jQuery(".totalFriends").children(".total").text(obj.data.length);
+	if(obj.data.length > 0){
+		if(paginaFriends == 1) jQuery("#friends-list").html(compileFriends(obj))
+		else jQuery("#friends-list").append(compileFriends(obj));
+	
+		if(jQuery("#friends .friends").attr("data") == "0"){
+			jQuery("#friends :first").hide();
+		}
+	} else {
+		jQuery("#friends").html('<center>Você não tem amigos no CoolSpots!</center>');
+	}
+	
+	paginaFriends++;
 }
 function callbackInboxRead(obj) {
 	if(!obj) {
@@ -93,11 +133,14 @@ function callbackInboxSent(obj) {
 	
 	console.log(obj);
 	
-	jQuery("#messages-sent-list").append(compileMessagesSent(obj));
+	if(paginaInboxSent == 1) jQuery("#messages-sent-list").html(compileMessagesSent(obj))
+	else jQuery("#messages-sent-list").append(compileMessagesSent(obj));
 	
 	if(jQuery("#messages-sent .messages-sent").attr("data") == "0"){
 		jQuery("#messages-sent :first").hide();
 	}
+	
+	paginaInboxSent++;
 }
 function callbackInboxAdd(obj) {
 	if(!obj) {
@@ -123,15 +166,22 @@ function callbackInboxOld(obj) {
 		return(false);
 	}
 	
-	console.log(obj);
+	var total = obj.data.length;
 	
-	jQuery("#messages-inbox-old-list").append(compileMessagesInboxOld(obj));
+	if(obj.data.length > 0){
+		if(paginaInboxOld==1) jQuery("#messages-inbox-old-list").html(compileMessagesInboxOld(obj))
+		else jQuery("#messages-inbox-old-list").append(compileMessagesInboxOld(obj));
 	
-	if(jQuery("#messages-inbox-old .messages-inbox-old").attr("data") == "0"){
-		jQuery("#messages-inbox-old :first").hide();
+		if(jQuery("#messages-inbox-old .messages-inbox-old").attr("data") == "0"){
+			jQuery("#messages-inbox-old :first").hide();
+		}
+	} else {
+		jQuery("#messages-inbox-old").html('<center>Nenhuma mensagem!</center>');
 	}
-
-	pagina++;
+	
+	console.log(obj);
+		
+	paginaInboxOld++;
 	
 }
 function callbackInbox(obj) {
@@ -145,17 +195,23 @@ function callbackInbox(obj) {
 		return(false);
 	}
 	
-	jQuery(".totalInbox").children(".total").text(obj.data.length);
+	var total = obj.data.length;
+	jQuery(".totalInbox").children(".total").text(total);
+	
+	if(obj.data.length > 0){
+		if(paginaInbox==1) jQuery("#messages-inbox-list").html(compileMessagesInbox(obj))
+		else jQuery("#messages-inbox-list").append(compileMessagesInbox(obj))
+	
+		if(jQuery("#messages-inbox .messages-inbox").attr("data") == "0"){
+			jQuery("#messages-inbox :first").hide();
+		}
+	} else {
+		jQuery("#messages-inbox").html('<center>Nenhuma mensagem nova!</center>');
+	}
 	
 	console.log(obj);
-	
-	jQuery("#messages-inbox-list").append(compileMessagesInbox(obj));
-	
-	if(jQuery("#messages-inbox .messages-inbox").attr("data") == "0"){
-		jQuery("#messages-inbox :first").hide();
-	}
 		
-	pagina++;
+	paginaInbox++;
 	
 }
 
@@ -171,7 +227,9 @@ jQuery(document).ready(function(){
 				'.toggle@title':'obj.idUserFrom.fullName',
 				'h4.name':'obj.idUserFrom.fullName',
 				'.toggle em': 'obj.dateAdded.timestamp',
-				'.mes-content p':'obj.message'
+				'.mes-content p':'obj.message',
+				'.delete@data':'obj.id',
+				'.delete@rel':'obj.idUserFrom.username'
 			}
 		}
 	}
@@ -185,7 +243,9 @@ jQuery(document).ready(function(){
 				'.toggle@title':'obj.idUserFrom.fullName',
 				'h4.name':'obj.idUserFrom.fullName',
 				'.toggle em': 'obj.dateAdded.timestamp',
-				'.mes-content p':'obj.message'
+				'.mes-content p':'obj.message',
+				'.delete@data':'obj.id',
+				'.delete@rel':'obj.idUserFrom.username'
 			}
 		}
 	}
@@ -204,36 +264,55 @@ jQuery(document).ready(function(){
 	}
 	compileMessagesSent = jQuery('#messages-sent').compile(directiveSent);
 	
-	loadInbox();
-	loadInbox('Y');
+	directiveFriends = {
+		'.friends': {
+			'obj<-data': {
+				'@data':'obj.username',
+				'img@src': 'obj.profilePicture',
+				'h4.name':'obj.fullName',
+				'h4.login':'obj.username',
+				'.desde': 'obj.dateAdded.timestamp'
+			}
+		}
+	}
+	compileFriends = jQuery('#friends').compile(directiveFriends);
+	
+	loadInbox('new');
+	loadInbox('read');
 	loadInboxSent();
-	loadFriends();
 	
 	var	shadown = '.shadown';
 	jQuery(".reply").click(function(){
 		var html = '';
-		html += '<div class=\"box-criar-evento boxDiversos\">                                                                    ';
-		html += '	<div class=\"space\">                                                                                        ';
-		html += '		<h2 class=\"box-h2\">Nova Mensagem</h2>                                                                  ';
-		html += '		<div class=\"row\">                                                                                      ';
-		html += '			<span class=\"colM\">Para</span>                                                                     ';
-		html += '			<div class=\"col2M\" contenteditable=\"true\">                                                       ';
-		html += '				<span class=\"user borRad02\" data="paulanardez">Givanildo <em contenteditable=\"false\"></em></span>				 ';
-		html += '			</div>                                                                                               ';
-		html += '		</div>                                                                                                   ';
-		html += '		<div class=\"clr h05\"></div>                                                                            ';
-		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>                                                 ';
-		html += '		<div class=\"row\">                                                                                      ';
+		html += '<div class=\"box-criar-evento boxDiversos\">';
+		html += '	<div class=\"space\">';
+		html += '		<h2 class=\"box-h2\">Nova Mensagem</h2>';
+		html += '		<div class=\"row\">';
+		html += '			<span class=\"colM\">Para</span>';
+		html += '			<div class=\"col2M\" contenteditable=\"true\">';
+		html += '				<span class=\"user borRad02\" data="paulanardez">Givanildo <em contenteditable=\"false\"></em></span>';
+		html += '			</div>';
+		html += '		</div>';
+		html += '		<div class=\"clr h05\"></div>';
+		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>';
+		html += '		<div class=\"row\">';
 		html += '			<textarea name=\"detalhes\" rows=\"5\" class=\"message campos-box bor-less\" placeholder=\"Escreva sua mensagem\"></textarea>';
-		html += '		</div>                                                                                                   ';
-		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>                                                 ';
-		html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">                         ';
-		html += '		<input class=\"btn-padrao-m dir marRig05 btn-message-add\" type=\"button\" value=\"Enviar\">                             ';
-		html += '	</div>                                                                                                       ';
-		html += '</div>                                                                                                          ';
+		html += '		</div>';
+		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>';
+		html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">';
+		html += '		<input class=\"btn-padrao-m dir marRig05 btn-message-add\" type=\"button\" value=\"Enviar\">';
+		html += '	</div>';
+		html += '</div>';
 		jQuery(shadown).html(html).fadeIn('slow');
 	});
 	
+	jQuery(document).delegate('.delete', 'click', function(){
+		idInboxRemove = [];
+		idInboxRemove.push(jQuery(this).attr("data"));
+		loginInboxRemove = jQuery(this).attr("rel");
+		loadInboxRemove();
+		jQuery(this).closest(".msg-box").fadeOut('fast').end().remove();
+	});
 	jQuery(document).delegate('.btn-message-add', 'click', function(){
 		loadInboxAdd();
 		jQuery(shadown).html("").fadeOut('slow');
@@ -258,6 +337,18 @@ jQuery(document).ready(function(){
 		
 		return false;
 	});
+	
+	jQuery("a.menuMes").click(function(){
+		var action = jQuery(this).attr("rel");
+		if(action=='Inbox') { 
+			paginaInbox = 1; paginaInboxOld = 1; paginaInboxSent = 1;
+			loadInbox('new');	loadInbox('read'); loadInboxSent(); 
+		}
+		if(action=='Friends') {
+			paginaFriends = 1;
+			loadFriends();
+		}
+	});
 });
 </script>
 <div class="page messages">
@@ -266,9 +357,9 @@ jQuery(document).ready(function(){
 			<h1>{{ app.session.get('full_name') }}</h1>
 			
 			<div class="content-esq">				
-				<a class="menuMes menuPink menuPinkAtivo totalInbox" href="#" title="Mensagens" data="box-messages"><span class="pink"></span>Mensagens <span class="total">0</span></a>
-				<a class="menuMes menuPink totalFriends" href="#" title="Amigos" data="box-amigos"><span class="pink"></span>Amigos <span class="total">0</span></a>
-				<a class="menuMes menuPink totalFavorites" href="#" title="Favoritos" data="box-favoritos"><span class="pink"></span>Favoritos <span class="total">0</span></a>
+				<a rel="Inbox" class="menuMes menuPink menuPinkAtivo totalInbox" href="#" title="Mensagens" data="box-messages"><span class="pink"></span>Mensagens <span class="total">0</span></a>
+				<a rel="Friends" class="menuMes menuPink totalFriends" href="#" title="Amigos" data="box-amigos"><span class="pink"></span>Amigos <span class="total">0</span></a>
+				<!--a class="menuMes menuPink totalFavorites" href="#" title="Favoritos" data="box-favoritos"><span class="pink"></span>Favoritos <span class="total">0</span></a-->
 				<a class="menuMes menuPink" href="#" title="Informações" data="box-info"><span class="pink"></span>Informações de Usuário</a>
 			</div>
 		</div>
@@ -280,7 +371,7 @@ jQuery(document).ready(function(){
 				<div class="clr h10"></div>
 				
 				<div id="messages-inbox">
-					<div class="messages-inbox" data="0">
+					<div class="messages-inbox msg-box" data="0">
 						<a id="" class="toggle inbox-new" href="#" title="">
 							<h4 class="name"></h4> 
 							<em></em><span class="span"></span>
@@ -289,7 +380,7 @@ jQuery(document).ready(function(){
 							<p></p>
 					
 							<div class="clr h20"></div>
-							<input class="btn-padrao-m dir" type="button" value="Deletar">
+							<input class="btn-padrao-m dir delete" data="" rel="" type="button" value="Deletar">
 							<input class="btn-padrao-m dir marRig05 reply" type="button" value="Responder">
 							<div class="clr"></div>
 						</div>
@@ -302,7 +393,7 @@ jQuery(document).ready(function(){
 				<div class="clr h10"></div>
 				
 				<div id="messages-inbox-old">
-					<div class="messages-inbox-old" data="0">
+					<div class="messages-inbox-old msg-box" data="0">
 						<a id="" class="toggle" href="#" title="">
 							<h4 class="name"></h4> 
 							<em></em><span class="span"></span>
@@ -311,7 +402,7 @@ jQuery(document).ready(function(){
 							<p></p>
 					
 							<div class="clr h20"></div>
-							<input class="btn-padrao-m dir" type="button" value="Deletar">
+							<input class="btn-padrao-m dir delete" data="" rel="" type="button" value="Deletar">
 							<input class="btn-padrao-m dir marRig05 reply" type="button" value="Responder">
 							<div class="clr"></div>
 						</div>
@@ -325,7 +416,7 @@ jQuery(document).ready(function(){
 				<div class="clr h20"></div>
 				
 				<div id="messages-sent">
-					<div class="messages-sent" data="0">
+					<div class="messages-sent msg-box" data="0">
 						<a class="toggle" href="#" title="">
 							<h4 class="name"></h4> 
 							<em></em><span class="span"></span>
@@ -340,7 +431,23 @@ jQuery(document).ready(function(){
 			
 			<div class="mes-box box-amigos">
 				<h2>Amigos</h2>
-				<div class="clr h20"></div><div class="clr h20"></div>
+				<div class="clr h20"></div>
+				
+				<div id="friends">
+					<div class="friends" data="0">
+						<img src="http://images.ak.instagram.com/profiles/profile_198230980_75sq_1362087670.jpg" alt="" />
+						<div class="friends-info">
+							<h4 class="name">Givanildo R. de Oliveira </h4>
+							<h4 class="login">givaonlinemt</h4>
+							<div class="clr h10"></div>
+							<input type="button" class="btn-padrao-m" value="Desfazer amizade" />
+							<span class="desde">Desde 10/12/2013</span>
+						</div>
+					</div>
+					<div class="clr separator"></div>
+				</div>
+				
+				<div id="friends-list"></div>
 			</div>
 			
 			<div class="mes-box box-favoritos">

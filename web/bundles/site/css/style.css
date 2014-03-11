@@ -375,6 +375,16 @@ ul.pho-menu li span.com { background-position:-291px -127px; }
 
 .messages .messages-info .content .mes-box { width:480px; display:none; }
 
+/*FRIENDS*/
+#friends .friends { width:100%; display:table; padding:5px; margin:10px 0; float:left; }
+#friends .friends img { float:left; margin-right:5px; padding:3px; width:80px; height:80px; background:#FFF; border:1px solid #ccc; }
+#friends .friends .friends-info { width:380px; float:left; position:relative; }
+#friends .friends .friends-info h4.name { color:#296689 }
+#friends .friends .friends-info h4.login { color:#666 }
+#friends .friends .friends-info .desde { position:absolute; top:0; right:0; line-height:80px; }
+#friends .friends .separator { border-bottom:1px solid #F0F0F0; }
+
+
 /*MENUS - LINKS*/
 a.menuPink:link, a.menuPink:visited , a.menuPinkAtivo{ width:300px; height:40px; line-height:40px; display:block; text-align:left; color:#666; background:url('../images/borGray.png') repeat-x bottom; position:relative; }
 a.menuPink span.pink { width:3px; height:20px; background:#FF5885; position:absolute; top:10px; left:-10px; display:none; }
