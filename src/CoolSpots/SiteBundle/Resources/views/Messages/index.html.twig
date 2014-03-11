@@ -3,13 +3,214 @@
 {% block title %}SiteBundle:Messages:index{% endblock %}
 
 {% block body %}
+
 <script>
+pg = 'Messages';
+var idInboxRead = 0;
+
+function loadInbox(status) {
+	var url =  '/json/inbox';
+	var params =  {
+		page: pagina
+	};
+	if(status=='Y'){
+		jsonCall(url, params, callbackInboxOld);
+	} else {
+		jsonCall(url, params, callbackInbox);
+	}	
+}
+function loadInboxAdd() {
+	var msg = jQuery(".message").val();
+	var tit = msg.length > 30 ? msg.substr(0,30) + "..." : msg;
+	var url =  '/json/inbox/add';
+	var params =  {
+		to: jQuery(".user").attr("data"),
+		title: tit,
+		message: msg
+	};
+	jsonCall(url, params, callbackInboxAdd);	
+}
+function loadInboxSent() {
+	var url =  '/json/inbox/sent';
+	var params =  {
+		page: pagina
+	};
+	jsonCall(url, params, callbackInboxSent);	
+}
+function loadInboxRead() {
+	var url =  '/json/inbox/read';
+	var params =  {
+		id: idInboxRead
+	};
+	jsonCall(url, params, callbackInboxRead);	
+}
+function loadFriends() {
+	var url =  '/json/friends';
+	var params =  {
+		page: pagina
+	};
+	jsonCall(url, params, callbackFriends);	
+}
+
+//CALLBACKS
+function callbackFriends(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	jQuery(".totalFriends").children(".total").text(obj.data.length);
+	console.log(obj);
+}
+function callbackInboxRead(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	console.log(obj);
+}
+function callbackInboxSent(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	console.log(obj);
+	
+	jQuery("#messages-sent-list").append(compileMessagesSent(obj));
+	
+	if(jQuery("#messages-sent .messages-sent").attr("data") == "0"){
+		jQuery("#messages-sent :first").hide();
+	}
+}
+function callbackInboxAdd(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	console.log(obj);
+}
+function callbackInboxOld(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	console.log(obj);
+	
+	jQuery("#messages-inbox-old-list").append(compileMessagesInboxOld(obj));
+	
+	if(jQuery("#messages-inbox-old .messages-inbox-old").attr("data") == "0"){
+		jQuery("#messages-inbox-old :first").hide();
+	}
+
+	pagina++;
+	
+}
+function callbackInbox(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	jQuery(".totalInbox").children(".total").text(obj.data.length);
+	
+	console.log(obj);
+	
+	jQuery("#messages-inbox-list").append(compileMessagesInbox(obj));
+	
+	if(jQuery("#messages-inbox .messages-inbox").attr("data") == "0"){
+		jQuery("#messages-inbox :first").hide();
+	}
+		
+	pagina++;
+	
+}
+
 jQuery(document).ready(function(){
 	jQuery(site).css("visibility","visible");
 	jQuery(".messages-esq").css("min-height",jQuery(window).height());
 	
+	directiveInbox = {
+		'.messages-inbox': {
+			'obj<-data': {
+				'@data':'obj.idUserFrom.fullName',
+				'.toggle@id':'obj.id',
+				'.toggle@title':'obj.idUserFrom.fullName',
+				'h4.name':'obj.idUserFrom.fullName',
+				'.toggle em': 'obj.dateAdded.timestamp',
+				'.mes-content p':'obj.message'
+			}
+		}
+	}
+	compileMessagesInbox = jQuery('#messages-inbox').compile(directiveInbox);
+	
+	directiveInboxOld = {
+		'.messages-inbox-old': {
+			'obj<-data': {
+				'@data':'obj.idUserFrom.fullName',
+				'.toggle@id':'obj.id',
+				'.toggle@title':'obj.idUserFrom.fullName',
+				'h4.name':'obj.idUserFrom.fullName',
+				'.toggle em': 'obj.dateAdded.timestamp',
+				'.mes-content p':'obj.message'
+			}
+		}
+	}
+	compileMessagesInboxOld = jQuery('#messages-inbox-old').compile(directiveInboxOld);
+
+	directiveSent = {
+		'.messages-sent': {
+			'obj<-data': {
+				'@data':'obj.idUserTo.fullName',
+				'.toggle@title':'obj.idUserTo.fullName',
+				'h4.name':'obj.idUserTo.fullName',
+				'.toggle em': 'obj.dateAdded.timestamp',
+				'.mes-content':'obj.message'
+			}
+		}
+	}
+	compileMessagesSent = jQuery('#messages-sent').compile(directiveSent);
+	
+	loadInbox();
+	loadInbox('Y');
+	loadInboxSent();
+	loadFriends();
+	
+	var	shadown = '.shadown';
 	jQuery(".reply").click(function(){
-		var	shadown = '.shadown';
 		var html = '';
 		html += '<div class=\"box-criar-evento boxDiversos\">                                                                    ';
 		html += '	<div class=\"space\">                                                                                        ';
@@ -17,93 +218,124 @@ jQuery(document).ready(function(){
 		html += '		<div class=\"row\">                                                                                      ';
 		html += '			<span class=\"colM\">Para</span>                                                                     ';
 		html += '			<div class=\"col2M\" contenteditable=\"true\">                                                       ';
-		html += '				<span class=\"user borRad02\">Givanildo <em contenteditable=\"false\"></em></span>				 ';
+		html += '				<span class=\"user borRad02\" data="paulanardez">Givanildo <em contenteditable=\"false\"></em></span>				 ';
 		html += '			</div>                                                                                               ';
 		html += '		</div>                                                                                                   ';
 		html += '		<div class=\"clr h05\"></div>                                                                            ';
 		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>                                                 ';
 		html += '		<div class=\"row\">                                                                                      ';
-		html += '			<textarea name=\"detalhes\" rows=\"5\" class=\"campos-box bor-less\" placeholder=\"Escreva sua mensagem\"></textarea>';
+		html += '			<textarea name=\"detalhes\" rows=\"5\" class=\"message campos-box bor-less\" placeholder=\"Escreva sua mensagem\"></textarea>';
 		html += '		</div>                                                                                                   ';
 		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>                                                 ';
 		html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">                         ';
-		html += '		<input class=\"btn-padrao-m dir marRig05\" type=\"button\" value=\"Enviar\">                             ';
+		html += '		<input class=\"btn-padrao-m dir marRig05 btn-message-add\" type=\"button\" value=\"Enviar\">                             ';
 		html += '	</div>                                                                                                       ';
 		html += '</div>                                                                                                          ';
 		jQuery(shadown).html(html).fadeIn('slow');
+	});
+	
+	jQuery(document).delegate('.btn-message-add', 'click', function(){
+		loadInboxAdd();
+		jQuery(shadown).html("").fadeOut('slow');
+	});
+	
+	//MESSAGES
+	jQuery(".mes-box:first").show();
+	jQuery(document).delegate('a.toggle', 'click', function(){
+		if(!(jQuery(this).find("span").hasClass("ativo"))){
+			jQuery("a.toggle").find("span").removeClass("ativo");
+			jQuery(this).find("span").addClass("ativo");
+		} else {
+			jQuery(this).find("span").removeClass("ativo");
+		}
+		jQuery(this).next().slideToggle('fast');
+		
+		if(jQuery(this).hasClass("inbox-new")){
+			idInboxRead = jQuery(this).attr("id");
+			jQuery(this).removeClass("inbox-new");
+			loadInboxRead();
+		}
+		
+		return false;
 	});
 });
 </script>
 <div class="page messages">
 	<div class="messages-esq">
 		<div class="content">
-			<h1>Daniel Alcanja</h1>
+			<h1>{{ app.session.get('full_name') }}</h1>
 			
 			<div class="content-esq">				
-				<a class="menuMes menuPink menuPinkAtivo" href="#" title="Mensagens" data="box-messages"><span class="pink"></span>Mensagens <span class="total">3</span></a>
-				<a class="menuMes menuPink" href="#" title="Amigos" data="box-amigos"><span class="pink"></span>Amigos <span class="total">45</span></a>
-				<a class="menuMes menuPink" href="#" title="Favoritos" data="box-favoritos"><span class="pink"></span>Favoritos <span class="total">15</span></a>
+				<a class="menuMes menuPink menuPinkAtivo totalInbox" href="#" title="Mensagens" data="box-messages"><span class="pink"></span>Mensagens <span class="total">0</span></a>
+				<a class="menuMes menuPink totalFriends" href="#" title="Amigos" data="box-amigos"><span class="pink"></span>Amigos <span class="total">0</span></a>
+				<a class="menuMes menuPink totalFavorites" href="#" title="Favoritos" data="box-favoritos"><span class="pink"></span>Favoritos <span class="total">0</span></a>
 				<a class="menuMes menuPink" href="#" title="Informações" data="box-info"><span class="pink"></span>Informações de Usuário</a>
 			</div>
 		</div>
 	</div>
-	<div class="messages-info rollBar">
+	<div class="messages-info">
 		<div class="content">
 			<div class="mes-box box-messages">
 				<h2>Novas</h2>
-				<div class="clr h20"></div><div class="clr h20"></div>
+				<div class="clr h10"></div>
 				
-				<a class="toggle" href="#" title="Givanildo R. de Oliveira">
-					Givanildo R. de Oliveira <em>25 minutos atrás</em><span></span>
-				</a>
-				<div class="mes-content">
-					<p>Lorekkj asldfkj asdflkj asdlkjasdflkj asdflkj asdflkj asdflkj asdflkj asdflkj asdflk jasd.</p>
+				<div id="messages-inbox">
+					<div class="messages-inbox" data="0">
+						<a id="" class="toggle inbox-new" href="#" title="">
+							<h4 class="name"></h4> 
+							<em></em><span class="span"></span>
+						</a>
+						<div class="mes-content">
+							<p></p>
 					
-					<div class="clr h20"></div>
-					<input class="btn-padrao-m dir" type="button" value="Deletar">
-					<input class="btn-padrao-m dir marRig05 reply" type="button" value="Responder">
-					<div class="clr"></div>
+							<div class="clr h20"></div>
+							<input class="btn-padrao-m dir" type="button" value="Deletar">
+							<input class="btn-padrao-m dir marRig05 reply" type="button" value="Responder">
+							<div class="clr"></div>
+						</div>
+					</div>
 				</div>
-				<a class="toggle" href="#" title="Walter Cruz">
-					Walter Cruz <em>25 minutos atrás</em><span></span>
-				</a>
-				<div class="mes-content">
-					<p>Lorekkj asldfkj asdflkj asdlkjasdflkj asdflkj asdflkj asdflkj asdflkj asdflkj asdflk jasd.</p>
-					
-					<div class="clr h20"></div>
-					<input class="btn-padrao-m dir" type="button" value="Deletar">
-					<input class="btn-padrao-m dir marRig05 reply" type="button" value="Responder">
-					<div class="clr"></div>
-				</div>
-				<a class="toggle" href="#" title="Daniel Vieira">
-					Daniel Vieira<em>25 minutos atrás</em><span></span>
-				</a>
-				<div class="mes-content">
-					<p>Lorekkj asldfkj asdflkj asdlkjasdflkj asdflkj asdflkj asdflkj asdflkj asdflkj asdflk jasd.</p>
-					
-					<div class="clr h20"></div>
-					<input class="btn-padrao-m dir" type="button" value="Deletar">
-					<input class="btn-padrao-m dir marRig05 reply" type="button" value="Responder">
-					<div class="clr"></div>
-				</div>
-				
+				<div id="messages-inbox-list"></div>
 				
 				<div class="clr h20"></div><div class="clr h20"></div>
-				<h2>Arquivos</h2>
-				<div class="clr h20"></div><div class="clr h20"></div>
+				<h2>Antigas</h2>
+				<div class="clr h10"></div>
 				
-				<a class="toggle" href="#" title="Givanildo R. de Oliveira">
-					Givanildo R. de Oliveira <em>25 minutos atrás</em><span></span>
-				</a>
-				<div class="mes-content"><p>Lorekkj asldfkj asdflkj asdlkjasdflkj asdflkj asdflkj asdflkj asdflkj asdflkj asdflk jasd.</p></div>
-				<a class="toggle" href="#" title="Walter Cruz">
-					Walter Cruz <em>25 minutos atrás</em><span></span>
-				</a>
-				<div class="mes-content"><p>Dadfkj asdflkj flkj asdflkj asdflkj asdflkj asdflkj asdflkj asdflk jasd.</p></div>
-				<a class="toggle" href="#" title="Daniel Vieira">
-					Daniel Vieira<em>25 minutos atrás</em><span></span>
-				</a>
-				<div class="mes-content"><p>Oasdflk jasdflkj flkj asdflkj asdflkj asdflkj asdflk jasd.</p></div>
+				<div id="messages-inbox-old">
+					<div class="messages-inbox-old" data="0">
+						<a id="" class="toggle" href="#" title="">
+							<h4 class="name"></h4> 
+							<em></em><span class="span"></span>
+						</a>
+						<div class="mes-content">
+							<p></p>
+					
+							<div class="clr h20"></div>
+							<input class="btn-padrao-m dir" type="button" value="Deletar">
+							<input class="btn-padrao-m dir marRig05 reply" type="button" value="Responder">
+							<div class="clr"></div>
+						</div>
+					</div>
+				</div>
+				<div id="messages-inbox-old-list"></div>
+				
+				
+				<div class="clr h20"></div><div class="clr h20"></div>
+				<h2>Enviadas</h2>
+				<div class="clr h20"></div>
+				
+				<div id="messages-sent">
+					<div class="messages-sent" data="0">
+						<a class="toggle" href="#" title="">
+							<h4 class="name"></h4> 
+							<em></em><span class="span"></span>
+						</a>
+						<div class="mes-content">
+						
+						</div>
+					</div>
+				</div>
+				<div id="messages-sent-list"></div>
 			</div>
 			
 			<div class="mes-box box-amigos">

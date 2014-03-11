@@ -224,15 +224,19 @@ $a(document).ready(function(){
 			failure_limit : 20,
 			effect : "fadeIn"
 		});
-		if(hasImage) foundImage();
+		if(pg=='Default' || pg=='Photos' || pg=='Favorites' || pg=='Explore') {
+			if(hasImage) foundImage();
+		}
 	}
 	
 	function fetchNextPage(pg) {
 		if(pg=='Default') loadLocations();
 		if(pg=='Photos') loadLocationPhotos();
-		var sleep = 0;
-		console.log('Próxima pagina: '+pagina);
-		sleep = setTimeout(function(){ start(true); }, 200);
+		if(pg=='Default' || pg=='Photos' || pg=='Favorites' || pg=='Explore') {
+			var sleep = 0;
+			console.log('Próxima pagina: '+pagina);
+			sleep = setTimeout(function(){ start(true); }, 200);
+		}
 	}
 	
 	$a(window).resize(function(){
@@ -545,19 +549,6 @@ $a(document).ready(function(){
 			$a(".mes-box").slideUp('fast');
 			$a("div."+pg).slideDown('fast');
 		}
-		return false;
-	});
-	
-	//MESSAGES
-	$a(".mes-box:first").show();
-	$a("a.toggle").click(function(){
-		if(!($a(this).find("span").hasClass("ativo"))){
-			$a("a.toggle").find("span").removeClass("ativo");
-			$a(this).find("span").addClass("ativo");
-		} else {
-			$a(this).find("span").removeClass("ativo");
-		}
-		$a(this).next().slideToggle('fast');
 		return false;
 	});
 	
