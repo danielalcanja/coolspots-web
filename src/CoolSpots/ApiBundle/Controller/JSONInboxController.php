@@ -67,8 +67,24 @@ class JSONInboxController extends Controller {
 			
 			$page = isset($params->page) ? $params->page : 1;
 			$offset = ($page - 1) * $this->container->getParameter('max_items_per_page');
-			
-			$Messages = $em->getRepository('SiteBundle:CsInbox')->findBy(array('idUserTo' => $User, 'deleted' => 'N'), array('dateAdded' => 'DESC'), $this->container->getParameter('max_items_per_page'), $offset);
+			$Messages = $em->getRepository('SiteBundle:CsInbox')->createQueryBuilder('c')
+					->where('c.idUserTo = :idUserTo')
+					->andWhere('c.deleted = :deleted');
+			if(isset($params->filter)) {
+				if($params->filter == 'new') {
+					$Messages = $Messages->andWhere('c.dateRead is null');
+				} else if($params->filter == 'read') {
+					$Messages = $Messages->andWhere('c.dateRead is not null');
+				}
+			} 
+			$Messages = $Messages->setParameter('idUserTo', $User)
+					->setParameter('deleted', 'N')
+					->setFirstResult($offset)
+					->setMaxResults($this->container->getParameter('max_items_per_page'))
+					->getQuery()
+					->getResult();
+
+			//$Messages = $em->getRepository('SiteBundle:CsInbox')->findBy($arrFilter, array('dateAdded' => 'DESC'), $this->container->getParameter('max_items_per_page'), $offset);
 			$serializer = new Serializer(array(new GetSetMethodNormalizer()), array('json' => new JsonEncoder()));
 			$json = $serializer->serialize($Messages, 'json');
 			return $this->jsonResponse(array('meta' => array('status' => 'OK', 'message' => 'Success'), 'data' => json_decode($json)));
