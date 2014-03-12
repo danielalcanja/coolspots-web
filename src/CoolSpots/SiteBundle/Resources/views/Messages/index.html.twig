@@ -28,11 +28,11 @@ function loadInbox(filter) {
 	}
 }
 function loadInboxAdd() {
-	var msg = jQuery(".message").val();
+	var msg = jQuery(".messageAdd").val();
 	var tit = msg.length > 30 ? msg.substr(0,30) + "..." : msg;
 	var url =  '/json/inbox/add';
 	var params =  {
-		to: jQuery(".user").attr("data"),
+		to: jQuery(".userAdd").attr("data"),
 		title: tit,
 		message: msg
 	};
@@ -67,7 +67,27 @@ function loadInboxRemove() {
 	};
 	jsonCall(url, params, callbackInboxRemove);	
 }
+function loadUser() {
+	var url =  '/json/users';
+	var params =  {
+		/////FALTANDO
+	};
+	jsonCall(url, params, callbackUsers);	
+}
 //CALLBACKS
+function callbackUsers(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	console.log(obj);
+}
 function callbackInboxRemove(obj) {
 	if(!obj) {
 		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
@@ -151,6 +171,9 @@ function callbackInboxAdd(obj) {
 	if(obj.meta.status === 'ERROR') {
 		console.log(obj.meta.message);
 		return(false);
+	} else {
+		paginaInboxSent = 1;
+		loadInboxSent(); 
 	}
 	
 	console.log(obj);
@@ -229,7 +252,9 @@ jQuery(document).ready(function(){
 				'.toggle em': 'obj.dateAdded.timestamp',
 				'.mes-content p':'obj.message',
 				'.delete@data':'obj.id',
-				'.delete@rel':'obj.idUserFrom.username'
+				'.delete@rel':'obj.idUserFrom.username',
+				'.reply@data':'obj.idUserFrom.username',
+				'.reply@rel':'obj.idUserFrom.fullName'
 			}
 		}
 	}
@@ -245,7 +270,9 @@ jQuery(document).ready(function(){
 				'.toggle em': 'obj.dateAdded.timestamp',
 				'.mes-content p':'obj.message',
 				'.delete@data':'obj.id',
-				'.delete@rel':'obj.idUserFrom.username'
+				'.delete@rel':'obj.idUserFrom.username',
+				'.reply@data':'obj.idUserFrom.username',
+				'.reply@rel':'obj.idUserFrom.fullName'
 			}
 		}
 	}
@@ -258,7 +285,11 @@ jQuery(document).ready(function(){
 				'.toggle@title':'obj.idUserTo.fullName',
 				'h4.name':'obj.idUserTo.fullName',
 				'.toggle em': 'obj.dateAdded.timestamp',
-				'.mes-content':'obj.message'
+				'.mes-content p':'obj.message',
+				'.delete@data':'obj.id',
+				'.delete@rel':'obj.idUserFrom.username',
+				'.reply@data':'obj.idUserTo.username',
+				'.reply@rel':'obj.idUserTo.fullName'
 			}
 		}
 	}
@@ -280,9 +311,11 @@ jQuery(document).ready(function(){
 	loadInbox('new');
 	loadInbox('read');
 	loadInboxSent();
+	loadFriends();
+	loadUser();
 	
 	var	shadown = '.shadown';
-	jQuery(".reply").click(function(){
+	jQuery(document).delegate('.reply', 'click', function(){
 		var html = '';
 		html += '<div class=\"box-criar-evento boxDiversos\">';
 		html += '	<div class=\"space\">';
@@ -290,13 +323,13 @@ jQuery(document).ready(function(){
 		html += '		<div class=\"row\">';
 		html += '			<span class=\"colM\">Para</span>';
 		html += '			<div class=\"col2M\" contenteditable=\"true\">';
-		html += '				<span class=\"user borRad02\" data="paulanardez">Givanildo <em contenteditable=\"false\"></em></span>';
+		html += '				<span class=\"userAdd borRad02\" data="'+jQuery(this).attr("data")+'">' + jQuery(this).attr("rel") + '<em contenteditable=\"false\"></em></span>';
 		html += '			</div>';
 		html += '		</div>';
 		html += '		<div class=\"clr h05\"></div>';
 		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>';
 		html += '		<div class=\"row\">';
-		html += '			<textarea name=\"detalhes\" rows=\"5\" class=\"message campos-box bor-less\" placeholder=\"Escreva sua mensagem\"></textarea>';
+		html += '			<textarea name=\"detalhes\" rows=\"5\" class=\"messageAdd campos-box bor-less\" placeholder=\"Escreva sua mensagem\"></textarea>';
 		html += '		</div>';
 		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>';
 		html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">';
@@ -360,7 +393,7 @@ jQuery(document).ready(function(){
 				<a rel="Inbox" class="menuMes menuPink menuPinkAtivo totalInbox" href="#" title="Mensagens" data="box-messages"><span class="pink"></span>Mensagens <span class="total">0</span></a>
 				<a rel="Friends" class="menuMes menuPink totalFriends" href="#" title="Amigos" data="box-amigos"><span class="pink"></span>Amigos <span class="total">0</span></a>
 				<!--a class="menuMes menuPink totalFavorites" href="#" title="Favoritos" data="box-favoritos"><span class="pink"></span>Favoritos <span class="total">0</span></a-->
-				<a class="menuMes menuPink" href="#" title="Informações" data="box-info"><span class="pink"></span>Informações de Usuário</a>
+				<a class="menuMes menuPink" href="#" title="Minhas Informações" data="box-info"><span class="pink"></span>Minhas Informações</a>
 			</div>
 		</div>
 	</div>
@@ -379,9 +412,9 @@ jQuery(document).ready(function(){
 						<div class="mes-content">
 							<p></p>
 					
-							<div class="clr h20"></div>
+							<div class="clr h10"></div>
 							<input class="btn-padrao-m dir delete" data="" rel="" type="button" value="Deletar">
-							<input class="btn-padrao-m dir marRig05 reply" type="button" value="Responder">
+							<input class="btn-padrao-m dir marRig05 reply" data="" rel="" type="button" value="Responder">
 							<div class="clr"></div>
 						</div>
 					</div>
@@ -401,9 +434,9 @@ jQuery(document).ready(function(){
 						<div class="mes-content">
 							<p></p>
 					
-							<div class="clr h20"></div>
+							<div class="clr h10"></div>
 							<input class="btn-padrao-m dir delete" data="" rel="" type="button" value="Deletar">
-							<input class="btn-padrao-m dir marRig05 reply" type="button" value="Responder">
+							<input class="btn-padrao-m dir marRig05 reply" data="" rel="" type="button" value="Responder">
 							<div class="clr"></div>
 						</div>
 					</div>
@@ -422,7 +455,12 @@ jQuery(document).ready(function(){
 							<em></em><span class="span"></span>
 						</a>
 						<div class="mes-content">
-						
+							<p></p>
+					
+							<div class="clr h10"></div>
+							<input class="btn-padrao-m dir delete" data="" rel="" type="button" value="Deletar">
+							<input class="btn-padrao-m dir marRig05 reply" data="" rel="" type="button" value="Nova Mensagem">
+							<div class="clr"></div>
 						</div>
 					</div>
 				</div>
@@ -435,13 +473,13 @@ jQuery(document).ready(function(){
 				
 				<div id="friends">
 					<div class="friends" data="0">
-						<img src="http://images.ak.instagram.com/profiles/profile_198230980_75sq_1362087670.jpg" alt="" />
+						<img src="" alt="" />
 						<div class="friends-info">
-							<h4 class="name">Givanildo R. de Oliveira </h4>
-							<h4 class="login">givaonlinemt</h4>
+							<h4 class="name"></h4>
+							<h4 class="login"></h4>
 							<div class="clr h10"></div>
 							<input type="button" class="btn-padrao-m" value="Desfazer amizade" />
-							<span class="desde">Desde 10/12/2013</span>
+							<span class="desde"></span>
 						</div>
 					</div>
 					<div class="clr separator"></div>
@@ -456,8 +494,18 @@ jQuery(document).ready(function(){
 			</div>
 			
 			<div class="mes-box box-info">
-				<h2>Informações de Usuário</h2>
+				<h2>Minhas Informaçõs</h2>
 				<div class="clr h20"></div><div class="clr h20"></div>
+				
+				<div class="user" data="0">
+					<img src="{{ app.session.get('profile_picture') }}" alt="" />
+					<div class="user-info">
+						<h3 class="name">{{ app.session.get('full_name') }}</h3>
+						<h4 class="login">Username: {{ app.session.get('username') }}</h4>
+						<h4 class="email">Email:{{ app.session.get('email') }}</h4>
+						<span class="entrou">Entrou {{ app.session.get('token_date') }}</span>
+					</div>
+				</div>
 			</div>
 			<div class="clr h10"></div>
 		</div>		

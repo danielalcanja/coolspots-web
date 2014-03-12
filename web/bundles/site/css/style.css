@@ -233,9 +233,9 @@ span.ros { background:#FF5885; }
 .shadown .box-criar-evento .space .row span.colM { display:inline-block; margin-right:5px; font-size:12px; line-height:20px; float:left; text-align:left; }
 .shadown .box-criar-evento .space .row .col2 { width:210px; margin-right:10px; float:right; }
 .shadown .box-criar-evento .space .row .col2M { width:240px; display:inline-block; margin-right:10px; float:left; line-height:20px; color:#666; font-family:'Museo500-Regular'; font-size:12px; }
-.shadown .box-criar-evento .space .row .col2M span.user { display:inline-block; padding:0 3px; border:1px solid #CCC; line-height:20px; color:#666; font-family:'Museo500-Regular'; font-size:12px; resize:none; }
-.shadown .box-criar-evento .space .row .col2M span.user em { width:6px; height:6px; margin:0 2px 0 5px; display:inline-block; background:url('../images/icons.png') -65px -165px no-repeat; }
-.shadown .box-criar-evento .space .row .col2M span.user em:hover { background-position:-65px -171px; cursor:pointer; }
+.shadown .box-criar-evento .space .row .col2M span.userAdd { display:inline-block; padding:0 3px; border:1px solid #CCC; line-height:20px; color:#666; font-family:'Museo500-Regular'; font-size:12px; resize:none; }
+.shadown .box-criar-evento .space .row .col2M span.userAdd em { width:6px; height:6px; margin:0 2px 0 5px; display:inline-block; background:url('../images/icons.png') -65px -165px no-repeat; }
+.shadown .box-criar-evento .space .row .col2M span.userAdd em:hover { background-position:-65px -171px; cursor:pointer; }
 .space .row input[type="text"], .space .row textarea { padding:0 3px; border:1px solid #CCC; line-height:20px; color:#666; font-family:'Museo500-Regular'; font-size:12px; resize:none; }
 .space .row textarea.bor-less { width:285px; border:0; }
 .space .row .campos-box { width:210px; }
@@ -383,6 +383,16 @@ ul.pho-menu li span.com { background-position:-291px -127px; }
 #friends .friends .friends-info h4.login { color:#666 }
 #friends .friends .friends-info .desde { position:absolute; top:0; right:0; line-height:80px; }
 #friends .friends .separator { border-bottom:1px solid #F0F0F0; }
+
+/*USER*/
+.user { width:100%; display:table; padding:5px; margin:10px 0; float:left; }
+.user img { float:left; margin-right:5px; padding:3px; width:150px; background:#FFF; border:1px solid #ccc; }
+.user .user-info { line-height:20px; float:left; position:relative; }
+.user .user-info h3.name { color:#296689; }
+.user .user-info h4.login { color:#666 }
+.user .user-info h4.email { color:#296689; text-decoration:underline; }
+.user .user-info .desde { position:absolute; top:0; right:0; line-height:80px; }
+.user .separator { border-bottom:1px solid #F0F0F0; }
 
 
 /*MENUS - LINKS*/
