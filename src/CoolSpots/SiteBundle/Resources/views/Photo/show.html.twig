@@ -72,41 +72,41 @@ $b(document).ready(function(){
 	
 	var	shadown = '.shadownPics';
 	var html = '';
-	html += '<div class=\"gallery-box\"><div class=\"box\">                                   ';
-	html += '	<div class=\"slide-eve-prev\"></div><div class=\"slide-eve-next\"></div>      ';
-	html += '	<div class=\"content\">                                                       ';
-	html += '		<div class=\"img\"><span class=\"sh\"></span><img src=\"\" />             ';
-	html += '			<div class=\"description\">                                           ';
-	html += '				<span class=\"caption\"></span>	 							      ';
-	html += '				<div class=\"author\">                                            ';
-	html += '					<img src=\"\" width=\"30\" height=\"30\" />                   ';
-	html += '					<h3>	                                                      ';
-	html += '						<strong class=\"user\"></strong>	                      ';
-	html += '						enviou essa foto de 	                                  ';
+	html += '<div class=\"gallery-box\"><div class=\"box\">';
+	html += '	<div class=\"slide-eve-prev\"></div><div class=\"slide-eve-next\"></div>';
+	html += '	<div class=\"content\">';
+	html += '		<div class=\"img\"><span class=\"sh\"></span><img src=\"\" />';
+	html += '			<div class=\"description\">';
+	html += '				<span class=\"caption\"></span>';
+	html += '				<div class=\"author\">';
+	html += '					<img src=\"\" width=\"30\" height=\"30\" />';
+	html += '					<h3>';
+	html += '						<strong class=\"user\"></strong>';
+	html += '						enviou essa foto de';
 	html += '						<strong><strong class=\"name_location\"></strong></strong>';
-	html += '						<br /><span class=\"data_pic\"></span>	                  ';
-	html += '					</h3>                                                         ';
-	html += '				</div>                                                            ';
-	html += ' 			</div>                                                                ';
-	html += ' 		</div>                                                                	  ';
-	html += '	</div>                                                                    	  ';
-	html += '	<div class=\"slide-close\"></div>                                  	  	      ';
-	html += '	<div class="slide-icos">                             	                      ';
-	html += '		<div class=\"line\">            										  ';
-	html += '			<div class=\"icos cur\"></div><span class=\"p1\"></span>			  ';
-	html += '			<span>Curtir esta foto</span>	  					  				  ';
-	html += '			<span class=\"p2\"></span></div>									  ';
-	html += '		<div class=\"line\">            										  ';
-	html += '			<div class=\"icos men\"></div><span class=\"p1\"></span> 			  ';
-	html += '			<span>Enviar mensagem ao usuário</span>	  					  	  	  ';
-	html += '			<span class=\"p2\"></span></div>									  ';
-	html += '		<div class=\"line\">            										  ';
-	html += '			<div class=\"icos com\"></div><span class=\"p1\"></span> 			  ';
-	html += '			<span>Compartilhar</span>	  							  			  ';
-	html += '			<span class=\"p2\"></span></div>									  ';
-	html += '	</div>                                                                        ';
-	html += '</div>                                                                       	  ';
-	html += '</div>                                                                           ';
+	html += '						<br /><span class=\"data_pic\"></span>';
+	html += '					</h3>';
+	html += '				</div>';
+	html += ' 			</div>';
+	html += ' 		</div>';
+	html += '	</div>';
+	html += '	<div class=\"slide-close\"></div>';
+	html += '	<div class="slide-icos">';
+	html += '		<div class=\"line\">';
+	html += '			<div class=\"icos cur\"></div><span class=\"p1\"></span>';
+	html += '			<span>Curtir esta foto</span>';
+	html += '			<span class=\"p2\"></span></div>';
+	html += '		<div class=\"line\">';
+	html += '			<div class=\"icos men\" data=\"\" rel=\"\"></div><span class=\"p1\"></span>';
+	html += '			<span>Enviar mensagem ao usuário</span>';
+	html += '			<span class=\"p2\"></span></div>';
+	html += '		<div class=\"line\">';
+	html += '			<div class=\"icos com\"></div><span class=\"p1\"></span>';
+	html += '			<span>Compartilhar</span>';
+	html += '			<span class=\"p2\"></span></div>';
+	html += '	</div>';
+	html += '</div>';
+	html += '</div>';
 	
 	$b(shadown).html(html);
 	
@@ -177,7 +177,7 @@ jQuery(document).ready(function(){
 					i++;
 					return posObj;
 				},
-				'.username@value': 'obj.idUser.username',
+				'.name@value': 'obj.idUser.fullName',
 				'.userpic@value': 'obj.idUser.profilePicture',
 				'.dateadded@value': 'obj.dateAdded.timestamp',
 				'.name_location@value': 'obj.idLocation.name',
@@ -243,6 +243,7 @@ jQuery(document).ready(function(){
 <ul class="content template">		
 	<li id="" class="photo eve-pic" data="">
 		<a href="#" class="box">
+			<input type="hidden" class="name" value="">
 			<input type="hidden" class="username" value="">
 			<input type="hidden" class="userpic" value="">
 			<input type="hidden" class="dateadded" value="">

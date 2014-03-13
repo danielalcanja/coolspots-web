@@ -27,17 +27,7 @@ function loadInbox(filter) {
 		jsonCall(url, params, callbackInbox);
 	}
 }
-function loadInboxAdd() {
-	var msg = jQuery(".messageAdd").val();
-	var tit = msg.length > 30 ? msg.substr(0,30) + "..." : msg;
-	var url =  '/json/inbox/add';
-	var params =  {
-		to: jQuery(".userAdd").attr("data"),
-		title: tit,
-		message: msg
-	};
-	jsonCall(url, params, callbackInboxAdd);	
-}
+
 function loadInboxSent() {
 	var url =  '/json/inbox/sent';
 	var params =  {
@@ -162,22 +152,7 @@ function callbackInboxSent(obj) {
 	
 	paginaInboxSent++;
 }
-function callbackInboxAdd(obj) {
-	if(!obj) {
-		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
-		return(false);
-	}
-	
-	if(obj.meta.status === 'ERROR') {
-		console.log(obj.meta.message);
-		return(false);
-	} else {
-		paginaInboxSent = 1;
-		loadInboxSent(); 
-	}
-	
-	console.log(obj);
-}
+
 function callbackInboxOld(obj) {
 	if(!obj) {
 		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
@@ -235,12 +210,20 @@ function callbackInbox(obj) {
 	console.log(obj);
 		
 	paginaInbox++;
-	
 }
 
 jQuery(document).ready(function(){
 	jQuery(site).css("visibility","visible");
 	jQuery(".messages-esq").css("min-height",jQuery(window).height());
+	
+	jQuery("#user-result").mCustomScrollbar({
+		scrollInertia: 0,
+		autoHideScrollbar: true,
+		advanced:{
+			updateOnBrowserResize: true,
+			updateOnContentResize: true
+		}
+	});
 	
 	directiveInbox = {
 		'.messages-inbox': {
@@ -308,36 +291,25 @@ jQuery(document).ready(function(){
 	}
 	compileFriends = jQuery('#friends').compile(directiveFriends);
 	
+	directiveUsersSearch = {
+		'.users-search': {
+			'obj<-data': {
+				'@data':'obj.username',
+				'@title':'obj.fullName',
+				'img@src':'obj.profilePicture',
+				'img@alt':'obj.fullName',
+				'h3':'obj.fullName',
+				'h4':'obj.username'
+			}
+		}
+	}
+	compileUsersSearch = jQuery('#users-search').compile(directiveUsersSearch);
+	
 	loadInbox('new');
 	loadInbox('read');
 	loadInboxSent();
 	loadFriends();
 	loadUser();
-	
-	var	shadown = '.shadown';
-	jQuery(document).delegate('.reply', 'click', function(){
-		var html = '';
-		html += '<div class=\"box-criar-evento boxDiversos\">';
-		html += '	<div class=\"space\">';
-		html += '		<h2 class=\"box-h2\">Nova Mensagem</h2>';
-		html += '		<div class=\"row\">';
-		html += '			<span class=\"colM\">Para</span>';
-		html += '			<div class=\"col2M\" contenteditable=\"true\">';
-		html += '				<span class=\"userAdd borRad02\" data="'+jQuery(this).attr("data")+'">' + jQuery(this).attr("rel") + '<em contenteditable=\"false\"></em></span>';
-		html += '			</div>';
-		html += '		</div>';
-		html += '		<div class=\"clr h05\"></div>';
-		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>';
-		html += '		<div class=\"row\">';
-		html += '			<textarea name=\"detalhes\" rows=\"5\" class=\"messageAdd campos-box bor-less\" placeholder=\"Escreva sua mensagem\"></textarea>';
-		html += '		</div>';
-		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>';
-		html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">';
-		html += '		<input class=\"btn-padrao-m dir marRig05 btn-message-add\" type=\"button\" value=\"Enviar\">';
-		html += '	</div>';
-		html += '</div>';
-		jQuery(shadown).html(html).fadeIn('slow');
-	});
 	
 	jQuery(document).delegate('.delete', 'click', function(){
 		idInboxRemove = [];
@@ -345,10 +317,6 @@ jQuery(document).ready(function(){
 		loginInboxRemove = jQuery(this).attr("rel");
 		loadInboxRemove();
 		jQuery(this).closest(".msg-box").fadeOut('fast').end().remove();
-	});
-	jQuery(document).delegate('.btn-message-add', 'click', function(){
-		loadInboxAdd();
-		jQuery(shadown).html("").fadeOut('slow');
 	});
 	
 	//MESSAGES
@@ -371,6 +339,12 @@ jQuery(document).ready(function(){
 		return false;
 	});
 	
+	jQuery(document).delegate('.users-search', 'click', function(){
+		jQuery(this).closest('.boxInboxAdd').find('.sentFor').html('<span class=\"userAdd borRad02\" data="'+jQuery(this).attr("data")+'">' + jQuery(this).attr('title') + '<em contenteditable=\"false\"></em></span>').attr('contenteditable','false');
+		var result = jQuery("#user-result");
+		result.fadeOut('fast').html();
+	});
+
 	jQuery("a.menuMes").click(function(){
 		var action = jQuery(this).attr("rel");
 		if(action=='Inbox') { 
@@ -394,6 +368,33 @@ jQuery(document).ready(function(){
 				<a rel="Friends" class="menuMes menuPink totalFriends" href="#" title="Amigos" data="box-amigos"><span class="pink"></span>Amigos <span class="total">0</span></a>
 				<!--a class="menuMes menuPink totalFavorites" href="#" title="Favoritos" data="box-favoritos"><span class="pink"></span>Favoritos <span class="total">0</span></a-->
 				<a class="menuMes menuPink" href="#" title="Minhas Informações" data="box-info"><span class="pink"></span>Minhas Informações</a>
+				
+				<div class="clr h20"></div>
+				<div class="boxInboxAdd box-message-add">
+					<h2 class="box-h2">Nova Mensagem</h2>
+					<div class="clr h20"></div>
+					<div class="row">
+						<span class="colM">Para</span>
+						<div class="col2M sentFor" contenteditable="true">
+						</div>
+						<div id="user-result"></div>
+					</div>
+					<div class="clr h05"></div>
+					<div class="row">
+						<textarea name="detalhes" rows="5" class="messageAdd campos-box bor-less"></textarea>
+					</div>
+					<div class="clr"></div><div class="rowDivide"></div>
+					<input class="btn-padrao-m dir marRig05 btn-message-add" type="button" value="Enviar">
+					<div id="users-search">
+						<div class="users-search" data="" title="">
+							<div class="img">
+								<img src="" alt="" />
+							</div>
+							<h3></h3>
+							<h4></h4>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

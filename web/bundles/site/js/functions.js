@@ -3,6 +3,9 @@ var part1 = {data:[]}, part2 = {data:[]};
 var one = false, two = false;
 var arrFav = [], arrLast = [], lastTimer = 0;
 var pg = 'Default', barBox = '';
+var paginaUsersSearch = 1;
+var textUserSearch = '';
+var inboxAddText = '', inboxAddTo = 0;
 
 function loadFavorites() {
 	var url = '/json/favorites';
@@ -114,6 +117,97 @@ function lastPhotos(id){
 	},1000);
 }
 
+function loadUsersSearch() {
+	var url =  '/json/users/search';
+	var params =  {
+		keyword: textUserSearch,
+		page: paginaUsersSearch
+	};
+	jsonCall(url, params, callbackUsersSearch);	
+}
+function callbackUsersSearch(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	console.log(obj);
+	if(obj.data.length > 0) {
+		jQuery("#user-result").html(compileUsersSearch(obj));
+	} else {
+		jQuery("#user-result").html("<span>Nenhum resultado!</span>");
+	}
+	jQuery("#user-result").mCustomScrollbar("update");
+}
+function loadInboxAdd() {
+	var msg = inboxAddText;
+	var tit = msg.length > 30 ? msg.substr(0,30) + "..." : msg;
+	var url =  '/json/inbox/add';
+	var params =  {
+		to: inboxAddTo,
+		title: tit,
+		message: msg
+	};
+	jsonCall(url, params, callbackInboxAdd);	
+}
+function callbackInboxAdd(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	} else {
+		paginaInboxSent = 1;
+		jQuery('.messageAdd').val('').focus();
+		inboxAddText = '';
+		if(pg=='Messages') loadInboxSent()
+	}
+	
+	console.log(obj);
+}
+var	shadown = '.shadown';
+jQuery(document).delegate('.btn-message-add', 'click', function(){
+	inboxAddText = jQuery(this).closest('.boxInboxAdd').find('.messageAdd').val();
+	inboxAddTo = jQuery(this).closest('.boxInboxAdd').find('.userAdd').attr('data');
+	inboxAddText.trim(); inboxAddTo.trim();
+	
+	if(inboxAddTo.length > 0 && inboxAddText.length > 0) { 
+		loadInboxAdd()
+		jQuery(shadown).html("").fadeOut('slow');
+	} else { return false; }
+});
+jQuery(document).delegate('.reply', 'click', function(){
+	var html = '';
+	html += '<div class=\"boxInboxAdd box-criar-evento boxDiversos\">';
+	html += '	<div class=\"space\">';
+	html += '		<h2 class=\"box-h2\">Nova Mensagem</h2>';
+	html += '		<div class=\"row\">';
+	html += '			<span class=\"colM\">Para</span>';
+	html += '			<div class=\"col2M sentFor\" contenteditable=\"false\">';
+	html += '				<span class=\"userAdd borRad02\" data="'+jQuery(this).attr("data")+'">' + jQuery(this).attr("rel") + '</span>';
+	html += '			</div>';
+	html += '		</div>';
+	html += '		<div class=\"clr h05\"></div>';
+	html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>';
+	html += '		<div class=\"row\">';
+	html += '			<textarea name=\"detalhes\" rows=\"5\" class=\"messageAdd campos-box bor-less\" placeholder=\"Escreva sua mensagem\"></textarea>';
+	html += '		</div>';
+	html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>';
+	html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">';
+	html += '		<input class=\"btn-padrao-m dir marRig05 btn-message-add\" type=\"button\" value=\"Enviar\">';
+	html += '	</div>';
+	html += '</div>';
+	jQuery(shadown).html(html).fadeIn('slow');
+});
+	
 var $a = jQuery.noConflict();
 $a(document).ready(function(){
 	var body 	= $a("body"),
@@ -486,6 +580,7 @@ $a(document).ready(function(){
 		$a(".eve-pic").each(function(index){
 			pic[index] 	= $a(this);
 			var imagem 	= $a(this).attr("data");
+			var name 	= $a(this).find(".name").val();
 			var user 	= $a(this).find(".username").val();
 			var userpic	= $a(this).find(".userpic").val();
 			var data_add= $a(this).find(".dateadded").val();
@@ -496,7 +591,7 @@ $a(document).ready(function(){
 				$a(shadownPics).fadeIn('slow');
 				$a(".box .img img").attr("src",imagem);
 				$a(".author img").attr("src",userpic);
-				$a("strong.user").html(user);
+				$a("strong.user").html(name);
 				$a("span.data_pic").html(data_add);
 				$a("strong.name_location").html(name_loc);
 				$a("span.caption").html(caption);
@@ -520,7 +615,10 @@ $a(document).ready(function(){
 		alert("CURTIR IMAGEM DE ID: " + $a(pic[atual]).attr("id"));
 	});
 	$a(document).delegate(".slide-icos .men", "click", function(){
-		alert("ENVIAR MENSAGEM AO USUÁRIO: " + $a(pic[atual]).find(".username").val());
+		$a(this).addClass("reply")
+		.attr("data",$a(pic[atual]).find(".username").val())
+		.attr("rel",$a(pic[atual]).find(".name").val());
+		$a(".reply").click();
 	});
 	$a(document).delegate(".slide-icos .com", "click", function(){
 		alert("COMPARTIHAR IMAGEM: " + $a(pic[atual]).attr("data"));
@@ -560,6 +658,23 @@ $a(document).ready(function(){
 		$a(shadown).fadeOut('slow');
 		$a(shadownPics).fadeOut('slow');
 	}
+	
+	//MESSAGES
+	$a(document).delegate('.sentFor em', 'click', function(){
+		$a(this).closest('.sentFor').html('').attr('contenteditable','true').focus();
+		$a(this).parent().remove();
+	});
+	$a(document).delegate('.sentFor', 'keyup', function(){
+		var text = $a(this).html();
+		var result = $a("#user-result");
+		if(text.length > 2) { 
+			textUserSearch = text;
+			loadUsersSearch();
+			result.fadeIn();
+		} else {
+			result.fadeOut('fast').html();
+		}
+	});
 	
 	//BAR LATERAL
 	jQuery(barBox).hover(function() {

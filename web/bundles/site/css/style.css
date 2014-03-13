@@ -194,7 +194,8 @@ span.ros { background:#FF5885; }
 .comment .espace .com a:hover { color:#31749B; }
 
 /*GALERIA*/
-.shadownPics, .shadown { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; z-index:5; display:none; }
+.shadownPics, .shadown { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; display:none; }
+.shadownPics { z-index:5; } .shadown { z-index:6; }
 .shadownPics .gallery-box { width:100%; height:100%; overflow:auto; position:fixed; top:0; left:0; }
 .shadownPics .gallery-box .box { width:600px; margin:-310px auto auto -310px; padding:10px; background-color:#FFF; position:fixed; top:50%; left:50%; }
 .shadownPics .gallery-box .box .content { width:100%; display:table; position:relative;  }
@@ -229,6 +230,7 @@ span.ros { background:#FF5885; }
 .shadown .box-criar-evento { width:310px; height:320px; background:#FFF; position:absolute; top:50%; left:50%; margin:-160px auto auto -155px; }
 .shadown .box-criar-evento .space { margin:10px; }
 .shadown .box-criar-evento .space .box-h2 { font-size:15px; color:#31749B; margin-bottom:25px; } 
+.shadown .box-criar-evento .space .row { position:relative; }
 .shadown .box-criar-evento .space .row span.col1 { width:65px; display:inline-block; font-size:12px; line-height:20px; float:left; text-align:right; }
 .shadown .box-criar-evento .space .row span.colM { display:inline-block; margin-right:5px; font-size:12px; line-height:20px; float:left; text-align:left; }
 .shadown .box-criar-evento .space .row .col2 { width:210px; margin-right:10px; float:right; }
@@ -364,6 +366,16 @@ ul.pho-menu li span.com { background-position:-291px -127px; }
 .messages .messages-esq .content h1 { margin-left:10px; font-size:45px; font-weight:normal; }
 .messages .messages-esq .content-esq { margin:25px auto auto 10px; font-size:12px; }
 
+.box-message-add { width:300px; }
+.box-message-add .box-h2 { color:#31749B; margin-top:10px; }
+.box-message-add textarea { width:290px; padding:5px; height:100px; resize:none; }
+.box-message-add .row { font-size:15px; position:relative; }
+.box-message-add .row span.colM { display:inline-block; margin-right:5px; line-height:20px; text-align:left; }
+.box-message-add .row .col2M { width:290px; padding:5px; border-bottom:1px solid #CCC; display:block; background:#fff; line-height:25px; color:#666; }
+.box-message-add .row .col2M span.userAdd { display:inline-block; padding:0 3px; border:1px solid #CCC; line-height:20px; color:#666; font-family:'Museo500-Regular'; font-size:12px; resize:none; }
+.box-message-add .row .col2M span.userAdd em { width:6px; height:6px; margin:0 2px 0 5px; display:inline-block; background:url('../images/icons.png') -65px -165px no-repeat; }
+.box-message-add .row .col2M span.userAdd em:hover { background-position:-65px -171px; cursor:pointer; }
+
 .messages .messages-info { width:500px; margin-left:400px; padding-top:80px; height:100%; float:left; }
 .messages .messages-info .content { margin:0 15px auto 50px; }
 .messages .messages-info .content h3 { font-weight:normal; }
@@ -374,6 +386,17 @@ ul.pho-menu li span.com { background-position:-291px -127px; }
 .messages .messages-info .content .mes-content { width:100%; display:none; border-bottom:1px solid #CCC; padding-bottom:10px; padding:5px; font-size:13px;  }
 
 .messages .messages-info .content .mes-box { width:480px; display:none; }
+
+#user-result { width:100%; max-height:200px; color:#296689; background:#296689; position:absolute; z-index:3; display:none; }
+#user-result span { text-align:center; color:#FFF; display:block; line-height:50px; }
+#user-search { display:none; }
+#user-result .users-search { clear:both; height:50px; overflow:hidden; margin:2px; background:#FFF; }
+#user-result .users-search:hover { background:#F0F0F0; cursor:pointer; }
+#user-result .users-search .img { width:50px; height:50px; display:inline-block; float:left; margin-right:5px; }
+#user-result .users-search .img img { width:100%; }
+#user-result .users-search h3 { padding-top:5px; font-size:16px; height:20px; overflow:hidden; }
+#user-result .users-search h4 { font-size:13px; color:#666; }
+
 
 /*FRIENDS*/
 #friends .friends { width:100%; display:table; padding:5px; margin:10px 0; float:left; }
