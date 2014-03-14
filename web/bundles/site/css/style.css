@@ -295,6 +295,17 @@ ul.pho-menu li span.com { background-position:-291px -127px; }
 .bottom-bar .search { background:url('../images/icons.png') -250px 0px no-repeat; }
 .bottom-bar .inp-search { width:0; height:30px; margin:13px 0 0 10px; border:0; line-height:30px; background:#FFF; color:#AAA; float:left; display:none; }
 
+#bottom-result { width:285px; bottom:55px; background:#296689; position:absolute; z-index:3; display:none; }
+#bottom-result span { text-align:center; color:#FFF; display:block; line-height:50px; }
+#bottom-search { display:none; }
+#bottom-result #bottom-search { display:block; }
+#bottom-result a.bottom-search { display:block; color:#296689; clear:both; height:50px; overflow:hidden; margin:2px; background:#FFF; }
+#bottom-result a.bottom-search:hover { background:#F0F0F0; cursor:pointer; }
+#bottom-result a.bottom-search .img { width:50px; height:50px; display:inline-block; float:left; margin-right:5px; }
+#bottom-result a.bottom-search .img img { width:100%; }
+#bottom-result a.bottom-search h3 { padding-top:5px; font-size:16px; height:20px; overflow:hidden; }
+#bottom-result a.bottom-search h4 { font-size:13px; color:#666; }
+
 .bottom-bar ul { float:left; } .bottom-bar ul.login { float:right; }
 .bottom-bar ul.dir { float:right; }
 .bottom-bar ul li { float:left; }

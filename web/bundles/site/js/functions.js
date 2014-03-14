@@ -3,8 +3,8 @@ var part1 = {data:[]}, part2 = {data:[]};
 var one = false, two = false;
 var arrFav = [], arrLast = [], lastTimer = 0;
 var pg = 'Default', barBox = '';
-var paginaUsersSearch = 1;
-var textUserSearch = '';
+var paginaUsersSearch = 1, paginaLocationsSearch = 1;
+var textUserSearch = '', textLocationsSearch;
 var inboxAddText = '', inboxAddTo = 0;
 
 function loadFavorites() {
@@ -27,6 +27,7 @@ function callbackFavorites(obj) {
 	}
 	console.log(obj);
 }	
+
 function favorites(local,acao) {
 	action = acao == 'add' ? acao : 'remove';
 	console.log(local + " " + acao);
@@ -52,6 +53,7 @@ function isFavorite(id){
 		else if(total==item-1) { return false; }
 	}
 }
+
 function loadLocations() {
 	var url =  '/json/locations';
 	var params =  {
@@ -144,6 +146,7 @@ function callbackUsersSearch(obj) {
 	}
 	jQuery("#user-result").mCustomScrollbar("update");
 }
+
 function loadInboxAdd() {
 	var msg = inboxAddText;
 	var tit = msg.length > 30 ? msg.substr(0,30) + "..." : msg;
@@ -173,6 +176,41 @@ function callbackInboxAdd(obj) {
 	
 	console.log(obj);
 }
+
+function loadLocationsSearch() {
+	var url =  '/json/locations/search';
+	var params =  {
+		keyword: textLocationsSearch,
+		page: paginaLocationsSearch,
+		geo: {
+			countryName: 'Brazil',
+			stateName: 'MT',
+			cityName: 'Cuiabá'
+		}
+	};
+	jsonCall(url, params, callbackLocationsSearch);	
+}
+function callbackLocationsSearch(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	console.log(obj);
+	if(obj.data.length > 0) {
+		jQuery("#bottom-result").html(compileLocationsSearch(obj));
+	} else {
+		jQuery("#bottom-result").html("<span>Nenhum resultado!</span>");
+	}
+	jQuery("#bottom-result").mCustomScrollbar("update");
+}
+
+	
 var	shadown = '.shadown';
 jQuery(document).delegate('.btn-message-add', 'click', function(){
 	inboxAddText = jQuery(this).closest('.boxInboxAdd').find('.messageAdd').val();
@@ -207,7 +245,23 @@ jQuery(document).delegate('.reply', 'click', function(){
 	html += '</div>';
 	jQuery(shadown).html(html).fadeIn('slow');
 });
-	
+
+jQuery(document).ready(function(){
+	directiveLocationsSearch = {
+		'.bottom-search': {
+			'obj<-data': {
+				'@href':'/#{obj.id}/#{obj.idInstagram}',
+				'@title':'obj.name',
+				'img@src':'obj.coverPic',
+				'img@alt':'obj.name',
+				'h3':'obj.name',
+				'h4':'obj.categoryName'
+			}
+		}
+	}
+	compileLocationsSearch = jQuery('#bottom-search').compile(directiveLocationsSearch);
+})
+
 var $a = jQuery.noConflict();
 $a(document).ready(function(){
 	var body 	= $a("body"),
@@ -543,7 +597,7 @@ $a(document).ready(function(){
 	
 	//BOTTOM - BAR
 	$a(".search").hover(function(){
-		$a(".inp-search").animate({ width: 150, paddingLeft: 5, paddingRight: 5 },500).show().focus();
+		$a(".inp-search").animate({ width: 200, paddingLeft: 5, paddingRight: 5 },500).show().focus();
 	});
 	
 	var input = ".inp-search";
@@ -574,6 +628,19 @@ $a(document).ready(function(){
 		$a(this).find("span").toggleClass("click");
 		$a("ul.config-menu").slideToggle('fast');
 	});
+	
+	$a(document).delegate('.inp-search', 'keyup', function(){
+		var text = $a(this).val();
+		var result = $a("#bottom-result");
+		if(text.length > 2) { 
+			textLocationsSearch = text;
+			loadLocationsSearch();
+			result.fadeIn();
+		} else {
+			result.fadeOut('fast').html('');
+		}
+	});
+	
 	
 	//GALLERY
 	function slideGallery(){
@@ -665,14 +732,14 @@ $a(document).ready(function(){
 		$a(this).parent().remove();
 	});
 	$a(document).delegate('.sentFor', 'keyup', function(){
-		var text = $a(this).html();
+		var text = $a(this).text();
 		var result = $a("#user-result");
 		if(text.length > 2) { 
 			textUserSearch = text;
 			loadUsersSearch();
 			result.fadeIn();
 		} else {
-			result.fadeOut('fast').html();
+			result.fadeOut('fast').html('');
 		}
 	});
 	

@@ -112,10 +112,21 @@
 				<li><a href="{{ path('explore') }}"><span class="bor bl"></span>{% trans %}bottom.bar.explore{% endtrans %}<span class="bor br nor"></span></a></li>
 			</ul>
 			<div class="container-search">
+				<div id="bottom-result"></div>
 				<input type="text" class="inp-search" placeholder="Procurar no site">
 				<div class="bottom-ico search"></div>
 			</div>
 			{{ render(controller('SiteBundle:Login:connect')) }}
+		</div>
+		
+		<div id="bottom-search">
+			<a class="bottom-search" href="" title="">
+				<div class="img">
+					<img src="" alt="" />
+				</div>
+				<h3></h3>
+				<h4></h4>
+			</a>
 		</div>
 		
 		<div class="shadown"></div><div class="shadownPics"></div>
