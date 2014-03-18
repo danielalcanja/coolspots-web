@@ -3,34 +3,9 @@
 {% block body %}
 <script>
 pg = 'Photos';
-loadLocationInfo();
-
-function loadLocationInfo() {
-	var url =  '/json/locations/info';
-	var params =  {
-		id : {{ location.id }}
-	};
-	jsonCall(url, params, callbackLocationInfo);	
-}
-function callbackLocationInfo(obj) {
-	if(!obj) {
-		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
-		return(false);
-	}
-	
-	if(obj.meta.status === 'ERROR') {
-		console.log(obj.meta.message);
-		return(false);
-	}
-	console.log(obj);
-	jQuery(".locName").text(obj.data.name);
-	var likes = obj.data.likesCount == null ? "Seja o primeiro a indicar" : "";
-	jQuery(".locLikes").text(likes);
-	jQuery(".locAddress").text(obj.data.address == null ? "" : obj.data.address);
-	jQuery(".locCatCitSta").html(obj.data.idCategory.name + "<br />"+ obj.data.idCity.cityName + " - " + obj.data.idState.stateName);
-}
-
 barBox = ".location-info";
+var paginaLocationsComments = 1;
+
 var $b = jQuery.noConflict();
 $b(document).ready(function(){
 	var	timer = "", 
@@ -135,7 +110,32 @@ $b(document).ready(function(){
 	});
 });
 
+loadLocationInfo();
 
+function loadLocationInfo() {
+	var url =  '/json/locations/info';
+	var params =  {
+		id : {{ location.id }}
+	};
+	jsonCall(url, params, callbackLocationInfo);	
+}
+function callbackLocationInfo(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	console.log(obj);
+	jQuery(".locName").text(obj.data.name);
+	var likes = obj.data.likesCount == null ? "Seja o primeiro a indicar" : "";
+	jQuery(".locLikes").text(likes);
+	jQuery(".locAddress").text(obj.data.address == null ? "" : obj.data.address);
+	jQuery(".locCatCitSta").html(obj.data.idCategory.name + "<br />"+ obj.data.idCity.cityName + " - " + obj.data.idState.stateName);
+}
 function loadLocationPhotos() {
 	var url =  '/json/locations/photos';
 	var params =  {
@@ -161,6 +161,40 @@ function callbackLocationPhotos(obj) {
 	if(two) jQuery("#photo-list").append(compila(part2));
 	pagina++;
 }
+
+function loadLocationsComments() {
+	var url =  '/json/locations/comments';
+	var params =  {
+		id: {{ location.id }},
+		page: paginaLocationsComments
+	};
+	jsonCall(url, params, callbackLocationsComments);	
+}
+function callbackLocationsComments(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	console.log(obj);
+	var totComments = obj.data == null ? "(0)" : "("+obj.data.length+")";
+	jQuery(".comments-total").text(totComments);
+	
+	if(paginaLocationsComments == 1) jQuery("#location-comments-result").html(compileLocationsComments(obj))
+	else jQuery("#location-comments-result").append(compileLocationsComments(obj));
+	
+	//if(jQuery("#location-comments .location-comments").attr("data") == ""){
+		jQuery("#location-comments :first").hide();
+	//}
+	
+	paginaLocationsComments++;
+}
+
 
 jQuery(document).ready(function(){	
 	var i=1;
@@ -190,9 +224,22 @@ jQuery(document).ready(function(){
 			}
 		}
 	}
-	
 	compila = $p('ul.content').compile(directive);
+	
+	directiveLocationsComments = {
+		'.location-comments': {
+			'obj<-data': {
+				'@data':'obj.id',
+				'strong':'obj.idUser.fullName',
+				'em':'obj.comment',
+				'span': 'obj.dateAdded.timestamp'
+			}
+		}
+	}
+	compileLocationsComments = jQuery('#location-comments').compile(directiveLocationsComments);
+	
 	loadLocationPhotos();
+	loadLocationsComments();
 });
 </script>
 
@@ -231,12 +278,19 @@ jQuery(document).ready(function(){
 <div class="com-back"><span></span></div>
 <div class="comment">
 	<div class="espace">
-		<h2>Comentários <span>(10)</span></h2>
-		<div class="com">
-			<h3><strong>Givanildo</strong> Muito bacana asfljk asflja sfoiua sdfou asflj asfljkasfozuv asf kaasf.</h3>
-			<span>5 horas atrás</span>
-			<a href="">Responder</a>
+		<h2>Comentários <span class="comments-total"></span></h2>
+		<div id="location-comments">
+			<div class="location-comments" data="">
+				<h3>
+					<strong></strong> 
+					<em>Muito bacana asfljk asflja sfoiua sdfou asflj asfljkasfozuv asf kaasf.</em>
+				</h3>
+				<span>5 horas atrás</span>
+				<a href="">Responder</a>
+			</div>
 		</div>
+		
+		<div id="location-comments-result"></div>
 	</div>
 </div>
 
