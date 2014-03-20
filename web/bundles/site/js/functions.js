@@ -241,7 +241,7 @@ jQuery(document).delegate('.reply', 'click', function(){
 	html += '			<textarea name=\"detalhes\" rows=\"5\" class=\"messageAdd campos-box bor-less\" placeholder=\"Escreva sua mensagem\"></textarea>';
 	html += '		</div>';
 	html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>';
-	html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">';
+	html += '		<input class=\"btn-padrao-m dir btn-cancel sdw\" type=\"button\" value=\"Cancelar\">';
 	html += '		<input class=\"btn-padrao-m dir marRig05 btn-message-add\" type=\"button\" value=\"Enviar\">';
 	html += '	</div>';
 	html += '</div>';
@@ -720,7 +720,7 @@ $a(document).ready(function(){
 	});
 	
 	$a(document).delegate('.btn-cancel', 'click', function(){
-		shadownClose();
+		$a(shadown).fadeOut('slow');
 	});
 	
 	function shadownClose(){
@@ -775,5 +775,8 @@ function dateAgo(tipo, time){
 	if(tipo=='daystr'){
 		var days = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado']
 		return days[a.getDay()];
+	}
+	if(tipo=='agodate'){
+		return a.getDate()+'/'+parseInt(a.getMonth())+1+'/'+a.getFullYear();
 	}
 }

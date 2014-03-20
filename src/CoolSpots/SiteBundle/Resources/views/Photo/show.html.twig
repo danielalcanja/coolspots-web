@@ -4,7 +4,7 @@
 <script>
 pg = 'Photos';
 barBox = ".location-info";
-var paginaLocationsComments = 1;
+var paginaLocationsComments = 1, locationsCommentsAddText;
 
 var $b = jQuery.noConflict();
 $b(document).ready(function(){
@@ -13,17 +13,13 @@ $b(document).ready(function(){
 		wid = 0, 
 		locInfo = $b(".location-info"),
 		comment = $b(".comment"),
-		comIco = $b(".comment-ico"),
+		comIco = $b(".com-ico"),
 		comBack= $b(".com-back"),
 		datIco = $b(".calendar-ico"),
 		site = $b("#site"); 
 	
 	barLateral(false,3000);
 	
-	$b(".ph-menu-com").click(function() {
-		$b(comment).animate({"right" : 0}, 500);
-		return false;
-	});
 	$b(comIco).click(function() {
 		$b(comment).toggleClass("closed");
 		if($b(comment).hasClass("closed")){
@@ -194,9 +190,31 @@ function callbackLocationsComments(obj) {
 		jQuery("#location-comments :first").hide();
 	//}
 	
-	paginaLocationsComments++;
+	paginaLocationsComments = 1;
 }
 
+function loadLocationsCommentsAdd() {
+	var url =  '/json/locations/comments/add';
+	var params =  {
+		id: {{ location.id }},
+		username: '{{ app.session.get('username') }}',
+		comment: locationsCommentsAddText
+	};
+	jsonCall(url, params, callbackLocationsCommentsAdd);	
+}
+function callbackLocationsCommentsAdd(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	} else {
+		loadLocationsComments();
+	}
+}
 
 jQuery(document).ready(function(){
 	var i=1;
@@ -215,7 +233,9 @@ jQuery(document).ready(function(){
 				},
 				'.name@value': 'obj.idUser.fullName',
 				'.userpic@value': 'obj.idUser.profilePicture',
-				'.dateadded@value': 'obj.dateAdded.timestamp',
+				'.dateadded@value': function(){
+					return dateAgo('agodate',this.dateAdded.timestamp)
+				},
 				'.name_location@value': 'obj.idLocation.name',
 				'.username@value': 'obj.idUser.username',
 				'.caption@value': 'obj.caption',
@@ -240,7 +260,9 @@ jQuery(document).ready(function(){
 				'@data':'obj.id',
 				'strong':'obj.idUser.fullName',
 				'em':'obj.comment',
-				'span': 'obj.dateAdded.timestamp'
+				'.timeago@title': function(){
+					return dateAgo('timeago',this.dateAdded.timestamp)
+				},
 			}
 		}
 	}
@@ -248,10 +270,26 @@ jQuery(document).ready(function(){
 	
 	loadLocationPhotos();
 	loadLocationsComments();
+	
+	jQuery(document).delegate('.btn-comment-add', 'click', function(){
+		textComment = jQuery(this).closest('.boxCommentsAdd').find('.commentAdd');
+		locationsCommentsAddText = textComment.val();
+		locationsCommentsAddText.trim();
+	
+		if(locationsCommentsAddText.length) { 
+			loadLocationsCommentsAdd();
+			textComment.val('');
+		} else { textComment.focus(); return false; }
+	});
+	
+	jQuery(document).delegate('.response', 'click', function(){
+		return false;
+	});
+	
 });
 </script>
 
-<div title="Exibir comentários" class="comment-ico"><span></span></div>
+<div title="Exibir comentários" class="comment-ico com-ico"><span></span></div>
 <div title="Selecionar por data" class="calendar-ico"><span></span></div>
 <div class="location-info">
 	<div class="content">
@@ -276,7 +314,7 @@ jQuery(document).ready(function(){
 		<ul class="pho-menu">
 			<li><span class="ind"></span> <a href="">{% trans %}location.info.indicate{% endtrans %}</a></li>
 			<li><span class="add"></span> <a href="">{% trans %}location.info.favorite{% endtrans %}</a></li>
-			<li><span class="com"></span> <a class="ph-menu-com" href="">Exibir comentários</a></li>
+			<li><span class="com"></span> <a class="com-ico" href="">Exibir comentários</a></li>
 		</ul>
 		
 		<br />
@@ -287,14 +325,25 @@ jQuery(document).ready(function(){
 <div class="comment">
 	<div class="espace">
 		<h2>Comentários <span class="comments-total"></span></h2>
+		
+		<div class="clr h10"></div>
+		<div class="boxCommentsAdd">
+			<div class="row">
+				<textarea name="detalhes" rows="5" class="commentAdd borRad02" placeholder="Comentar"></textarea>
+			</div>
+			<div class="clr"></div>
+			<input class="btn-padrao-m dir btn-comment-add" type="button" value="Enviar">
+		</div>
+		
+		<div class="clr h20"></div>
 		<div id="location-comments">
 			<div class="location-comments" data="">
 				<h3>
 					<strong></strong> 
-					<em>Muito bacana asfljk asflja sfoiua sdfou asflj asfljkasfozuv asf kaasf.</em>
+					<em></em>
 				</h3>
-				<span>5 horas atrás</span>
-				<a href="">Responder</a>
+				<span class="timeago"></span>
+				<a href="#" class="response">Responder</a>
 			</div>
 		</div>
 		

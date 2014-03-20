@@ -428,6 +428,8 @@ ul.pho-menu li span.com { background-position:-291px -127px; }
 .mes-box .user .user-info .desde { position:absolute; top:0; right:0; line-height:80px; }
 .mes-box .user .separator { border-bottom:1px solid #F0F0F0; }
 
+/*COMMENTS*/
+.commentAdd { width:260px; padding:3px; border:1px solid #CCC; }
 
 /*MENUS - LINKS*/
 a.menuPink:link, a.menuPink:visited , a.menuPinkAtivo{ width:300px; height:40px; line-height:40px; display:block; text-align:left; color:#666; background:url('../images/borGray.png') repeat-x bottom; position:relative; }

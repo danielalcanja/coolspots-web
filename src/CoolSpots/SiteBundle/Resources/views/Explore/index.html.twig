@@ -65,7 +65,9 @@ jQuery(document).ready(function(){
 					return " " + this.idFoursquare + posObj;
 				},
 				'a.box@href': '/#{obj.id}/#{obj.idInstagram}',
-				'.timeago': 'obj.dateUpdated',
+				'.timeago@title': function(){
+					return dateAgo('timeago',this.dateUpdated)
+				},
 				'.image img@data-original':'obj.coverPic',
 				'.favorite@class+': function(){ if(isFavorite(this.id)) return ' this-fav'; },
 				'h2.title': 'obj.name',
