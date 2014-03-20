@@ -4,6 +4,7 @@
 <script>
 pg = 'Photos';
 barBox = ".location-info";
+barCal = ".location-calendar";
 var paginaLocationsComments = 1, locationsCommentsAddText;
 
 var $b = jQuery.noConflict();
@@ -11,7 +12,6 @@ $b(document).ready(function(){
 	var	timer = "", 
 		time = 0, 
 		wid = 0, 
-		locInfo = $b(".location-info"),
 		comment = $b(".comment"),
 		comIco = $b(".com-ico"),
 		comBack= $b(".com-back"),
@@ -38,8 +38,25 @@ $b(document).ready(function(){
 		return false;
 	});
 	$b(datIco).click(function() {
-		alert("open");
+		barCalendar(true,10);
 	});
+	
+	$b(barCal).hover(function() {
+	},function(){
+		barCalendar(false,10);
+	});
+	
+	barCalendar(false,0);
+	
+	function barCalendar(action,time){
+		wid = !(action) ? -($b(barCal).width()) : 0;
+		opa = !(action) ? 0.5 : 1;
+		dat = !(action) ? 0 : $b(barCal).width();
+		timer = setTimeout(function(){
+			$b(barCal).animate({"left" : wid , "opacity" : opa}, 300);
+			clearTimeout(timer);
+		}, time);
+	}
 	
 	var	shadown = '.shadownPics';
 	var html = '';
@@ -329,6 +346,24 @@ jQuery(document).ready(function(){
 	jQuery(document).delegate('.response', 'click', function(){
 		return false;
 	});	
+	
+	jQuery("a.order").hover(function(){
+		if(!(jQuery(this).find("span").hasClass("ativo"))){
+			jQuery(this).find("span").addClass("hover");
+		}
+		return false;
+	}, function(){
+		jQuery(this).find("span").removeClass("hover");
+	});
+	jQuery("a.order").click(function(){
+		if(!(jQuery(this).find("span").hasClass("ativo"))){
+			jQuery("a.order").find("span").removeClass("ativo");
+			jQuery(this).find("span").addClass("ativo");
+		} else {
+			jQuery(this).find("span").removeClass("ativo");
+		}
+		return false;
+	});
 });
 </script>
 
@@ -364,6 +399,26 @@ jQuery(document).ready(function(){
 		<h3> 30 Spooters - 5 Friends</h3>
 	</div>
 </div>
+
+<div class="location-calendar">
+	<div class="content">
+		<h1>Calendar Filter</h1>
+		<div class="clr h20"></div><div class="clr h10"></div>
+		
+		<h3>Veja fotos deste local de acordo com o filtro desejado. </h3>
+		
+		<div class="clr h20"></div><div class="clr h10"></div>
+		
+		<a class="order" href="#" title="">Ontem <span></span></a>
+		<a class="order" href="#" title="">Esta semana <span></span></a>
+		<a class="order" href="#" title="">Último fim de semana <span></span></a>
+		<a class="order" href="#" title="">Este mês <span></span></a>
+		<a class="order" href="#" title="">Data específia <span></span></a>
+		
+		
+	</div>
+</div>
+
 <div class="com-back"><span></span></div>
 <div class="comment">
 	<div class="espace">

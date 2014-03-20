@@ -258,9 +258,9 @@ select { color:#999; font-family:'Museo500-Regular'; font-size:12px; font-weight
 .location-date { width:240px; height:140px; background:#31749B; border-left:10px solid #FFF; position:fixed; z-index:2; top:70px; color:#FFF; }
 .location-date .day { font-family: 'Museo300-Regular'; font-size:80px; font-weight:normal; position:absolute; top:0px; right:10px; }
 .location-date .time { font-family: 'Museo500-Regular'; font-size:12px; position:absolute; bottom:10px; left:10px; }
-.location-info { width:40%; min-width:40%; height:100%; background:#FFF; position:fixed; z-index:1; top:0; left:0; color:#888; }
-.location-info h1 { width:100%; margin-left:-10px; padding-top:20px; color:#666; font-size:45px; font-weight:normal; float:left; }
-.location-info .content { margin-top:70px; padding:0px 50px 0 60px; }
+.location-info, .location-calendar { width:40%; min-width:40%; height:100%; background:#FFF; position:fixed; z-index:1; top:0; left:0; color:#888; }
+.location-info h1, .location-calendar h1 { width:100%; margin-left:-10px; padding-top:20px; color:#666; font-size:45px; font-weight:normal; float:left; }
+.location-info .content, .location-calendar .content { margin-top:70px; padding:0px 50px 0 60px; }
 .location-info .content h3 { font-size:15px; margin-bottom:10px; }
 .location-info .content span { font-size:13px; font-weight:normal; }
 .location-info .content .divide { clear:both; width:345px; height:1px; margin:15px 0 10px 0; border-bottom:1px solid #CCC; }
@@ -414,6 +414,11 @@ ul.pho-menu li.this-fav a { background:#900; }
 #user-result .users-search h3 { padding-top:5px; font-size:16px; height:20px; overflow:hidden; }
 #user-result .users-search h4 { font-size:13px; color:#666; }
 
+.location-calendar { background-color:#F0F0F0; }
+.location-calendar .content a.order:link, .location-calendar .content a.order:visited { width:100%; height:40px; line-height:40px; display:block; text-align:left; color:#666; background:url('../images/borGray.png') repeat-x bottom; position:relative; }
+.location-calendar .content a.order span { width:12px; height:12px; display:block; position:absolute; top:14px; right:15px; background:url('../images/icons.png') -50px -149px no-repeat; }
+.location-calendar .content a.order span.hover { background-position: -50px -161px; }
+.location-calendar .content a.order span.ativo { background-position: -50px -173px; }
 
 /*FRIENDS*/
 #friends .friends { width:100%; display:table; padding:5px; margin:10px 0; float:left; }
