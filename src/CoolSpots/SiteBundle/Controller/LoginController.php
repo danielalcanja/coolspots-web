@@ -118,7 +118,7 @@ class LoginController extends Controller
 			$session->set('full_name', $ret['user']['full_name']);
 			$session->set('profile_picture', $ret['user']['profile_picture']);
 			$session->set('access_token', $ret['access_token']);
-			$session->set('userid', $user->getIdLocation()->getId());
+			$session->set('userid', $user->getId());
 			$session->set('favorites', $userFavorites);
 			
 			return $this->redirect($this->generateUrl('main'));

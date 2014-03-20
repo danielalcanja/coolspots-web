@@ -10,6 +10,7 @@ events:
     indicate:        Indicate an event
 bottom:
     bar:
+        home:        Home
         about:       About
         explore:     Explore
         friends:     friends
