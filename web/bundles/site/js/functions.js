@@ -84,6 +84,8 @@ function callbackLocations(obj) {
 			arrLast[obj.data[i].idFoursquare][j] = obj.data[i].lastPhotos[j].lowResolution;
 		}
 	}
+	
+	jQuery('.timeago').timeago();
 }
 function divide(obj){
 	part1 = {data:[]}, part2 = {data:[]};
@@ -759,4 +761,19 @@ function barLateral(action,time){
 		jQuery(barBox).animate({"left" : wid , "opacity" : opa}, 300);
 		clearTimeout(timer);
 	}, time);
+}
+
+function dateAgo(tipo, time){
+	var dtdb = time;
+	var a = new Date(dtdb * 1000);
+	if(tipo=='timeago'){
+		return a.getFullYear()+'-'+parseInt(a.getMonth())+1+'-'+a.getDate()+' '+a.getHours()+":"+a.getMinutes()+":"+a.getSeconds();
+	}
+	if(tipo=='day'){
+		return a.getDate();
+	}
+	if(tipo=='daystr'){
+		var days = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado']
+		return days[a.getDay()];
+	}
 }

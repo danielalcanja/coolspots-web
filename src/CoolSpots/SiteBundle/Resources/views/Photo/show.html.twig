@@ -160,6 +160,8 @@ function callbackLocationPhotos(obj) {
 	if(one) jQuery("#photo-list").append(compila(part1));
 	if(two) jQuery("#photo-list").append(compila(part2));
 	pagina++;
+	
+	jQuery('.timeago').timeago();
 }
 
 function loadLocationsComments() {
@@ -196,7 +198,7 @@ function callbackLocationsComments(obj) {
 }
 
 
-jQuery(document).ready(function(){	
+jQuery(document).ready(function(){
 	var i=1;
 	directive = {
 		'li.photo': {
@@ -217,9 +219,15 @@ jQuery(document).ready(function(){
 				'.name_location@value': 'obj.idLocation.name',
 				'.username@value': 'obj.idUser.username',
 				'.caption@value': 'obj.caption',
-				'.timeago': 'obj.dateAdded.timestamp',
-				'.day': 'obj.dateAdded.timestamp',
-				'.day-str': 'obj.dateAdded.timestamp',
+				'.timeago@title': function(){
+					return dateAgo('timeago',this.dateAdded.timestamp)
+				},
+				'.day': function(){
+					return dateAgo('day',this.dateAdded.timestamp)
+				},
+				'.day-str': function(){
+					return dateAgo('daystr',this.dateAdded.timestamp)
+				},
 				'.image img@data-original':'obj.standardResolution'
 			}
 		}
