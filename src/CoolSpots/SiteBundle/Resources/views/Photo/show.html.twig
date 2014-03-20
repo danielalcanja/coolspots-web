@@ -132,6 +132,30 @@ function callbackLocationInfo(obj) {
 	jQuery(".locAddress").text(obj.data.address == null ? "" : obj.data.address);
 	jQuery(".locCatCitSta").html(obj.data.idCategory.name + "<br />"+ obj.data.idCity.cityName + " - " + obj.data.idState.stateName);
 }
+
+function loadLocationsFavorites() {
+	var url = '/json/favorites';
+	var params =  { };
+	jsonCall(url, params, callbackLocationsFavorites);	
+}
+function callbackLocationsFavorites(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	for(var item in obj.data){
+		arrFav[item] = obj.data[item].idLocation.id;
+	}
+	
+	if(isFavorite({{ location.id }})) jQuery('.pho-menu .favorite').addClass('this-fav');
+}
+
 function loadLocationPhotos() {
 	var url =  '/json/locations/photos';
 	var params =  {
@@ -216,6 +240,25 @@ function callbackLocationsCommentsAdd(obj) {
 	}
 }
 
+function loadPhotosLikesAdd(idPhoto,acao) {
+	action = acao == 'add' ? acao : 'remove';
+	console.log(idPhoto + " " + acao);
+	var url = '/json/photos/likes/'+action;
+	var params =  { id: idPhoto };
+	jsonCall(url, params, callbackPhotosLikes);
+}
+function callbackPhotosLikes(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+}
+
 jQuery(document).ready(function(){
 	var i=1;
 	directive = {
@@ -268,6 +311,7 @@ jQuery(document).ready(function(){
 	}
 	compileLocationsComments = jQuery('#location-comments').compile(directiveLocationsComments);
 	
+	loadLocationsFavorites();
 	loadLocationPhotos();
 	loadLocationsComments();
 	
@@ -284,8 +328,7 @@ jQuery(document).ready(function(){
 	
 	jQuery(document).delegate('.response', 'click', function(){
 		return false;
-	});
-	
+	});	
 });
 </script>
 
@@ -313,7 +356,7 @@ jQuery(document).ready(function(){
 		
 		<ul class="pho-menu">
 			<li><span class="ind"></span> <a href="">{% trans %}location.info.indicate{% endtrans %}</a></li>
-			<li><span class="add"></span> <a href="">{% trans %}location.info.favorite{% endtrans %}</a></li>
+			<li class="favorite" rel="{{ location.id }}"><span class="add"></span> <a href="">{% trans %}location.info.favorite{% endtrans %}</a></li>
 			<li><span class="com"></span> <a class="com-ico" href="">Exibir comentários</a></li>
 		</ul>
 		

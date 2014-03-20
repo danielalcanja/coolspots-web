@@ -426,10 +426,13 @@ $a(document).ready(function(){
 		$a(".top-bar .back").fadeIn('fast');
 	});
 
-	$a("#photo-list").delegate(".favorite",'click', function(e) {
+	$a("#site").delegate(".favorite",'click', function(e) {
 		e.preventDefault();
-		var id = $a(this).closest(".photo").attr("rel");
-		$a(this).html("<div class='loading'><div class='load'></div></div>");
+		if(pg=='Default' || pg=='Favorites'){
+			var id = $a(this).closest(".photo").attr("rel");
+		}else{
+			var id = $a(this).attr("rel");
+		}
 
 		if($a(this).hasClass("this-fav")){
 			favorites(id, 'remove');
@@ -438,7 +441,6 @@ $a(document).ready(function(){
 			favorites(id, 'add');
 			$a(this).addClass("this-fav");
 		}
-		$a(this).find(".loading").remove();
 	});
 	
 	
@@ -467,6 +469,7 @@ $a(document).ready(function(){
 	
 	var	shadown = ".shadown",
 		shadownPics = ".shadownPics",
+		shadownMessage = ".shadownMessage",
 		box = ".shadownPics .box",
 		atual = 0,
 		pic = [];
@@ -680,8 +683,9 @@ $a(document).ready(function(){
 	$a(document).delegate(".slide-close", "click", function(){
 		shadownClose();
 	});
-	$a(document).delegate(".slide-icos .cur", "click", function(){
-		alert("CURTIR IMAGEM DE ID: " + $a(pic[atual]).attr("id"));
+	$a(document).delegate(".slide-icos .cur", "click", function(e){
+		e.preventDefault();
+		var id = $a(pic[atual]).attr("id");
 	});
 	$a(document).delegate(".slide-icos .men", "click", function(){
 		$a(this).addClass("reply")
@@ -723,9 +727,17 @@ $a(document).ready(function(){
 		$a(shadown).fadeOut('slow');
 	});
 	
+	$a(document).delegate('.shadownMessage', 'click', function(){
+		shadownClose();
+	});
+	$a(document).delegate('.btn-cancel-add', 'click', function(){
+		shadownClose();
+	});
+	
 	function shadownClose(){
 		$a(shadown).fadeOut('slow');
 		$a(shadownPics).fadeOut('slow');
+		$a(shadownMessage).fadeOut('slow');
 	}
 	
 	//MESSAGES

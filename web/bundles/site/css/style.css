@@ -194,7 +194,7 @@ span.ros { background:#FF5885; }
 .comment .espace .location-comments a:hover { color:#31749B; }
 
 /*GALERIA*/
-.shadownPics, .shadown { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; display:none; }
+.shadownPics, .shadown, .shadownMessage { width:100%; height:100%; background:url('../images/alpha.png'); position:fixed; top:0; left:0; display:none; }
 .shadownPics { z-index:5; } .shadown { z-index:6; }
 .shadownPics .gallery-box { width:100%; height:100%; overflow:auto; position:fixed; top:0; left:0; }
 .shadownPics .gallery-box .box { width:600px; margin:-310px auto auto -310px; padding:10px; background-color:#FFF; position:fixed; top:50%; left:50%; }
@@ -223,6 +223,8 @@ span.ros { background:#FF5885; }
 .shadownPics .gallery-box .box .slide-icos .com { background-position:-0px -245px; }
 .shadownPics .gallery-box .box .slide-icos .cur { background-position:-0px -275px; }
 .shadownPics .gallery-box .box .slide-icos .men { background-position:-0px -304px; }
+
+
 .shadownPics .gallery-box .box .slide-icos .line span { padding:0 5px; color:#000; font-size:11px; display:none; float:left; height:29px; line-height:29px; background:url('../images/slide-icos-back.png') center repeat-x; }
 .shadownPics .gallery-box .box .slide-icos .line span.p1 { width:7px; padding:0; background:url('../images/slide-icos-esqdir.png') center left no-repeat; }
 .shadownPics .gallery-box .box .slide-icos .line span.p2 { width:7px; padding:0; background:url('../images/slide-icos-esqdir.png') center right no-repeat; }
@@ -281,6 +283,8 @@ ul.pho-menu li span.ind { background-position:-292px -103px; }
 ul.pho-menu li span.add { background-position:-316px -103px; }
 ul.pho-menu li span.fav { background-position:-341px -103px; }
 ul.pho-menu li span.com { background-position:-291px -127px; }
+
+ul.pho-menu li.this-fav a { background:#900; }
 
 .pg-next, .pg-prev { width:25px; height:125px; background-image:url('../images/icons.png'); position:fixed; top:50%; margin-top:-62px; cursor:pointer; z-index:10; display:none; }
 .pg-prev { background-position:-380px -100px; left:10px; }
@@ -377,7 +381,7 @@ ul.pho-menu li span.com { background-position:-291px -127px; }
 .messages .messages-esq .content h1 { margin-left:10px; font-size:45px; font-weight:normal; }
 .messages .messages-esq .content-esq { margin:25px auto auto 10px; font-size:12px; }
 
-.box-message-add { width:300px; }
+.box-message-add { width:300px; background:#FFF; padding:20px; position:absolute; left:50%; top:50%; margin:-162px auto auto -150px; }
 .box-message-add .box-h2 { color:#31749B; margin-top:10px; }
 .box-message-add textarea { width:290px; padding:5px; height:100px; resize:none; }
 .box-message-add .row { font-size:15px; position:relative; }
@@ -397,6 +401,8 @@ ul.pho-menu li span.com { background-position:-291px -127px; }
 .messages .messages-info .content .mes-content { width:100%; display:none; border-bottom:1px solid #CCC; padding-bottom:10px; padding:5px; font-size:13px;  }
 
 .messages .messages-info .content .mes-box { width:480px; display:none; }
+.messages .messages-info .content .mes-box h2 { display:inline; }
+.messages .messages-info .content .mes-box h2.lnk { display:inline; color:#296689; font-size:20px; cursor:pointer; float:right; }
 
 #user-result { width:100%; max-height:200px; color:#296689; background:#296689; position:absolute; z-index:3; display:none; }
 #user-result span { text-align:center; color:#FFF; display:block; line-height:50px; }
