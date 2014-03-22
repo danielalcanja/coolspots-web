@@ -241,7 +241,7 @@ jQuery(document).delegate('.reply', 'click', function(){
 	html += '			<textarea name=\"detalhes\" rows=\"5\" class=\"messageAdd campos-box bor-less\" placeholder=\"Escreva sua mensagem\"></textarea>';
 	html += '		</div>';
 	html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>';
-	html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">';
+	html += '		<input class=\"btn-padrao-m dir btn-cancel sdw\" type=\"button\" value=\"Cancelar\">';
 	html += '		<input class=\"btn-padrao-m dir marRig05 btn-message-add\" type=\"button\" value=\"Enviar\">';
 	html += '	</div>';
 	html += '</div>';
@@ -426,10 +426,13 @@ $a(document).ready(function(){
 		$a(".top-bar .back").fadeIn('fast');
 	});
 
-	$a("#photo-list").delegate(".favorite",'click', function(e) {
+	$a("#site").delegate(".favorite",'click', function(e) {
 		e.preventDefault();
-		var id = $a(this).closest(".photo").attr("rel");
-		$a(this).html("<div class='loading'><div class='load'></div></div>");
+		if(pg=='Default' || pg=='Favorites'){
+			var id = $a(this).closest(".photo").attr("rel");
+		}else{
+			var id = $a(this).attr("rel");
+		}
 
 		if($a(this).hasClass("this-fav")){
 			favorites(id, 'remove');
@@ -438,7 +441,6 @@ $a(document).ready(function(){
 			favorites(id, 'add');
 			$a(this).addClass("this-fav");
 		}
-		$a(this).find(".loading").remove();
 	});
 	
 	
@@ -467,6 +469,7 @@ $a(document).ready(function(){
 	
 	var	shadown = ".shadown",
 		shadownPics = ".shadownPics",
+		shadownMessage = ".shadownMessage",
 		box = ".shadownPics .box",
 		atual = 0,
 		pic = [];
@@ -480,105 +483,105 @@ $a(document).ready(function(){
 	
 	$a(".add-event").click(function(){
 		var html = '';
-		html += '<div class=\"box-criar-evento boxDiversos\">                                                                    ';
-		html += '	<div class=\"space\">                                                                                        ';
-		html += '		<h2 class=\"box-h2\">Crie um evento</h2>                                                                 ';
-		html += '		<div class=\"row\">                                                                                      ';
-		html += '			<span class=\"col1\">Nome</span>                                                                     ';
-		html += '			<div class=\"col2\">                                                                                 ';
+		html += '<div class=\"box-criar-evento boxDiversos\">';
+		html += '	<div class=\"space\">';
+		html += '		<h2 class=\"box-h2\">Crie um evento</h2>';
+		html += '		<div class=\"row\">';
+		html += '			<span class=\"col1\">Nome</span>';
+		html += '			<div class=\"col2\">';
 		html += '				<input type=\"text\" name=\"nome\" class=\"campos-box\" placeholder=\"ex: Festa de aniversário\">';
-		html += '			</div>                                                                                               ';
-		html += '		</div>                                                                                                   ';
-		html += '		<div class=\"clr h05\"></div>                                                                            ';
-		html += '		<div class=\"row\">                                                                                      ';
-		html += '			<span class=\"col1\">Detalhes</span>                                                                 ';
-		html += '			<div class=\"col2\">                                                                                 ';
+		html += '			</div>';
+		html += '		</div>';
+		html += '		<div class=\"clr h05\"></div>';
+		html += '		<div class=\"row\">';
+		html += '			<span class=\"col1\">Detalhes</span>';
+		html += '			<div class=\"col2\">';
 		html += '				<textarea name=\"detalhes\" rows=\"2\" class=\"campos-box\" placeholder=\"Adicione mais informações\"></textarea>';
-		html += '			</div>                                                                                               ';
-		html += '		</div>                                                                                                   ';
-		html += '		<div class=\"clr h05\"></div>                                                                            ';
-		html += '		<div class=\"row\">                                                                                      ';
-		html += '			<span class=\"col1\">Onde</span>                                                                     ';
-		html += '			<div class=\"col2\">                                                                                 ';
-		html += '				<input type=\"text\" name=\"onde\" class=\"campos-box\" placeholder=\"Adicione um lugar\">       ';
-		html += '			</div>                                                                                               ';
-		html += '		</div>                                                                                                   ';
-		html += '		<div class=\"clr h05\"></div>                                                                            ';
-		html += '		<div class=\"row\">                                                                                      ';
-		html += '			<span class=\"col1\">Quando</span>                                                                   ';
-		html += '			<div class=\"col2\">                                                                                 ';
-		html += '				<input type=\"text\" name=\"data\" class=\"campos-boxM\">                                        ';
-		html += '				<input type=\"text\" name=\"hora\" class=\"campos-boxM\" placeholder=\"Horário\">                ';
-		html += '			</div>                                                                                               ';
-		html += '		</div>                                                                                                   ';
-		html += '		<div class=\"clr h05\"></div>                                                                            ';
-		html += '		<div class=\"row\">                                                                                      ';
-		html += '			<span class=\"col1\">Privacidade</span>                                                              ';
-		html += '			<div class=\"col2\">                                                                                 ';
-		html += '				<div class=\"pri-box\">                                                                          ';
-		html += '					<select>                                                                                     ';
-		html += '						<option value=\"1\">Público</option>  		                             ';
-		html += '						<option value=\"0\">Privado</option>   		                                             ';
-		html += '					</select>                                                                                    ';
-		html += '				</div>                                                                                           ';
-		html += '				<input type=\"hidden\" name=\"privacidade\" value=\"Spooters Amigos\">                           ';
-		html += '			</div>                                                                                               ';
-		html += '		</div>                                                                                                   ';
-		html += '		<div class=\"clr h05\"></div>                                                                            ';
-		html += '		<div class=\"row\">                                                                                      ';
-		html += '			<span class=\"col1\">Hashtag</span>                                                                 ';
-		html += '			<div class=\"col2\">                                                                                 ';
+		html += '			</div>';
+		html += '		</div>';
+		html += '		<div class=\"clr h05\"></div>';
+		html += '		<div class=\"row\">';
+		html += '			<span class=\"col1\">Onde</span>';
+		html += '			<div class=\"col2\">';
+		html += '				<input type=\"text\" name=\"onde\" class=\"campos-box\" placeholder=\"Adicione um lugar\">';
+		html += '			</div>';
+		html += '		</div>';
+		html += '		<div class=\"clr h05\"></div>';
+		html += '		<div class=\"row\">';
+		html += '			<span class=\"col1\">Quando</span>';
+		html += '			<div class=\"col2\">';
+		html += '				<input type=\"text\" name=\"data\" class=\"campos-boxM\">';
+		html += '				<input type=\"text\" name=\"hora\" class=\"campos-boxM\" placeholder=\"Horário\">';
+		html += '			</div>';
+		html += '		</div>';
+		html += '		<div class=\"clr h05\"></div>';
+		html += '		<div class=\"row\">';
+		html += '			<span class=\"col1\">Privacidade</span>';
+		html += '			<div class=\"col2\">';
+		html += '				<div class=\"pri-box\">';
+		html += '					<select>';
+		html += '						<option value=\"1\">Público</option>';
+		html += '						<option value=\"0\">Privado</option>';
+		html += '					</select>';
+		html += '				</div>';
+		html += '				<input type=\"hidden\" name=\"privacidade\" value=\"Spooters Amigos\">';
+		html += '			</div>';
+		html += '		</div>';
+		html += '		<div class=\"clr h05\"></div>';
+		html += '		<div class=\"row\">';
+		html += '			<span class=\"col1\">Hashtag</span>';
+		html += '			<div class=\"col2\">';
 		html += '				<textarea name=\"hashtag\" rows=\"2\" class=\"campos-box\" placeholder=\"Hashtag\"></textarea>';
-		html += '			</div>                                                                                               ';
-		html += '		</div>                                                                                                   ';
-		html += '		                                                                                                         ';
-		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>                                                 ';
-		html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">                         ';
-		html += '		<input class=\"btn-padrao-m dir marRig05 btCriarEvento\" type=\"button\" value=\"Criar\">                ';
-		html += '	</div>                                                                                                       ';
-		html += '</div>                                                                                                          ';
+		html += '			</div>';
+		html += '		</div>';
+		html += '';
+		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>';
+		html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">';
+		html += '		<input class=\"btn-padrao-m dir marRig05 btCriarEvento\" type=\"button\" value=\"Criar\">';
+		html += '	</div>';
+		html += '</div>';
 		$a(shadown).html(html).fadeIn('slow');
 	});
 	
 	$a(".ind-location").click(function(){
 		var html = '';
-		html += '<div class=\"box-ind-location boxDiversos\">                                                                    ';
-		html += '	<div class=\"space\">                                                                                        ';
-		html += '		<h2 class=\"box-h2\">Indicar um lugar</h2>                                                                ';
-		html += '		<div class=\"row\">                                                                                      ';
-		html += '			<span class=\"col1\">Lugar</span>                                                                    ';
-		html += '			<div class=\"col2\">                                                                                 ';
-		html += '				<input type=\"text\" name=\"nome\" class=\"campos-box\" placeholder=\"Nome do lugar\">			 ';
-		html += '			</div>                                                                                               ';
-		html += '		</div>                                                                                                   ';
-		html += '		<div class=\"clr h05\"></div>                                                                            ';
-		html += '		<div class=\"row\">                                                                                      ';
-		html += '			<span class=\"col1\">E-mail</span>                                                                   ';
-		html += '			<div class=\"col2\">                                                                                 ';
-		html += '				<input type=\"text\" name=\"email\" class=\"campos-box\" placeholder=\"Seu e-mail\">			 ';
-		html += '			</div>                                                                                               ';
-		html += '		</div>                                                                                                   ';
-		html += '		<div class=\"clr h05\"></div>                                                                            ';
-		html += '		<div class=\"row\">                                                                                      ';
-		html += '			<span class=\"col1\">Cidade</span>             		                                                 ';
-		html += '			<div class=\"col2\">                                                                                 ';
-		html += '				<input type=\"text\" name=\"cidade\" class=\"campos-box\" placeholder=\"Nome da cidade\">		 ';
-		html += '			</div>                                                                                               ';
-		html += '		</div>                                                                                                   ';
-		html += '		<div class=\"clr h05\"></div>                                                                            ';
-		html += '		<div class=\"row\">                                                                                      ';
-		html += '			<span class=\"col1\">Estado</span>                        		                                     ';
-		html += '			<div class=\"col2\">                                                                                 ';
-		html += '				<input type=\"text\" name=\"estado\" class=\"campos-box\" placeholder=\"Nome do estado\">		 ';
-		html += '			</div>                                                                                               ';
-		html += '		</div>                                                                                                   ';
-		html += '		<div class=\"clr h05\"></div>                                                                            ';
+		html += '<div class=\"box-ind-location boxDiversos\">';
+		html += '	<div class=\"space\">';
+		html += '		<h2 class=\"box-h2\">Indicar um lugar</h2>';
+		html += '		<div class=\"row\">';
+		html += '			<span class=\"col1\">Lugar</span>';
+		html += '			<div class=\"col2\">';
+		html += '				<input type=\"text\" name=\"nome\" class=\"campos-box\" placeholder=\"Nome do lugar\">';
+		html += '			</div>';
+		html += '		</div>';
+		html += '		<div class=\"clr h05\"></div>';
+		html += '		<div class=\"row\">';
+		html += '			<span class=\"col1\">E-mail</span>';
+		html += '			<div class=\"col2\">';
+		html += '				<input type=\"text\" name=\"email\" class=\"campos-box\" placeholder=\"Seu e-mail\">';
+		html += '			</div>';
+		html += '		</div>';
+		html += '		<div class=\"clr h05\"></div>';
+		html += '		<div class=\"row\">';
+		html += '			<span class=\"col1\">Cidade</span>';
+		html += '			<div class=\"col2\">';
+		html += '				<input type=\"text\" name=\"cidade\" class=\"campos-box\" placeholder=\"Nome da cidade\">';
+		html += '			</div>';
+		html += '		</div>';
+		html += '		<div class=\"clr h05\"></div>';
+		html += '		<div class=\"row\">';
+		html += '			<span class=\"col1\">Estado</span>';
+		html += '			<div class=\"col2\">';
+		html += '				<input type=\"text\" name=\"estado\" class=\"campos-box\" placeholder=\"Nome do estado\">';
+		html += '			</div>';
+		html += '		</div>';
+		html += '		<div class=\"clr h05\"></div>';
 		html += '		                                                                                                         ';
-		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>                                                 ';
-		html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">                         ';
-		html += '		<input class=\"btn-padrao-m dir marRig05 btIndicarLugar\" type=\"button\" value=\"Indicar\">             ';
-		html += '	</div>                                                                                                       ';
-		html += '</div>                                                                                                          ';
+		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>';
+		html += '		<input class=\"btn-padrao-m dir btn-cancel\" type=\"button\" value=\"Cancelar\">';
+		html += '		<input class=\"btn-padrao-m dir marRig05 btIndicarLugar\" type=\"button\" value=\"Indicar\">';
+		html += '	</div>';
+		html += '</div>';
 		$a(shadown).html(html).fadeIn('slow');
 	});
 	
@@ -680,8 +683,9 @@ $a(document).ready(function(){
 	$a(document).delegate(".slide-close", "click", function(){
 		shadownClose();
 	});
-	$a(document).delegate(".slide-icos .cur", "click", function(){
-		alert("CURTIR IMAGEM DE ID: " + $a(pic[atual]).attr("id"));
+	$a(document).delegate(".slide-icos .cur", "click", function(e){
+		e.preventDefault();
+		var id = $a(pic[atual]).attr("id");
 	});
 	$a(document).delegate(".slide-icos .men", "click", function(){
 		$a(this).addClass("reply")
@@ -720,12 +724,20 @@ $a(document).ready(function(){
 	});
 	
 	$a(document).delegate('.btn-cancel', 'click', function(){
+		$a(shadown).fadeOut('slow');
+	});
+	
+	$a(document).delegate('.shadownMessage', 'click', function(){
+		shadownClose();
+	});
+	$a(document).delegate('.btn-cancel-add', 'click', function(){
 		shadownClose();
 	});
 	
 	function shadownClose(){
 		$a(shadown).fadeOut('slow');
 		$a(shadownPics).fadeOut('slow');
+		$a(shadownMessage).fadeOut('slow');
 	}
 	
 	//MESSAGES
@@ -775,5 +787,8 @@ function dateAgo(tipo, time){
 	if(tipo=='daystr'){
 		var days = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado']
 		return days[a.getDay()];
+	}
+	if(tipo=='agodate'){
+		return a.getDate()+'/'+parseInt(a.getMonth())+1+'/'+a.getFullYear();
 	}
 }

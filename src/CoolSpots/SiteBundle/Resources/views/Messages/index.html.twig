@@ -356,6 +356,10 @@ jQuery(document).ready(function(){
 			loadFriends();
 		}
 	});
+	
+	jQuery("h2.lnk").click(function(){
+		jQuery(".shadownMessage").fadeIn();
+	});
 });
 </script>
 <div class="page messages">
@@ -368,40 +372,13 @@ jQuery(document).ready(function(){
 				<a rel="Friends" class="menuMes menuPink totalFriends" href="#" title="Amigos" data="box-amigos"><span class="pink"></span>Amigos <span class="total">0</span></a>
 				<!--a class="menuMes menuPink totalFavorites" href="#" title="Favoritos" data="box-favoritos"><span class="pink"></span>Favoritos <span class="total">0</span></a-->
 				<a class="menuMes menuPink" href="#" title="Minhas Informações" data="box-info"><span class="pink"></span>Minhas Informações</a>
-				
-				<div class="clr h20"></div>
-				<div class="boxInboxAdd box-message-add">
-					<h2 class="box-h2">Nova Mensagem</h2>
-					<div class="clr h20"></div>
-					<div class="row">
-						<span class="colM">Para</span>
-						<div class="col2M sentFor" contenteditable="true">
-						</div>
-						<div id="user-result"></div>
-					</div>
-					<div class="clr h05"></div>
-					<div class="row">
-						<textarea name="detalhes" rows="5" class="messageAdd campos-box bor-less"></textarea>
-					</div>
-					<div class="clr"></div><div class="rowDivide"></div>
-					<input class="btn-padrao-m dir marRig05 btn-message-add" type="button" value="Enviar">
-					<div id="users-search">
-						<div class="users-search" data="" title="">
-							<div class="img">
-								<img src="" alt="" />
-							</div>
-							<h3></h3>
-							<h4></h4>
-						</div>
-					</div>
-				</div>
 			</div>
 		</div>
 	</div>
 	<div class="messages-info">
 		<div class="content">
 			<div class="mes-box box-messages">
-				<h2>Novas</h2>
+				<h2>Novas</h2> <h2 class="lnk">Nova Mensagem</h2>
 				<div class="clr h10"></div>
 				
 				<div id="messages-inbox">
@@ -510,6 +487,35 @@ jQuery(document).ready(function(){
 			</div>
 			<div class="clr h10"></div>
 		</div>		
+	</div>
+	
+	<div class="shadownMessage">
+		<div class="boxInboxAdd boxDiversos box-message-add">
+			<h2 class="box-h2">Nova Mensagem</h2>
+			<div class="clr h20"></div>
+			<div class="row">
+				<span class="colM">Para</span>
+				<div class="col2M sentFor" contenteditable="true">
+				</div>
+				<div id="user-result"></div>
+			</div>
+			<div class="clr h05"></div>
+			<div class="row">
+				<textarea name="detalhes" rows="5" class="messageAdd campos-box bor-less"></textarea>
+			</div>
+			<div class="clr"></div><div class="rowDivide"></div>
+			<input class="btn-padrao-m dir btn-cancel-add" type="button" value="Cancelar">
+			<input class="btn-padrao-m dir marRig05 btn-message-add" type="button" value="Enviar">
+			<div id="users-search">
+				<div class="users-search" data="" title="">
+					<div class="img">
+						<img src="" alt="" />
+					</div>
+					<h3></h3>
+					<h4></h4>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 {% endblock %}

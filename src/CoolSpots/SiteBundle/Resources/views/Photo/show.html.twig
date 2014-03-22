@@ -4,26 +4,22 @@
 <script>
 pg = 'Photos';
 barBox = ".location-info";
-var paginaLocationsComments = 1;
+barCal = ".location-calendar";
+var paginaLocationsComments = 1, locationsCommentsAddText;
 
 var $b = jQuery.noConflict();
 $b(document).ready(function(){
 	var	timer = "", 
 		time = 0, 
 		wid = 0, 
-		locInfo = $b(".location-info"),
 		comment = $b(".comment"),
-		comIco = $b(".comment-ico"),
+		comIco = $b(".com-ico"),
 		comBack= $b(".com-back"),
 		datIco = $b(".calendar-ico"),
 		site = $b("#site"); 
 	
 	barLateral(false,3000);
 	
-	$b(".ph-menu-com").click(function() {
-		$b(comment).animate({"right" : 0}, 500);
-		return false;
-	});
 	$b(comIco).click(function() {
 		$b(comment).toggleClass("closed");
 		if($b(comment).hasClass("closed")){
@@ -42,8 +38,25 @@ $b(document).ready(function(){
 		return false;
 	});
 	$b(datIco).click(function() {
-		alert("open");
+		barCalendar(true,10);
 	});
+	
+	$b(barCal).hover(function() {
+	},function(){
+		barCalendar(false,10);
+	});
+	
+	barCalendar(false,0);
+	
+	function barCalendar(action,time){
+		wid = !(action) ? -($b(barCal).width()) : 0;
+		opa = !(action) ? 0.5 : 1;
+		dat = !(action) ? 0 : $b(barCal).width();
+		timer = setTimeout(function(){
+			$b(barCal).animate({"left" : wid , "opacity" : opa}, 300);
+			clearTimeout(timer);
+		}, time);
+	}
 	
 	var	shadown = '.shadownPics';
 	var html = '';
@@ -136,6 +149,30 @@ function callbackLocationInfo(obj) {
 	jQuery(".locAddress").text(obj.data.address == null ? "" : obj.data.address);
 	jQuery(".locCatCitSta").html(obj.data.idCategory.name + "<br />"+ obj.data.idCity.cityName + " - " + obj.data.idState.stateName);
 }
+
+function loadLocationsFavorites() {
+	var url = '/json/favorites';
+	var params =  { };
+	jsonCall(url, params, callbackLocationsFavorites);	
+}
+function callbackLocationsFavorites(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	for(var item in obj.data){
+		arrFav[item] = obj.data[item].idLocation.id;
+	}
+	
+	if(isFavorite({{ location.id }})) jQuery('.pho-menu .favorite').addClass('this-fav');
+}
+
 function loadLocationPhotos() {
 	var url =  '/json/locations/photos';
 	var params =  {
@@ -194,9 +231,50 @@ function callbackLocationsComments(obj) {
 		jQuery("#location-comments :first").hide();
 	//}
 	
-	paginaLocationsComments++;
+	paginaLocationsComments = 1;
 }
 
+function loadLocationsCommentsAdd() {
+	var url =  '/json/locations/comments/add';
+	var params =  {
+		id: {{ location.id }},
+		username: '{{ app.session.get('username') }}',
+		comment: locationsCommentsAddText
+	};
+	jsonCall(url, params, callbackLocationsCommentsAdd);	
+}
+function callbackLocationsCommentsAdd(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	} else {
+		loadLocationsComments();
+	}
+}
+
+function loadPhotosLikesAdd(idPhoto,acao) {
+	action = acao == 'add' ? acao : 'remove';
+	console.log(idPhoto + " " + acao);
+	var url = '/json/photos/likes/'+action;
+	var params =  { id: idPhoto };
+	jsonCall(url, params, callbackPhotosLikes);
+}
+function callbackPhotosLikes(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+}
 
 jQuery(document).ready(function(){
 	var i=1;
@@ -215,7 +293,9 @@ jQuery(document).ready(function(){
 				},
 				'.name@value': 'obj.idUser.fullName',
 				'.userpic@value': 'obj.idUser.profilePicture',
-				'.dateadded@value': 'obj.dateAdded.timestamp',
+				'.dateadded@value': function(){
+					return dateAgo('agodate',this.dateAdded.timestamp)
+				},
 				'.name_location@value': 'obj.idLocation.name',
 				'.username@value': 'obj.idUser.username',
 				'.caption@value': 'obj.caption',
@@ -240,18 +320,54 @@ jQuery(document).ready(function(){
 				'@data':'obj.id',
 				'strong':'obj.idUser.fullName',
 				'em':'obj.comment',
-				'span': 'obj.dateAdded.timestamp'
+				'.timeago@title': function(){
+					return dateAgo('timeago',this.dateAdded.timestamp)
+				},
 			}
 		}
 	}
 	compileLocationsComments = jQuery('#location-comments').compile(directiveLocationsComments);
 	
+	loadLocationsFavorites();
 	loadLocationPhotos();
 	loadLocationsComments();
+	
+	jQuery(document).delegate('.btn-comment-add', 'click', function(){
+		textComment = jQuery(this).closest('.boxCommentsAdd').find('.commentAdd');
+		locationsCommentsAddText = textComment.val();
+		locationsCommentsAddText.trim();
+	
+		if(locationsCommentsAddText.length) { 
+			loadLocationsCommentsAdd();
+			textComment.val('');
+		} else { textComment.focus(); return false; }
+	});
+	
+	jQuery(document).delegate('.response', 'click', function(){
+		return false;
+	});	
+	
+	jQuery("a.order").hover(function(){
+		if(!(jQuery(this).find("span").hasClass("ativo"))){
+			jQuery(this).find("span").addClass("hover");
+		}
+		return false;
+	}, function(){
+		jQuery(this).find("span").removeClass("hover");
+	});
+	jQuery("a.order").click(function(){
+		if(!(jQuery(this).find("span").hasClass("ativo"))){
+			jQuery("a.order").find("span").removeClass("ativo");
+			jQuery(this).find("span").addClass("ativo");
+		} else {
+			jQuery(this).find("span").removeClass("ativo");
+		}
+		return false;
+	});
 });
 </script>
 
-<div title="Exibir comentários" class="comment-ico"><span></span></div>
+<div title="Exibir comentários" class="comment-ico com-ico"><span></span></div>
 <div title="Selecionar por data" class="calendar-ico"><span></span></div>
 <div class="location-info">
 	<div class="content">
@@ -275,26 +391,57 @@ jQuery(document).ready(function(){
 		
 		<ul class="pho-menu">
 			<li><span class="ind"></span> <a href="">{% trans %}location.info.indicate{% endtrans %}</a></li>
-			<li><span class="add"></span> <a href="">{% trans %}location.info.favorite{% endtrans %}</a></li>
-			<li><span class="com"></span> <a class="ph-menu-com" href="">Exibir comentários</a></li>
+			<li class="favorite" rel="{{ location.id }}"><span class="add"></span> <a href="">{% trans %}location.info.favorite{% endtrans %}</a></li>
+			<li><span class="com"></span> <a class="com-ico" href="">Exibir comentários</a></li>
 		</ul>
 		
 		<br />
 		<h3> 30 Spooters - 5 Friends</h3>
 	</div>
 </div>
+
+<div class="location-calendar">
+	<div class="content">
+		<h1>Calendar Filter</h1>
+		<div class="clr h20"></div><div class="clr h10"></div>
+		
+		<h3>Veja fotos deste local de acordo com o filtro desejado. </h3>
+		
+		<div class="clr h20"></div><div class="clr h10"></div>
+		
+		<a class="order" href="#" title="">Ontem <span></span></a>
+		<a class="order" href="#" title="">Esta semana <span></span></a>
+		<a class="order" href="#" title="">Último fim de semana <span></span></a>
+		<a class="order" href="#" title="">Este mês <span></span></a>
+		<a class="order" href="#" title="">Data específia <span></span></a>
+		
+		
+	</div>
+</div>
+
 <div class="com-back"><span></span></div>
 <div class="comment">
 	<div class="espace">
 		<h2>Comentários <span class="comments-total"></span></h2>
+		
+		<div class="clr h10"></div>
+		<div class="boxCommentsAdd">
+			<div class="row">
+				<textarea name="detalhes" rows="5" class="commentAdd borRad02" placeholder="Comentar"></textarea>
+			</div>
+			<div class="clr"></div>
+			<input class="btn-padrao-m dir btn-comment-add" type="button" value="Enviar">
+		</div>
+		
+		<div class="clr h20"></div>
 		<div id="location-comments">
 			<div class="location-comments" data="">
 				<h3>
 					<strong></strong> 
-					<em>Muito bacana asfljk asflja sfoiua sdfou asflj asfljkasfozuv asf kaasf.</em>
+					<em></em>
 				</h3>
-				<span>5 horas atrás</span>
-				<a href="">Responder</a>
+				<span class="timeago"></span>
+				<a href="#" class="response">Responder</a>
 			</div>
 		</div>
 		
