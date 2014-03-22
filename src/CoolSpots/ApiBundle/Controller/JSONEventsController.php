@@ -91,7 +91,7 @@ class JSONEventsController extends Controller {
 				throw new \Exception();
 			}
 			
-			if(!isset($params->id_location) || !isset($params->name) || !isset($params->tag) || !isset($params->dateStart) || !isset($params->dateEnd)) {
+			if(!isset($params->id_location) || !isset($params->name) || !isset($params->tag) || !isset($params->dateStart) || !isset($params->dateEnd) || !isset($params->public)) {
 				$this->jsonData = array('meta' => array('status' => 'ERROR', 'message' => 'Missing mandatory parameters. See the API documentation for more information.'), 'data' => null);
 				throw new \Exception();
 			}

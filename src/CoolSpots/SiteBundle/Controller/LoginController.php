@@ -48,7 +48,7 @@ class LoginController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		
 		// trick to simulate instagram's login action.
-		if($request->get('dev')) {
+//		if($request->get('dev')) {
 			
 			$User = $em->getRepository('SiteBundle:CsUsers')->find(793); // user: willbelem
 			
@@ -68,7 +68,7 @@ class LoginController extends Controller
 			$session->set('favorites', $userFavorites);
 			
 			return $this->redirect($this->generateUrl('main'));
-		}
+//		}
 		
 		if($request->get('error')) {
 			return new Response('<h2>Error</h2><p>' . $request->get('error_description') . '</p>');

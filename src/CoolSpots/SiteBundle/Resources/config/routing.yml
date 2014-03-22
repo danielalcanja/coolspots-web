@@ -51,3 +51,11 @@ logout:
 users:
     pattern: /users
     defaults: { _controller: SiteBundle:Users:index }
+
+events:
+    pattern: /events
+    defaults: { _controller: SiteBundle:Events:index }
+
+events_details:
+    pattern: /events/details
+    defaults: { _controller: SiteBundle:Events:details }
