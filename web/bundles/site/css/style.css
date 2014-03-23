@@ -81,6 +81,9 @@ span.ros { background:#FF5885; }
 .region { float:right; margin-right:15px; }
 .region span { color:#FFF; }
 
+.inputFile { width: 230px; height:30px; position: relative; overflow: hidden; background:url('../images/input-file-foto.png'); }
+.inputFile input { position: absolute; right: 0; z-index: 2; font-size: 100px; opacity: 0; filter: alpha(opacity=0); }
+
 #site { width:100%; display:table; position:relative; z-index:0; }
 #site #photo-list { width:100%; display:table; }
 

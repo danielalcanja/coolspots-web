@@ -1,7 +1,94 @@
 {% extends 'SiteBundle::layout.html.twig' %}
 
 {% block body %}
-<br />
-<br />
-<h1>Welcome to the Events:index page</h1>
+
+<script>
+pg = 'Events';
+var totFav = 0;
+function loadEvents() {
+	var url =  '/json/events';
+	var params =  {
+		page: pagina
+	};
+	jsonCall(url, params, callbackEvents);	
+}
+function callbackEvents(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	}
+	
+	divide(obj);
+	if(one) jQuery("#photo-list").append(compila(part1));
+	if(two) jQuery("#photo-list").append(compila(part2));
+		
+	pagina++;
+	
+	for(var i in obj.data){
+		arrLast[obj.data[i].idLocation.idFoursquare] = [];
+		for(var j in obj.data[i].lastPhotos){
+			arrLast[obj.data[i].idLocation.idFoursquare][j] = obj.data[i].lastPhotos[j].lowResolution;
+		}
+	}
+	console.log(obj);
+}
+
+jQuery(document).ready(function(){
+	var i=1;
+	directiveEvents = {
+		'li.photo': {
+			'obj<-data': {
+				'@data':'obj.idLocation.idFoursquare',
+				'@rel':'obj.id',
+				'@class+':function(arg){
+					if(i == 10) {
+						posObj = ' li-1'; i=1;
+					} else { 
+						posObj = ' li-'+i 
+					};
+					i++;
+					return " " + this.idLocation.idFoursquare + posObj;
+				},
+				'a.box@href': '/events/details/#{obj.id}/#{obj.idLocation.id}',
+				'.timeago@title': function(){
+					return dateAgo('timeago',this.dateStart.timestamp)
+				},
+				'.image img@data-original':'obj.coverPic',
+				'h2.title': 'obj.name',
+				'div.back@data': '/events/details/#{obj.id}/#{obj.idLocation.id}',
+			}
+		}
+	}
+	
+	compila = jQuery('ul.content').compile(directiveEvents);
+	loadEvents();
+});
+</script>
+
+<ul class="content template">
+	<li class="photo" data="" rel="">
+		<a href="" class="box">
+			<div class="time">
+				<div class="clock"></div>
+				<div class="tmp"><span class="timeago" title=""></span></div>
+			</div>
+			<div class="image">
+				<img class="lazy" src="/bundles/site/images/photo-placeholder.png" data-original="giva" />
+			</div>
+			<div class="info">
+				<h2 class="title"></h2>
+				<div class="more">25 Spooters - 2 Friends</div>
+			</div>
+		</a>
+		<div class="back" data=""></div>
+	</li>
+</ul>
+<div id="photo-list">
+</div>
+
 {% endblock %}

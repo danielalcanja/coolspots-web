@@ -7,6 +7,50 @@ var paginaUsersSearch = 1, paginaLocationsSearch = 1;
 var textUserSearch = '', textLocationsSearch;
 var inboxAddText = '', inboxAddTo = 0;
 
+function loadEventsAdd() {
+	var dS = jQuery('input[name=eveDateStart]').val();
+	var eveDateStart = parseInt(new Date(dS.split("/").reverse().join("-") + " "+ jQuery('input[name=eveHoraStart]').val()+ ':00').getTime());
+	var dE = jQuery('input[name=eveDateEnd]').val();
+	var eveDateEnd = parseInt(new Date(dE.split("/").reverse().join("-") + " "+ jQuery('input[name=eveHoraEnd]').val()+ ':00').getTime());
+	
+	var eveLocation = 173;//jQuery('input[name=eveLocation]').val();
+	var eveName = jQuery('input[name=eveName]').val();
+	var eveDescription = jQuery('textarea[name=eveDescription]').val();
+	var eveTag = jQuery('input[name=eveTag]').val();
+	var evePic = 'teste';//jQuery('input[name=file]').val();
+	var evePublic = jQuery('select[name=evePublic]').val();
+	
+	var url =  '/json/inbox/add';
+	var params =  {
+		'username': 'willbelem',
+		'id_location': eveLocation,
+		'name': eveName,
+		'description': eveDescription,
+		'tag': eveTag,
+		'cover_pic': evePic,
+		'dateStart': eveDateStart,
+		'dateEnd': eveDateEnd,
+		'public': evePublic
+	};
+	console.log(params);
+	jsonCall(url, params, callbackInboxAdd);	
+}
+function callbackEventsAdd(obj) {
+	if(!obj) {
+		console.log("ERRO DURANTE EXECUÇÃO DA CHAMADA AJAX");
+		return(false);
+	}
+	
+	if(obj.meta.status === 'ERROR') {
+		console.log(obj.meta.message);
+		return(false);
+	} else {
+		return true;
+	}
+	
+	console.log(obj);
+}
+
 function loadFavorites() {
 	var url = '/json/favorites';
 	var params =  { };
@@ -115,7 +159,7 @@ function divide(obj){
 function lastPhotos(id){
 	var i = 0;
 	lastTimer = setInterval(function(){
-		jQuery("."+id).find("img").attr("src",arrLast[id][i]);
+		jQuery("."+id).find("").attr("src",arrLast[id][i]);
 		console.log(arrLast[id][i]);
 		i++; if(i==4) i = 0;
 	},1000);
@@ -374,7 +418,7 @@ $a(document).ready(function(){
 			failure_limit : 20,
 			effect : "fadeIn"
 		});
-		if(pg=='Default' || pg=='Photos' || pg=='Favorites' || pg=='Explore') {
+		if(pg=='Default' || pg=='Photos' || pg=='Favorites' || pg=='Explore' || pg=='Events') {
 			if(hasImage) foundImage();
 		}
 	}
@@ -487,31 +531,47 @@ $a(document).ready(function(){
 		html += '	<div class=\"space\">';
 		html += '		<h2 class=\"box-h2\">Crie um evento</h2>';
 		html += '		<div class=\"row\">';
+		html += '			<span class=\"col1\">Local</span>';
+		html += '			<div class=\"col2\">';
+		html += '				<input type=\"text\" name=\"eveLocationInput\" class=\"campos-box\" placeholder=\"ex: Bar of Brothers\">';
+		html += '				<input type=\"hidden\" name=\"eveLocation\">';
+		html += '			</div>';
+		html += '		</div>';
+		html += '		<div class=\"clr h05\"></div>';
+		html += '		<div class=\"row\">';
 		html += '			<span class=\"col1\">Nome</span>';
 		html += '			<div class=\"col2\">';
-		html += '				<input type=\"text\" name=\"nome\" class=\"campos-box\" placeholder=\"ex: Festa de aniversário\">';
+		html += '				<input type=\"text\" name=\"eveName\" class=\"campos-box\" placeholder=\"ex: Festa de aniversário\">';
 		html += '			</div>';
 		html += '		</div>';
 		html += '		<div class=\"clr h05\"></div>';
 		html += '		<div class=\"row\">';
-		html += '			<span class=\"col1\">Detalhes</span>';
+		html += '			<span class=\"col1\">Descrição</span>';
 		html += '			<div class=\"col2\">';
-		html += '				<textarea name=\"detalhes\" rows=\"2\" class=\"campos-box\" placeholder=\"Adicione mais informações\"></textarea>';
+		html += '				<textarea name=\"eveDescription\" rows=\"2\" class=\"campos-box\" placeholder=\"Adicione mais informações\"></textarea>';
 		html += '			</div>';
 		html += '		</div>';
 		html += '		<div class=\"clr h05\"></div>';
 		html += '		<div class=\"row\">';
-		html += '			<span class=\"col1\">Onde</span>';
+		html += '			<span class=\"col1\">Inínio</span>';
 		html += '			<div class=\"col2\">';
-		html += '				<input type=\"text\" name=\"onde\" class=\"campos-box\" placeholder=\"Adicione um lugar\">';
+		html += '				<input type=\"text\" name=\"eveDateStart\" class=\"campos-boxM\" placeholder=\"Data\">';
+		html += '				<input type=\"text\" name=\"eveHoraStart\" class=\"campos-boxM\" placeholder=\"Hora\">';
 		html += '			</div>';
 		html += '		</div>';
 		html += '		<div class=\"clr h05\"></div>';
 		html += '		<div class=\"row\">';
-		html += '			<span class=\"col1\">Quando</span>';
+		html += '			<span class=\"col1\">Fim</span>';
 		html += '			<div class=\"col2\">';
-		html += '				<input type=\"text\" name=\"data\" class=\"campos-boxM\">';
-		html += '				<input type=\"text\" name=\"hora\" class=\"campos-boxM\" placeholder=\"Horário\">';
+		html += '				<input type=\"text\" name=\"eveDateEnd\" class=\"campos-boxM\" placeholder=\"Data\">';
+		html += '				<input type=\"text\" name=\"eveHoraEnd\" class=\"campos-boxM\" placeholder=\"Hora\">';
+		html += '			</div>';
+		html += '		</div>';
+		html += '		<div class=\"clr h05\"></div>';
+		html += '		<div class=\"row\">';
+		html += '			<span class=\"col1\">Tag</span>';
+		html += '			<div class=\"col2\">';
+		html += '				<input type=\"text\" name=\"eveTag\" class=\"campos-box\" placeholder=\"ex: FestaDani\">';
 		html += '			</div>';
 		html += '		</div>';
 		html += '		<div class=\"clr h05\"></div>';
@@ -519,20 +579,15 @@ $a(document).ready(function(){
 		html += '			<span class=\"col1\">Privacidade</span>';
 		html += '			<div class=\"col2\">';
 		html += '				<div class=\"pri-box\">';
-		html += '					<select>';
-		html += '						<option value=\"1\">Público</option>';
-		html += '						<option value=\"0\">Privado</option>';
+		html += '					<select name=\"evePublic\">';
+		html += '						<option value=\"Y\">Público</option>';
+		html += '						<option value=\"N\">Privado</option>';
 		html += '					</select>';
 		html += '				</div>';
-		html += '				<input type=\"hidden\" name=\"privacidade\" value=\"Spooters Amigos\">';
 		html += '			</div>';
 		html += '		</div>';
-		html += '		<div class=\"clr h05\"></div>';
-		html += '		<div class=\"row\">';
-		html += '			<span class=\"col1\">Hashtag</span>';
-		html += '			<div class=\"col2\">';
-		html += '				<textarea name=\"hashtag\" rows=\"2\" class=\"campos-box\" placeholder=\"Hashtag\"></textarea>';
-		html += '			</div>';
+		html += '		<div class=\"inputFile\">';
+		html += '			<input type=\"file\" name=\"file\" id=\"file\">';
 		html += '		</div>';
 		html += '';
 		html += '		<div class=\"clr\"></div><div class=\"rowDivide\"></div>';
@@ -586,7 +641,7 @@ $a(document).ready(function(){
 	});
 	
 	$a(document).delegate('.btCriarEvento', 'click', function(){
-		alert("Chama função para gravar no banco");
+		loadEventsAdd();
 		shadownClose();
 	});
 	
